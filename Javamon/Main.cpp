@@ -1,7 +1,4 @@
-//	Libraries
-#include <SFML/Graphics.hpp>
-#include <iostream>
-#include <sstream>
+#include "Main.h"
 
 int main()
 {
@@ -9,13 +6,16 @@ int main()
 	//	Asset Creation/Window Settings
 	const float SCREEN_HEIGHT = 720;
 	const float SCREEN_WIDTH = 1280;
+	const int FRAME_RATE_LIMIT = 60;
+	const std::string WINDOW_TITLE = "Javamon";
 
-
-	sf::RenderWindow window(sf::VideoMode(int (SCREEN_WIDTH), int(SCREEN_HEIGHT)), "Game");
-	window.setFramerateLimit(60); //Cap the framerate at 60fps
+	sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Javamon");
+	window.setFramerateLimit(FRAME_RATE_LIMIT); //Cap the framerate at 60fps
 	window.setKeyRepeatEnabled(false);
+	
 
 	sf::Event event; //Object for handling/storing events
+	Events eventHandler;
 
 	bool playingGame = true; //Keeps the game running while true
 	
@@ -23,7 +23,7 @@ int main()
 	view.setSize(sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
 	view.setCenter(sf::Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2));
 
-	int mouseX, mouseY;
+	
 
 	sf::CircleShape player(50);
 	player.setFillColor(sf::Color::White);
@@ -37,119 +37,70 @@ int main()
 
 
 	sf::RectangleShape bg1;
-	bg1.setSize(sf::Vector2f(1280, 720));
+	bg1.setSize(sf::Vector2f(INT_MAX, INT_MAX));
 	bg1.setFillColor(sf::Color::Red);
-	bg1.setPosition(sf::Vector2f(0, -720));
+	bg1.setPosition(sf::Vector2f(INT_MIN / 2, INT_MIN / 2));
 
-	int count = 0;
-	// Booleans for key events
-	bool aPressed = false, dPressed = false, wPressed = false, sPressed = false;
+	sf::RectangleShape test;
+	test.setSize(sf::Vector2f(64, 64));
+	test.setFillColor(sf::Color::Yellow);
+	test.setPosition(sf::Vector2f(0, 0));
 
-	bool leftClick = false; //Left mouse button 
-							// Game loop
+	
+	
+	// Game loop
 	while (playingGame)
 	{
-		//	Look for events and deal with them
-		while (window.pollEvent(event))  //pollEvent function checks whether any events have occured, if so will return true until all events have been dealt with
-		{
-
-			//	If window is closed, end game loop.
-			if (event.type == sf::Event::Closed)
-			{
-				playingGame = false;
-			}
-
-			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::A)
-			{
-				aPressed = true;
-			}
-
-			if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::A)
-			{
-				aPressed = false;
-			}
-
-			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::D)
-			{
-				dPressed = true;
-			}
-
-			if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::D)
-			{
-				dPressed = false;
-			}
-
-			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::S)
-			{
-				sPressed = true;
-			}
-
-			if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::S)
-			{
-				sPressed = false;
-			}
-
-			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::W)
-			{
-				wPressed = true;
-			}
-
-			if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::W)
-			{
-				wPressed = false;
-			}
-
-			if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
-			{
-				leftClick = true;
-			}
-
-			if (event.type == sf::Event::MouseMoved)
-			{
-				mouseX = event.mouseMove.x;
-				mouseY = event.mouseMove.y;
-			}
-
-		}
+		//Listen for events
+		eventHandler.eventListener(event, window);
 
 		//	Perform logic based upon events
-		if (aPressed)
+		if (eventHandler.getWindowClosed())
 		{
-			player.move(-10, 0);
-			view.move(-10, 0);
+			playingGame = false;
+		}
+
+		if (eventHandler.getKeyPressed("A"))
+		{
+			player.move(-5, 0);
+			view.move(-5, 0);
 
 			std::cout << "Player has moved to the left\n";
 
 		}
 
-		if (dPressed)
+		if (eventHandler.getKeyPressed("D"))
 		{
-			player.move(10, 0);
-			view.move(10, 0);
+
+			player.move(5, 0);
+			view.move(5, 0);
 
 			std::cout << "Player has moved to the right\n";
 
 		}
 
-		if (sPressed)
+		if (eventHandler.getKeyPressed("S"))
 		{
-			player.move(0, 10);
-			view.move(0, 10);
+
+			player.move(0, 5);
+			view.move(0, 5);
+
 
 			std::cout << "Player has moved downwards\n";
 
 		}
 
-		if (wPressed)
+		if (eventHandler.getKeyPressed("W"))
 		{
-			player.move(0, -10);
-			view.move(0, -10);
+
+			player.move(0, -5);
+			view.move(0, -5);
 
 			std::cout << "Player has moved upwards\n";
 
 		}
 
-		if (leftClick)
+		if (eventHandler.getMouseClicked("L"))
 		{
 			if (player.getFillColor() == sf::Color::White)
 			{
@@ -161,27 +112,21 @@ int main()
 			}
 
 			std::cout << "Player has changed color!\n";
-			leftClick = false;
 		}
-
 
 		//	Render graphical changes
 		window.clear();
 		window.setView(view);
-		window.draw(bg);
 		window.draw(bg1);
+		window.draw(bg);
+		window.draw(test);
+		
 		window.draw(player);
 
 		window.display();
 
-		if (count % 10 == 0)
-		{
-			std::cout << "Player X Pos: " << player.getPosition().x << "Player Y Pos: " << player.getPosition().y << "\n";
-			std::cout << "BG X Pos: " << bg.getPosition().x << "BG Y Pos: " << bg.getPosition().y << "\n";
-			std::cout << "BG1 X Pos: " << bg1.getPosition().x << "BG1 Y Pos: " << bg1.getPosition().y << "\n";
-		}
+		
 
-		count++;
 	}
 
 
