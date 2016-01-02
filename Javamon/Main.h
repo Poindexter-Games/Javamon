@@ -8,10 +8,7 @@
 
 //	Project Includes
 #include "Events.h"
-#include "Window.h"
 #include "Entity.h"
-
-
-
+#include "GameState.h"
 
 #endif

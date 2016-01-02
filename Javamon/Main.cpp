@@ -17,6 +17,8 @@ int main()
 	sf::Event event; //Object for handling/storing events
 	Events eventHandler;
 
+	GameState gs("level");
+
 	bool playingGame = true; //Keeps the game running while true
 	
 	sf::View view;
@@ -29,17 +31,16 @@ int main()
 	player.setFillColor(sf::Color::White);
 	player.setPosition(SCREEN_WIDTH / 2 - player.getRadius(), SCREEN_HEIGHT / 2 - player.getRadius());
 
+	//sf::RectangleShape bg;
+	//bg.setSize(sf::Vector2f(1280, 720));
+	//bg.setFillColor(sf::Color::Green);
+	//bg.setPosition(sf::Vector2f(0, 0));
+
 
 	sf::RectangleShape bg;
-	bg.setSize(sf::Vector2f(1280, 720));
-	bg.setFillColor(sf::Color::Green);
-	bg.setPosition(sf::Vector2f(0, 0));
-
-
-	sf::RectangleShape bg1;
-	bg1.setSize(sf::Vector2f(INT_MAX, INT_MAX));
-	bg1.setFillColor(sf::Color::Red);
-	bg1.setPosition(sf::Vector2f(INT_MIN / 2, INT_MIN / 2));
+	bg.setSize(sf::Vector2f(INT_MAX, INT_MAX));
+	bg.setFillColor(sf::Color::Black);
+	bg.setPosition(sf::Vector2f(INT_MIN / 2, INT_MIN / 2));
 
 	sf::RectangleShape test;
 	test.setSize(sf::Vector2f(64, 64));
@@ -117,8 +118,8 @@ int main()
 		//	Render graphical changes
 		window.clear();
 		window.setView(view);
-		window.draw(bg1);
 		window.draw(bg);
+		gs.render(window);
 		window.draw(test);
 		
 		window.draw(player);
