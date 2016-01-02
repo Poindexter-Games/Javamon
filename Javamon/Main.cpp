@@ -27,7 +27,7 @@ int main()
 
 	
 
-	sf::CircleShape player(50);
+	sf::CircleShape player(32);
 	player.setFillColor(sf::Color::White);
 	player.setPosition(SCREEN_WIDTH / 2 - player.getRadius(), SCREEN_HEIGHT / 2 - player.getRadius());
 
@@ -120,7 +120,7 @@ int main()
 		window.setView(view);
 		window.draw(bg);
 		gs.render(window);
-		window.draw(test);
+		//window.draw(test);
 		
 		window.draw(player);
 

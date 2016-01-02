@@ -4,6 +4,9 @@
 #include <SFML/Graphics/Image.hpp>
 #include <cstdint>
 #include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Rect.hpp>
+#include <iostream>
 
 using namespace std;
 
@@ -15,8 +18,8 @@ private:
 	Tile **map;
 	int width;
 	int height;
-	sf::Texture textureMap;
-
+	sf::Image textureMap;
+	sf::Texture* textures;
 public:
 	Level();
 	Level(string); //Test method

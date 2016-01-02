@@ -1,13 +1,14 @@
-include "Tile.h"
+#include "Tile.h"
 
 using namespace std;
 
 Tile::Tile()
 {
-	this.z = 0;
+	Tile::imgnum = 0;
+	Tile::z = 0;
 }
 Tile::Tile(int imgnum, int z)
 {
-	this.imgnum = imgnum;
-	this.z = z;
+	Tile::imgnum = imgnum;
+	Tile::z = z;
 }
