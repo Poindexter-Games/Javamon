@@ -5,10 +5,11 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <sstream>
+#include <SFML/Window/Keyboard.hpp>
 
 //	Project Includes
 #include "Events.h"
 #include "Entity.h"
-#include "GameState.h"
+#include "Level.h"
 
 #endif

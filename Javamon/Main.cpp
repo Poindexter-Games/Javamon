@@ -17,19 +17,13 @@ int main()
 	sf::Event event; //Object for handling/storing events
 	Events eventHandler;
 
-	GameState gs("level");
+	Level level;
 
 	bool playingGame = true; //Keeps the game running while true
 	
 	sf::View view;
 	view.setSize(sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
 	view.setCenter(sf::Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2));
-
-	
-
-	sf::CircleShape player(32);
-	player.setFillColor(sf::Color::White);
-	player.setPosition(SCREEN_WIDTH / 2 - player.getRadius(), SCREEN_HEIGHT / 2 - player.getRadius());
 
 	//sf::RectangleShape bg;
 	//bg.setSize(sf::Vector2f(1280, 720));
@@ -47,7 +41,7 @@ int main()
 	test.setFillColor(sf::Color::Yellow);
 	test.setPosition(sf::Vector2f(0, 0));
 
-	
+	bool c_up, c_left, c_down, c_right = false;
 	
 	// Game loop
 	while (playingGame)
@@ -61,68 +55,48 @@ int main()
 			playingGame = false;
 		}
 
-		if (eventHandler.getKeyPressed("A"))
+		if (eventHandler.getKeyPressed("W"))
 		{
-			player.move(-5, 0);
-			view.move(-5, 0);
+			c_up = true;
 
-			std::cout << "Player has moved to the left\n";
-
+			std::cout << "Player pressed up\n";
 		}
 
-		if (eventHandler.getKeyPressed("D"))
+		if (eventHandler.getKeyPressed("A"))
 		{
+			c_left = true;
 
-			player.move(5, 0);
-			view.move(5, 0);
-
-			std::cout << "Player has moved to the right\n";
-
+			std::cout << "Player pressed left\n";
 		}
 
 		if (eventHandler.getKeyPressed("S"))
 		{
+			c_down = true;
 
-			player.move(0, 5);
-			view.move(0, 5);
-
-
-			std::cout << "Player has moved downwards\n";
-
+			std::cout << "Player pressed down\n";
 		}
 
-		if (eventHandler.getKeyPressed("W"))
+		if (eventHandler.getKeyPressed("D"))
 		{
+			c_right = true;
 
-			player.move(0, -5);
-			view.move(0, -5);
-
-			std::cout << "Player has moved upwards\n";
-
+			std::cout << "Player pressed right\n";
 		}
 
-		if (eventHandler.getMouseClicked("L"))
-		{
-			if (player.getFillColor() == sf::Color::White)
-			{
-				player.setFillColor(sf::Color::Blue);
-			}
-			else
-			{
-				player.setFillColor(sf::Color::White);
-			}
+		if(!sf::Keyboard::isKeyPressed(sf::Keyboard::W)){c_up    = false;}
+		if(!sf::Keyboard::isKeyPressed(sf::Keyboard::A)){c_left  = false;}
+		if(!sf::Keyboard::isKeyPressed(sf::Keyboard::S)){c_down  = false;}
+		if(!sf::Keyboard::isKeyPressed(sf::Keyboard::D)){c_right = false;}
 
-			std::cout << "Player has changed color!\n";
-		}
+		bool digitalControls[4] = {c_up, c_left, c_down, c_right};
+		level.update(digitalControls);
 
 		//	Render graphical changes
 		window.clear();
 		window.setView(view);
 		window.draw(bg);
-		gs.render(window);
+		level.render(window);
 		//window.draw(test);
-		
-		window.draw(player);
 
 		window.display();
 

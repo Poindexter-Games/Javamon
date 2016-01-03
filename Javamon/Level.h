@@ -7,6 +7,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Rect.hpp>
 #include <iostream>
+#include "Player.h"
 
 using namespace std;
 
@@ -18,13 +19,20 @@ private:
 	Tile **map;
 	int width;
 	int height;
+
 	sf::Image textureMap;
 	sf::Texture* textures;
+
+	sf::Image costumeMap;
+	sf::Texture* costumes;
+
+	Player p;
 public:
 	Level();
 	Level(string); //Test method
 	Level(string, string); //Regular way to load level, unimplemented, use the test method
 
+	void update(bool*);
 	void render(sf::RenderWindow&);
 
 	void setName(string);
