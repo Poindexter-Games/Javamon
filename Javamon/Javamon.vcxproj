@@ -134,6 +134,7 @@
     <ClInclude Include="Level.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Teleport.h" />
     <ClInclude Include="Tile.h" />
   </ItemGroup>
   <ItemGroup>

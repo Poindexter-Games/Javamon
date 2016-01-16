@@ -1,7 +1,15 @@
 #pragma once
 #ifndef _EVENTS_H_
 #define _EVENTS_H_
+
+#include <cstdint>
+#include <string>
+
 #include <SFML\Graphics.hpp>
+
+class Level;
+
+using namespace std;
 
 class Events
 {
@@ -10,7 +18,10 @@ public:
 	bool getKeyPressed(std::string key);
 	bool getMouseClicked(std::string button);
 	bool getWindowClosed();
-
+	void levelListener(string*, int);
+	bool getLevelRequestChange(){return levelRequestsChange;}
+	string getLevelPack() { return newLevelPack; }
+	string getLevelName() { return newLevelName; }
 private:
 	// Booleans for key events
 	bool aPressed = false, dPressed = false, wPressed = false, sPressed = false, shiftPressed = false, windowClosed = false;
@@ -18,6 +29,10 @@ private:
 	bool leftClick = false; //Left mouse button 
 
 	int mouseX, mouseY;
+
+	string newLevelPack;
+	string newLevelName;
+	bool levelRequestsChange = false;
 };
 
 

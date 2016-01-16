@@ -1,5 +1,7 @@
 #include "Events.h"
 
+using namespace std;
+
 void Events::eventListener(sf::Event& event, sf::RenderWindow& window)
 {
 	//	Look for events and deal with them
@@ -128,3 +130,22 @@ bool Events::getWindowClosed()
 		return false;
 	}
 }
+
+/*
+Gathers all of the data from the level to sort into requests
+x 
+levelChange,pack,name,,3 - Level is requesting change of levels
+x
+Author: Karl Piepho
+Date Created: 1/16/2016
+*/
+void Events::levelListener(string* events, int length)
+{
+	if (length == 3 && events[0] == "levelChange")
+	{
+		levelRequestsChange = true;
+		newLevelPack = events[1];
+		newLevelName = events[2];
+	}
+}
+

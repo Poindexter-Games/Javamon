@@ -2,8 +2,28 @@
 
 using namespace std;
 
-Level::Level()
+Level::Level(Events& e)
 {
+	//This is some testing code, it doesn't work correctly, so it will be removed soon
+
+	Level::pack = "Karl";
+	Level::name = "Test";
+
+	ifstream file;
+	file.open("C:/Users/Karl/Source/Repos/Javamon/Javamon/Resources/Levels/" + pack + "/" + name + "/Level.txt");
+	for (string line; getline(file, line); )
+	{
+		//...for each line in input...
+		cout << "l: " << line << endl;
+	}
+
+
+	file.close();
+
+	//End of file loading testing code. -Karl
+
+	Level::eventListener = e;
+
 	Level::pack = "Karl"; //I don't want to bother with spelling poindexter
 	Level::name = "Test";
 	width = 8;
@@ -12,19 +32,20 @@ Level::Level()
 	Player p;
 
 	map = new Tile*[width];
-	for(int i = 0; i < width; i++)
+	for (int i = 0; i < width; i++)
 	{
 		map[i] = new Tile[height];
 	}
-	for(int i = 0; i < width; i++)
+	for (int i = 0; i < width; i++)
 	{
-		for(int j = 0; j < height; j++)
+		for (int j = 0; j < height; j++)
 		{
-			map[i][j] = Tile(0, 0);
+			map[i][j] = Tile(0, 0, 0);
 		}
 	}
 	//TEMPORARY EDIT MAP HERE
-	map[1][1] = Tile(1, 0);
+	map[2][1] = Tile(1, 2, 0);
+	map[3][1] = Tile(2, 1, 0);
 
 	textureMap = sf::Image();
 	textureMap.loadFromFile("C:/Users/Karl/Source/Repos/Javamon/Javamon/Resources/Levels/" + pack + "/" + name + "/Spritesheet.png");
@@ -35,31 +56,92 @@ Level::Level()
 	/*
 	//Listening to Leeroy jenkins remix 10 hours
 	//Time straight = 54:07 (54 minutes 07 seconds) I couldn't make it to an hour...
-	
+
 	for(int i = 0; i < blocks.size(); i++)
-	{	
-		g.drawImage(images.get(blocks.get(i).imageId()), ((i%width)*60)+xOffset, (Math.roundDown(i/width)*60)+yOffset, null);
+	{
+	g.drawImage(images.get(blocks.get(i).imageId()), ((i%width)*60)+xOffset, (Math.roundDown(i/width)*60)+yOffset, null);
 	}
 	*/
 
 	textures = new sf::Texture[256];
-	for(int i = 0; i < 256; i++) //Creates a list of textures from the spritesheet
+	for (int i = 0; i < 256; i++) //Creates a list of textures from the spritesheet
 	{
 		textures[i] = sf::Texture();
-		textures[i].loadFromImage(textureMap, sf::IntRect((i % 16)*64, (int)(i / 16) * 64, 64, 64));
+		textures[i].loadFromImage(textureMap, sf::IntRect((i % 16) * 64, (int)(i / 16) * 64, 64, 64));
 	}
-	
+
 	costumes = new sf::Texture[8];
 	for (int i = 0; i < 8; i++) //Creates a list of textures from the spritesheet
 	{
 		costumes[i] = sf::Texture();
 		costumes[i].loadFromImage(costumeMap, sf::IntRect((i % 4) * 64, (int)(i / 4) * 64, 64, 64));
 	}
+
+	//==
+
+	/*
+	void loadLevel
+	{
+		fstream file;
+		file.open("");
+		file.close();
+	}
+	*/	
 }
 
-Level::Level(string name)
+Level::Level(string randomstringnameinordertomakethisnotseemlikeadefaultconstructor)
 {
-	Level::name = name;
+	Level::pack = "Karl"; //I don't want to bother with spelling poindexter
+	Level::name = "Test";
+	width = 8;
+	height = 8;
+
+	Player p;
+
+	map = new Tile*[width];
+	for (int i = 0; i < width; i++)
+	{
+		map[i] = new Tile[height];
+	}
+	for (int i = 0; i < width; i++)
+	{
+		for (int j = 0; j < height; j++)
+		{
+			map[i][j] = Tile(0, 0, 0);
+		}
+	}
+	//TEMPORARY EDIT MAP HERE
+	map[1][1] = Tile(1, 0, 0);
+
+	textureMap = sf::Image();
+	textureMap.loadFromFile("C:/Users/Karl/Source/Repos/Javamon/Javamon/Resources/Levels/" + pack + "/" + name + "/Spritesheet.png");
+
+	costumeMap = sf::Image();
+	costumeMap.loadFromFile("C:/Users/Karl/Source/Repos/Javamon/Javamon/Resources/Video/Player.png");
+
+	/*
+	//Listening to Leeroy jenkins remix 10 hours
+	//Time straight = 54:07 (54 minutes 07 seconds) I couldn't make it to an hour...
+
+	for(int i = 0; i < blocks.size(); i++)
+	{
+	g.drawImage(images.get(blocks.get(i).imageId()), ((i%width)*60)+xOffset, (Math.roundDown(i/width)*60)+yOffset, null);
+	}
+	*/
+
+	textures = new sf::Texture[256];
+	for (int i = 0; i < 256; i++) //Creates a list of textures from the spritesheet
+	{
+		textures[i] = sf::Texture();
+		textures[i].loadFromImage(textureMap, sf::IntRect((i % 16) * 64, (int)(i / 16) * 64, 64, 64));
+	}
+
+	costumes = new sf::Texture[8];
+	for (int i = 0; i < 8; i++) //Creates a list of textures from the spritesheet
+	{
+		costumes[i] = sf::Texture();
+		costumes[i].loadFromImage(costumeMap, sf::IntRect((i % 4) * 64, (int)(i / 4) * 64, 64, 64));
+	}
 }
 
 Level::Level(string pack, string level)
@@ -77,9 +159,41 @@ void Level::update(bool* digitalControls)
 	//123 asd
 	if(p.isLocked()) //If the player is standing in his tile
 	{
-		if (digitalControls[p.getDirection()] == true)
+		if (digitalControls[p.getDirection()] == true) //If player is facing the direction he wants to go
 		{
-			switch (p.getDirection())
+			if (p.getDirection() == 0) //Is player's direction up
+			{
+				if (p.getBlockY ()!= 0 && Tile::movementValid(map[p.getBlockX()][p.getBlockY()], map[p.getBlockX()][p.getBlockY()-1]))
+				{
+					p.setBlockY(p.getBlockY() - 1);
+					p.adjustActualY(-3.2f);
+				}
+			}
+			else if (p.getDirection() == 1) //Left
+			{
+				if (p.getBlockX() != 0 && Tile::movementValid(map[p.getBlockX()][p.getBlockY()], map[p.getBlockX()-1][p.getBlockY()]))
+				{
+					p.setBlockX(p.getBlockX() - 1);
+					p.adjustActualX(-3.2f);
+				}
+			}
+			else if (p.getDirection() == 2) //Down
+			{
+				if (p.getBlockY() != (height - 1) && Tile::movementValid(map[p.getBlockX()][p.getBlockY()], map[p.getBlockX()][p.getBlockY()+1]))
+				{
+					p.setBlockY(p.getBlockY() + 1);
+					p.adjustActualY(3.2f);
+				}
+			}
+			else if (p.getDirection() == 3) //Right
+			{
+				if (p.getBlockX() != (width - 1) && Tile::movementValid(map[p.getBlockX()][p.getBlockY()], map[p.getBlockX()+1][p.getBlockY()]))
+				{
+					p.setBlockX(p.getBlockX() + 1);
+					p.adjustActualX(3.2f);
+				}
+			}
+			/*switch (p.getDirection())
 			{
 			case 0:
 				p.setBlockY(p.getBlockY()-1);
@@ -97,7 +211,7 @@ void Level::update(bool* digitalControls)
 				p.setBlockX(p.getBlockX()+1);
 				p.adjustActualX(3.2f);
 				break;
-			}
+			}*/
 		}
 		else
 		{

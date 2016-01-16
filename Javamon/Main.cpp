@@ -17,7 +17,7 @@ int main()
 	sf::Event event; //Object for handling/storing events
 	Events eventHandler;
 
-	Level level;
+	Level level(eventHandler);
 
 	bool playingGame = true; //Keeps the game running while true
 	
@@ -48,6 +48,11 @@ int main()
 	{
 		//Listen for events
 		eventHandler.eventListener(event, window);
+
+		if(eventHandler.getLevelRequestChange())
+		{
+			level = Level(eventHandler.getLevelPack(), eventHandler.getLevelName());
+		}
 
 		//	Perform logic based upon events
 		if (eventHandler.getWindowClosed())

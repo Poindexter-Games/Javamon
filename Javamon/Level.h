@@ -1,22 +1,31 @@
 #pragma once
 #include <string>
-#include "Tile.h"
+
 #include <SFML/Graphics/Image.hpp>
+#include <codecvt> //This is for reading UTF-8 Files [?]
 #include <cstdint>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Rect.hpp>
 #include <iostream>
+#include <fstream>
+
+#include "Teleport.h"
+#include "Tile.h"
 #include "Player.h"
+#include "Events.h"
 
 using namespace std;
 
 class Level
 {
 private:
+	Events eventListener;
+
 	string pack;
 	string name; //This is the name for programming purposes, not the user display name
 	Tile **map;
+	Teleport *teleports; //List of teleports
 	int width;
 	int height;
 
@@ -28,7 +37,7 @@ private:
 
 	Player p;
 public:
-	Level();
+	Level(Events&);
 	Level(string); //Test method
 	Level(string, string); //Regular way to load level, unimplemented, use the test method
 

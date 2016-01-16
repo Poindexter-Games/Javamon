@@ -7,16 +7,19 @@ using namespace std;
 class Player
 {
 private:
+	bool npc;
 	string name;
 	int sex; //0 is male, 1 is female
 
-	int x;
-	int y;
+	int x; //block x
+	int y; //block y
 	int direction;
 	float actualX;
 	float actualY;
 public:
 	Player();
+
+	bool isNPC() { return npc; }
 
 	string getName() { return name; }
 	bool isMale(){return sex == 0;}

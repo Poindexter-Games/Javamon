@@ -1,6 +1,7 @@
 #include "Player.h"
 Player::Player()
 {
+	npc = false;
 	name = "";
 	sex = 0;
 	x = 0;

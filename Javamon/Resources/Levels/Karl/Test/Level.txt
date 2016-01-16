@@ -1,0 +1,8 @@
+﻿PLEASE LEAVE ONE LINE BLANK
+setName,Foobar,en
+setName,青森,ja
+setWidth,10
+setHeight,10
+setDefaultBlocks,1,0
+setBlock,1,1,1,0
+setNumTeleports,0
