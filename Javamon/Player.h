@@ -16,6 +16,9 @@ private:
 	int direction;
 	float actualX;
 	float actualY;
+
+	string anteBattleQuote; //Quote before the battle
+	string postBattleQuote; //Quote after the battle
 public:
 	Player();
 
@@ -41,8 +44,8 @@ public:
 	int getDirection() { return direction; }
 	float getActualX() { return actualX; }
 	float getActualY() { return actualY; }
-	/*Locked states if the player is seated correctly on the tile*/
 	bool lockedX(){return (int)actualX % 64 == 0;}
 	bool lockedY(){return (int)actualY % 64 == 0;}
+	/*Locked states if the player is seated correctly on the tile*/
 	bool isLocked(){return lockedX() && lockedY();}
 };

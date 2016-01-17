@@ -134,18 +134,17 @@ bool Events::getWindowClosed()
 /*
 Gathers all of the data from the level to sort into requests
 x 
-levelChange,pack,name,,3 - Level is requesting change of levels
+levelChange,name,2 - Level is requesting change of levels
 x
 Author: Karl Piepho
 Date Created: 1/16/2016
 */
 void Events::levelListener(string* events, int length)
 {
-	if (length == 3 && events[0] == "levelChange")
+	if (length == 2 && events[0] == "levelChange")
 	{
 		levelRequestsChange = true;
-		newLevelPack = events[1];
-		newLevelName = events[2];
+		newLevelName = events[1];
 	}
 }
 

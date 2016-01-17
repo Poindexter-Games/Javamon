@@ -4,28 +4,11 @@ using namespace std;
 
 Level::Level(Events& e)
 {
-	//This is some testing code, it doesn't work correctly, so it will be removed soon
-
-	Level::pack = "Karl";
-	Level::name = "Test";
-
-	ifstream file;
-	file.open("C:/Users/Karl/Source/Repos/Javamon/Javamon/Resources/Levels/" + pack + "/" + name + "/Level.txt");
-	for (string line; getline(file, line); )
-	{
-		//...for each line in input...
-		cout << "l: " << line << endl;
-	}
-
-
-	file.close();
-
-	//End of file loading testing code. -Karl
-
 	Level::eventListener = e;
 
-	Level::pack = "Karl"; //I don't want to bother with spelling poindexter
-	Level::name = "Test";
+	Level::auth = "Poindexter";
+	Level::pack = "Test";
+	Level::name = "TestLevel";
 	width = 8;
 	height = 8;
 
@@ -48,7 +31,7 @@ Level::Level(Events& e)
 	map[3][1] = Tile(2, 1, 0);
 
 	textureMap = sf::Image();
-	textureMap.loadFromFile("C:/Users/Karl/Source/Repos/Javamon/Javamon/Resources/Levels/" + pack + "/" + name + "/Spritesheet.png");
+	textureMap.loadFromFile("C:/Users/Karl/Source/Repos/Javamon/Javamon/Resources/Packs/" + auth + "/" + pack + "/" + name + "/Spritesheet.png");
 
 	costumeMap = sf::Image();
 	costumeMap.loadFromFile("C:/Users/Karl/Source/Repos/Javamon/Javamon/Resources/Video/Player.png");
@@ -89,7 +72,7 @@ Level::Level(Events& e)
 	*/	
 }
 
-Level::Level(string randomstringnameinordertomakethisnotseemlikeadefaultconstructor)
+Level::Level(string somerandomstringnameinordertomakethisnotseemlikeadefaultconstructor)
 {
 	Level::pack = "Karl"; //I don't want to bother with spelling poindexter
 	Level::name = "Test";
@@ -114,7 +97,7 @@ Level::Level(string randomstringnameinordertomakethisnotseemlikeadefaultconstruc
 	map[1][1] = Tile(1, 0, 0);
 
 	textureMap = sf::Image();
-	textureMap.loadFromFile("C:/Users/Karl/Source/Repos/Javamon/Javamon/Resources/Levels/" + pack + "/" + name + "/Spritesheet.png");
+	textureMap.loadFromFile("C:/Users/Karl/Source/Repos/Javamon/Javamon/Resources/Packs/" + auth + "/" + pack + "/" + name + "/Spritesheet.png");
 
 	costumeMap = sf::Image();
 	costumeMap.loadFromFile("C:/Users/Karl/Source/Repos/Javamon/Javamon/Resources/Video/Player.png");
@@ -144,13 +127,33 @@ Level::Level(string randomstringnameinordertomakethisnotseemlikeadefaultconstruc
 	}
 }
 
-Level::Level(string pack, string level)
+Level::Level(string auth, string pack, string level)
 {
-	/*We and mod developers all have seperate packs so that level name conflicts don't occur.
-	Therefore, our pack is designated as: Default*/
 
 	//TODO Implement loading from resource/pack/level.txt
 	name = level;
+
+	//This is some testing code, it doesn't work correctly, so it will be removed soon
+
+	Level::auth = auth;
+	Level::pack = pack;
+	Level::name = level;
+
+	ifstream file;
+	file.open("C:/Users/Karl/Source/Repos/Javamon/Javamon/Resources/Packs/" + auth + "/" + pack + "/" + level + "/Level.txt");
+	for (string line; getline(file, line); )
+	{
+		//...for each line in input...
+		cout << "l: " << line << endl;
+		if (line.substr(0, 8).compare("setName,") == 0)
+		{
+			dispName = line.substr(8, line.length() - 8);
+			cout << dispName << endl;
+		}
+	}
+	file.close();
+
+	//End of file loading testing code. -Karl
 }
 
 void Level::update(bool* digitalControls)

@@ -20,7 +20,6 @@ public:
 	bool getWindowClosed();
 	void levelListener(string*, int);
 	bool getLevelRequestChange(){return levelRequestsChange;}
-	string getLevelPack() { return newLevelPack; }
 	string getLevelName() { return newLevelName; }
 private:
 	// Booleans for key events
@@ -30,7 +29,6 @@ private:
 
 	int mouseX, mouseY;
 
-	string newLevelPack;
 	string newLevelName;
 	bool levelRequestsChange = false;
 };

@@ -6,6 +6,7 @@
 #include <iostream>
 #include <sstream>
 #include <SFML/Window/Keyboard.hpp>
+#include <locale>
 
 //	Project Includes
 #include "Events.h"

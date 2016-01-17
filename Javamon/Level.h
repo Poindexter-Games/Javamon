@@ -22,8 +22,12 @@ class Level
 private:
 	Events eventListener;
 
-	string pack;
+	string auth; //This is generally the author of the packs' name
+	string pack; //This is the individual pack name
 	string name; //This is the name for programming purposes, not the user display name
+
+	string dispName; //This is the user friendly name
+
 	Tile **map;
 	Teleport *teleports; //List of teleports
 	int width;
@@ -39,13 +43,15 @@ private:
 public:
 	Level(Events&);
 	Level(string); //Test method
-	Level(string, string); //Regular way to load level, unimplemented, use the test method
+	Level(string, string, string); //Regular way to load level, unimplemented, use the test method
 
 	void update(bool*);
 	void render(sf::RenderWindow&);
 
 	void setName(string);
 
+	string getAuth(){return auth;}
+	string getPack(){return pack;}
 	string getName(){return name;}
 
 };

@@ -58,9 +58,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Resources\Levels\Karl\Test\Spritesheet.png">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="Resources\Video\Player.png">
       <Filter>Resource Files</Filter>
     </Image>

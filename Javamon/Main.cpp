@@ -2,6 +2,9 @@
 
 int main()
 {
+	//Looking at user's locale
+
+	std::cout << locale().name() << std::endl;
 
 	//	Asset Creation/Window Settings
 	const float SCREEN_HEIGHT = 720;
@@ -17,7 +20,8 @@ int main()
 	sf::Event event; //Object for handling/storing events
 	Events eventHandler;
 
-	Level level(eventHandler);
+	//Level level(eventHandler);
+	Level level("Poindexter", "Test", "TestLevel");
 
 	bool playingGame = true; //Keeps the game running while true
 	
@@ -51,7 +55,7 @@ int main()
 
 		if(eventHandler.getLevelRequestChange())
 		{
-			level = Level(eventHandler.getLevelPack(), eventHandler.getLevelName());
+			level = Level(level.getAuth(), level.getPack(), eventHandler.getLevelName());
 		}
 
 		//	Perform logic based upon events
