@@ -3,6 +3,6 @@ setName,en,Foobar
 setName,ja,青森
 setWidth,10
 setHeight,10
-setDefaultBlocks,1,0
-setBlock,1,1,1,0
+setDefaultBlock,1,0,0
+setBlock,1,1,1,0,0
 setNumTeleports,0

@@ -1,10 +1,11 @@
 #include "Main.h"
 
+enum GameState{ LEVEL = 0, LOADING = 1};
+
 int main()
 {
-	//Looking at user's locale
-
-	std::cout << locale().name() << std::endl;
+	//Looking at user's locale, ignore this for now
+	//std::cout << locale().name() << std::endl;
 
 	//	Asset Creation/Window Settings
 	const float SCREEN_HEIGHT = 720;
@@ -20,8 +21,10 @@ int main()
 	sf::Event event; //Object for handling/storing events
 	Events eventHandler;
 
-	//Level level(eventHandler);
-	Level level("Poindexter", "Test", "TestLevel");
+	GameState gs = GameState::LEVEL;
+
+	Level level(0, -1, -1, -1);
+	//Level level("Poindexter", "Test", "TestLevel");
 
 	bool playingGame = true; //Keeps the game running while true
 	
@@ -53,9 +56,30 @@ int main()
 		//Listen for events
 		eventHandler.eventListener(event, window);
 
-		if(eventHandler.getLevelRequestChange())
+		if(level.isRequestingLevelChange())
 		{
-			level = Level(level.getAuth(), level.getPack(), eventHandler.getLevelName());
+			gs = GameState::LOADING;
+			string auth = level.getAuth();
+			string pack = level.getPack();
+			string name = level.getToLevelName();
+			int x = level.getToLevelX();
+			int y = level.getToLevelY();
+			int d = level.getToLevelDirection();
+			cout << name << endl;
+			if (name.compare("Level_FRLG_1")==0) //DEBUG METHOD
+			{
+				level.newLevel(1, level.getToLevelX(), level.getToLevelY(), level.getToLevelDirection());
+			}
+			else if (name.compare("Level_FRLG_0") == 0) //DEBUG METHOD
+			{
+				level.newLevel(0, level.getToLevelX(), level.getToLevelY(), level.getToLevelDirection());
+			}
+			else //Standard Method
+			{
+				//need to edit constructor to account for teleporting into the stage
+				level = Level(auth, pack, level.getToLevelName());
+			}
+			gs = GameState::LEVEL;
 		}
 
 		//	Perform logic based upon events
@@ -68,28 +92,28 @@ int main()
 		{
 			c_up = true;
 
-			std::cout << "Player pressed up\n";
+			//std::cout << "Player pressed up\n";
 		}
 
 		if (eventHandler.getKeyPressed("A"))
 		{
 			c_left = true;
 
-			std::cout << "Player pressed left\n";
+			//std::cout << "Player pressed left\n";
 		}
 
 		if (eventHandler.getKeyPressed("S"))
 		{
 			c_down = true;
 
-			std::cout << "Player pressed down\n";
+			//std::cout << "Player pressed down\n";
 		}
 
 		if (eventHandler.getKeyPressed("D"))
 		{
 			c_right = true;
 
-			std::cout << "Player pressed right\n";
+			//std::cout << "Player pressed right\n";
 		}
 
 		if(!sf::Keyboard::isKeyPressed(sf::Keyboard::W)){c_up    = false;}
@@ -98,15 +122,19 @@ int main()
 		if(!sf::Keyboard::isKeyPressed(sf::Keyboard::D)){c_right = false;}
 
 		bool digitalControls[4] = {c_up, c_left, c_down, c_right};
-		level.update(digitalControls);
+		if (gs == GameState::LEVEL)
+		{
+			level.update(digitalControls);
+		}
 
 		//	Render graphical changes
 		window.clear();
 		window.setView(view);
 		window.draw(bg);
-		level.render(window);
-		//window.draw(test);
-
+		if (gs == GameState::LEVEL)
+		{
+			level.render(window);
+		}
 		window.display();
 
 		

@@ -130,21 +130,3 @@ bool Events::getWindowClosed()
 		return false;
 	}
 }
-
-/*
-Gathers all of the data from the level to sort into requests
-x 
-levelChange,name,2 - Level is requesting change of levels
-x
-Author: Karl Piepho
-Date Created: 1/16/2016
-*/
-void Events::levelListener(string* events, int length)
-{
-	if (length == 2 && events[0] == "levelChange")
-	{
-		levelRequestsChange = true;
-		newLevelName = events[1];
-	}
-}
-

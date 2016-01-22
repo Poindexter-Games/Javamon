@@ -13,14 +13,13 @@
 #include "Teleport.h"
 #include "Tile.h"
 #include "Player.h"
-#include "Events.h"
 
 using namespace std;
 
 class Level
 {
 private:
-	Events eventListener;
+	int BLOCK_SIZE = 64; //This is a constant value that states the size of blocks, this will be useful if we program for higher resolutions
 
 	string auth; //This is generally the author of the packs' name
 	string pack; //This is the individual pack name
@@ -32,6 +31,7 @@ private:
 	Teleport *teleports; //List of teleports
 	int width;
 	int height;
+	int numTeleports; //Number of teleports
 
 	sf::Image textureMap;
 	sf::Texture* textures;
@@ -40,10 +40,18 @@ private:
 	sf::Texture* costumes;
 
 	Player p;
+
+	bool levelRequestsChange;
+	string toLevelName;
+	int toLevelX;
+	int toLevelY;
+	int toLevelDirection;
 public:
-	Level(Events&);
-	Level(string); //Test method
+	Level();
+	Level(int, int, int, int); //Test method
 	Level(string, string, string); //Regular way to load level, unimplemented, use the test method
+
+	void newLevel(int, int, int, int);
 
 	void update(bool*);
 	void render(sf::RenderWindow&);
@@ -54,4 +62,11 @@ public:
 	string getPack(){return pack;}
 	string getName(){return name;}
 
+	bool isRequestingLevelChange() { return levelRequestsChange; }
+	void requestLevelChange(string, int, int, int);
+
+	string getToLevelName() { return toLevelName; }
+	int getToLevelX() { return toLevelX; }
+	int getToLevelY() { return toLevelY; }
+	int getToLevelDirection() { return toLevelDirection; }
 };

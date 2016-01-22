@@ -2,10 +2,8 @@
 
 using namespace std;
 
-Level::Level(Events& e)
+Level::Level()
 {
-	Level::eventListener = e;
-
 	Level::auth = "Poindexter";
 	Level::pack = "Test";
 	Level::name = "TestLevel";
@@ -50,14 +48,14 @@ Level::Level(Events& e)
 	for (int i = 0; i < 256; i++) //Creates a list of textures from the spritesheet
 	{
 		textures[i] = sf::Texture();
-		textures[i].loadFromImage(textureMap, sf::IntRect((i % 16) * 64, (int)(i / 16) * 64, 64, 64));
+		textures[i].loadFromImage(textureMap, sf::IntRect((i % 16) * BLOCK_SIZE, (int)(i / 16) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE));
 	}
 
 	costumes = new sf::Texture[8];
 	for (int i = 0; i < 8; i++) //Creates a list of textures from the spritesheet
 	{
 		costumes[i] = sf::Texture();
-		costumes[i].loadFromImage(costumeMap, sf::IntRect((i % 4) * 64, (int)(i / 4) * 64, 64, 64));
+		costumes[i].loadFromImage(costumeMap, sf::IntRect((i % 4) * BLOCK_SIZE, (int)(i / 4) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE));
 	}
 
 	//==
@@ -72,59 +70,9 @@ Level::Level(Events& e)
 	*/	
 }
 
-Level::Level(string somerandomstringnameinordertomakethisnotseemlikeadefaultconstructor)
+Level::Level(int n, int x, int y, int d)
 {
-	Level::pack = "Karl"; //I don't want to bother with spelling poindexter
-	Level::name = "Test";
-	width = 8;
-	height = 8;
-
-	Player p;
-
-	map = new Tile*[width];
-	for (int i = 0; i < width; i++)
-	{
-		map[i] = new Tile[height];
-	}
-	for (int i = 0; i < width; i++)
-	{
-		for (int j = 0; j < height; j++)
-		{
-			map[i][j] = Tile(0, 0, 0);
-		}
-	}
-	//TEMPORARY EDIT MAP HERE
-	map[1][1] = Tile(1, 0, 0);
-
-	textureMap = sf::Image();
-	textureMap.loadFromFile("C:/Users/Karl/Source/Repos/Javamon/Javamon/Resources/Packs/" + auth + "/" + pack + "/" + name + "/Spritesheet.png");
-
-	costumeMap = sf::Image();
-	costumeMap.loadFromFile("C:/Users/Karl/Source/Repos/Javamon/Javamon/Resources/Video/Player.png");
-
-	/*
-	//Listening to Leeroy jenkins remix 10 hours
-	//Time straight = 54:07 (54 minutes 07 seconds) I couldn't make it to an hour...
-
-	for(int i = 0; i < blocks.size(); i++)
-	{
-	g.drawImage(images.get(blocks.get(i).imageId()), ((i%width)*60)+xOffset, (Math.roundDown(i/width)*60)+yOffset, null);
-	}
-	*/
-
-	textures = new sf::Texture[256];
-	for (int i = 0; i < 256; i++) //Creates a list of textures from the spritesheet
-	{
-		textures[i] = sf::Texture();
-		textures[i].loadFromImage(textureMap, sf::IntRect((i % 16) * 64, (int)(i / 16) * 64, 64, 64));
-	}
-
-	costumes = new sf::Texture[8];
-	for (int i = 0; i < 8; i++) //Creates a list of textures from the spritesheet
-	{
-		costumes[i] = sf::Texture();
-		costumes[i].loadFromImage(costumeMap, sf::IntRect((i % 4) * 64, (int)(i / 4) * 64, 64, 64));
-	}
+	newLevel(n, x, y, d);
 }
 
 Level::Level(string auth, string pack, string level)
@@ -133,7 +81,7 @@ Level::Level(string auth, string pack, string level)
 	//TODO Implement loading from resource/pack/level.txt
 	name = level;
 
-	//This is some testing code, it doesn't work correctly, so it will be removed soon
+	//This is some testing code, it doesn't work correctly, so it will be removed soon 
 
 	Level::auth = auth;
 	Level::pack = pack;
@@ -156,13 +104,198 @@ Level::Level(string auth, string pack, string level)
 	//End of file loading testing code. -Karl
 }
 
+void Level::newLevel(int n, int x, int y, int d)
+{
+	levelRequestsChange = false;
+
+	Level::auth = "Poindexter";
+	Level::pack = "Test";
+
+	Level::p = Player();
+
+	if (n == 0) //Red's room in pkmn fr
+	{
+		Level::name = "Level_FRLG";
+		width = 11;
+		height = 9;
+		numTeleports = 2;
+		if (x == -1 && y == -1 && d == -1)
+		{
+			//This means that this level is the first level being initialized (user just started the game)
+			p.setBlockX(5);
+			p.setBlockY(7);
+			p.setActualX(5 * BLOCK_SIZE);
+			p.setActualY(7 * BLOCK_SIZE);
+			p.setDirection(2);
+		}
+		else
+		{
+			//This means that the player has moved from a different level to this one and the other level has already designated its toX and toY co-ordinates
+			p.setBlockX(x);
+			p.setBlockY(y);
+			p.setActualX(x * BLOCK_SIZE);
+			p.setActualY(y * BLOCK_SIZE);
+			//This offsets the player and allows them to walk into the level, or off of the stairs
+			if (d == 0) { p.setDirection(0); p.setActualY((y + .5) * BLOCK_SIZE); }
+			if (d == 1) { p.setDirection(1); p.setActualX((x + .5) * BLOCK_SIZE); }
+			if (d == 2) { p.setDirection(2); p.setActualY((y - .5) * BLOCK_SIZE); }
+			if (d == 3) { p.setDirection(3); p.setActualX((x - .5) * BLOCK_SIZE); }
+		}
+	}
+	else if (n == 1) //Red's living room in pkmn fr
+	{
+		Level::name = "Level_FRLG";
+		width = 12;
+		height = 9;
+		numTeleports = 1;
+		if (x == -1 && y == -1 && d == -1)
+		{
+			p.setBlockX(1);
+			p.setBlockY(1);
+			p.setActualX(1 * BLOCK_SIZE);
+			p.setActualY(1 * BLOCK_SIZE);
+			p.setDirection(2);
+		}
+		else
+		{
+			//This means that the player has moved from a different level to this one and the other level has already designated its toX and toY co-ordinates
+			p.setBlockX(x);
+			p.setBlockY(y);
+			p.setActualX(x * BLOCK_SIZE);
+			p.setActualY(y * BLOCK_SIZE);
+			//This offsets the player and allows them to walk into the level, or off of the stairs
+			if (d == 0) { p.setDirection(0); p.setActualY((y + .5) * BLOCK_SIZE); }
+			if (d == 1) { p.setDirection(1); p.setActualX((x + .5) * BLOCK_SIZE); }
+			if (d == 2) { p.setDirection(2); p.setActualY((y - .5) * BLOCK_SIZE); }
+			if (d == 3) { p.setDirection(3); p.setActualX((x - .5) * BLOCK_SIZE); }
+		}
+	}
+
+	map = new Tile*[width];
+	for (int i = 0; i < width; i++)
+	{
+		map[i] = new Tile[height];
+	}
+	for (int i = 0; i < width; i++)
+	{
+		for (int j = 0; j < height; j++)
+		{
+			map[i][j] = Tile(0, 0, 0);
+		}
+	}
+
+	teleports = new Teleport[numTeleports];
+
+	//MAP EDITS HERE
+	if (n == 0)
+	{
+		//Map 0 block edits
+		for (int i = 0; i < width; i++)
+		{
+			map[i][0] = Tile(1, 2, 0);
+		}
+		for (int i = 0; i < width; i++)
+		{
+			map[i][1] = Tile(17, 2, 0);
+		}
+		for (int i = 0; i < width; i++)
+		{
+			map[i][2] = Tile(16, 0, 0);
+		}
+		map[10][8] = Tile(2, 0, 0);
+		map[0][8] = Tile(18, 0, 0);
+
+		map[8][1] = Tile(48, 2, 0);
+		map[8][2] = Tile(64, 2, 0);
+		map[9][2] = Tile(65, 0, 0); //This is the block where the teleport is located
+		map[8][3] = Tile(80, 2, 0);
+		map[9][3] = Tile(81, 2, 0);
+		//Map 0 teleport edits
+		teleports[0] = Teleport(10, 8, 0, 8, 2, 0);
+		teleports[1] = Teleport(9, 2, "Level_FRLG_1", 9, 2, 1, -1);
+	}
+	else if (n == 1)
+	{
+		//Map 1 block edits
+		for (int i = 0; i < width; i++)
+		{
+			map[i][0] = Tile(1, 2, 0);
+		}
+		for (int i = 0; i < width; i++)
+		{
+			map[i][1] = Tile(17, 2, 0);
+		}
+		for (int i = 0; i < width; i++)
+		{
+			map[i][2] = Tile(16, 0, 0);
+		}
+		map[10][1] = Tile(50, 2, 0);
+		map[11][1] = Tile(51, 2, 0);
+		map[10][2] = Tile(66, 0, 0); //This is the block where the teleport is located
+		map[11][2] = Tile(67, 2, 0);
+		map[10][3] = Tile(82, 2, 0);
+		map[11][3] = Tile(83, 2, 0);
+		//Map 1 teleport edits
+		teleports[0] = Teleport(10, 2, "Level_FRLG_0",  10, 2, 3, 1);
+	}
+
+	textureMap = sf::Image();
+	textureMap.loadFromFile("C:/Users/Karl/Source/Repos/Javamon/Javamon/Resources/Packs/" + auth + "/" + pack + "/" + name + "/Spritesheet.png");
+
+	costumeMap = sf::Image();
+	costumeMap.loadFromFile("C:/Users/Karl/Source/Repos/Javamon/Javamon/Resources/Video/Player.png");
+
+	textures = new sf::Texture[256];
+	for (int i = 0; i < 256; i++) //Creates a list of textures from the spritesheet
+	{
+		textures[i] = sf::Texture();
+		textures[i].loadFromImage(textureMap, sf::IntRect((i % 16) * BLOCK_SIZE, (int)(i / 16) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE));
+	}
+
+	costumes = new sf::Texture[8];
+	for (int i = 0; i < 8; i++) //Creates a list of textures from the spritesheet
+	{
+		costumes[i] = sf::Texture();
+		costumes[i].loadFromImage(costumeMap, sf::IntRect((i % 4) * BLOCK_SIZE, (int)(i / 4) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE));
+	}
+}
+
 void Level::update(bool* digitalControls)
 {
 	// 0   w
 	//123 asd
 	if(p.isLocked()) //If the player is standing in his tile
 	{
-		if (digitalControls[p.getDirection()] == true) //If player is facing the direction he wants to go
+		//Check if player is standing on a teleport
+
+		for (int i = 0; i < numTeleports; i++)
+		{
+			Teleport t = teleports[i];
+			if (p.getBlockX() == t.getX() && p.getBlockY() == t.getY())
+			{
+				if (t.intraLevel())
+				{
+					//Local Teleport, (inside of the same level)
+					p.setBlockX(t.getToX());
+					p.setBlockY(t.getToY());
+					p.setActualX(t.getToX() * BLOCK_SIZE);
+					p.setActualY(t.getToY() * BLOCK_SIZE);
+					p.setDirection(t.getDirection());
+				}
+				else
+				{
+					//Out of file teleport, old java code below. TODO replace with new C++ listener code
+					//l.switchLevels(t.level, t.toX, t.toY, t.getDirection());
+					requestLevelChange(t.getName(), t.getToX(), t.getToY(), t.getDirection());
+				}
+			}
+		}
+
+		//End teleport check
+		//Begin check if player wants to move
+
+
+		if (digitalControls[p.getDirection()] == true && p.isAllowedToMove()) //If user is pressing the direction that the character is facing
 		{
 			if (p.getDirection() == 0) //Is player's direction up
 			{
@@ -196,25 +329,16 @@ void Level::update(bool* digitalControls)
 					p.adjustActualX(3.2f);
 				}
 			}
-			/*switch (p.getDirection())
+			cout << p.getBlockX() << " " << p.getBlockY() << endl;
+			//The next code is to detect if the player is moving onto a teleport, and if he is, start displaying the going up or down animation if it is needed
+			for (int i = 0; i < numTeleports; i++)
 			{
-			case 0:
-				p.setBlockY(p.getBlockY()-1);
-				p.adjustActualY(-3.2f);
-				break;
-			case 1:
-				p.setBlockX(p.getBlockX()-1);
-				p.adjustActualX(-3.2f);
-				break;
-			case 2:
-				p.setBlockY(p.getBlockY()+1);
-				p.adjustActualY(3.2f);
-				break;
-			case 3:
-				p.setBlockX(p.getBlockX()+1);
-				p.adjustActualX(3.2f);
-				break;
-			}*/
+				if (teleports[i].getX() == p.getBlockX() && teleports[i].getY() == p.getBlockY())
+				{
+					p.setZDirection(teleports[i].getZDirection());
+					break;
+				}
+			}
 		}
 		else
 		{
@@ -230,17 +354,17 @@ void Level::update(bool* digitalControls)
 	}
 	else //If the player is not standing in his tile, e.g. he is walking
 	{
-		if (p.getActualY() - 3.2f>(float)p.getBlockY() * 64) p.adjustActualY(-3.2f);
-		else if ((int)p.getActualY() > p.getBlockY() * 64) p.setActualY((float)p.getBlockY() * 64);
+		if (p.getActualY() - 3.2f>(float)p.getBlockY() * BLOCK_SIZE) p.adjustActualY(-3.2f);
+		else if ((int)p.getActualY() > p.getBlockY() * BLOCK_SIZE) p.setActualY((float)p.getBlockY() * BLOCK_SIZE);
 
-		if (p.getActualX() - 3.2f>(float)p.getBlockX() * 64) p.adjustActualX(-3.2f);
-		else if ((int)p.getActualX()>p.getBlockX() * 64) p.setActualX((float)p.getBlockX() * 64);
+		if (p.getActualX() - 3.2f>(float)p.getBlockX() * BLOCK_SIZE) p.adjustActualX(-3.2f);
+		else if ((int)p.getActualX()>p.getBlockX() * BLOCK_SIZE) p.setActualX((float)p.getBlockX() * BLOCK_SIZE);
 
-		if (p.getActualY() + 3.2f<(float)p.getBlockY() * 64) p.adjustActualY(3.2f);
-		else if ((int)p.getActualY()<p.getBlockY() * 64) p.setActualY((float)p.getBlockY() * 64);
+		if (p.getActualY() + 3.2f<(float)p.getBlockY() * BLOCK_SIZE) p.adjustActualY(3.2f);
+		else if ((int)p.getActualY()<p.getBlockY() * BLOCK_SIZE) p.setActualY((float)p.getBlockY() * BLOCK_SIZE);
 
-		if (p.getActualX() + 3.2f < (float)p.getBlockX() * 64) p.adjustActualX(3.2f);
-		else if((int)p.getActualX()<p.getBlockX() * 64) p.setActualX((float)p.getBlockX() * 64);
+		if (p.getActualX() + 3.2f < (float)p.getBlockX() * BLOCK_SIZE) p.adjustActualX(3.2f);
+		else if((int)p.getActualX()<p.getBlockX() * BLOCK_SIZE) p.setActualX((float)p.getBlockX() * BLOCK_SIZE);
 	}
 
 	/*
@@ -347,26 +471,58 @@ void Level::update(bool* digitalControls)
 
 void Level::render(sf::RenderWindow & window)
 {
+	//Set the view
 	sf::View view;
 	view.setSize(sf::Vector2f(1280, 720));
 	view.setCenter(sf::Vector2f(p.getActualX() + 32, p.getActualY() + 32));
 	window.setView(view);
 
+	//Draw blocks
 	for (int i = 0; i < width; i++)
 	{
 		for (int j = 0; j < height; j++)
 		{
 			sf::Sprite s(textures[map[i][j].getImgNum()]);
-			s.setPosition(sf::Vector2f((float)i * 64, (float)j * 64));
+			s.setPosition(sf::Vector2f((float)i * BLOCK_SIZE, (float)j * BLOCK_SIZE));
 			window.draw(s);
 		}
 	}
+	//Draw character
 	sf::Sprite s(costumes[p.getDirection() + (p.getGender() * 4)]);
-	s.setPosition(sf::Vector2f(p.getActualX(), p.getActualY()));
+	//The rendering class actually handles the player appearing to move up and down the steps rather than editing the actual coordinates and making some really strange code
+	if(p.getZDirection() == 0)
+	{
+		s.setPosition(sf::Vector2f(p.getActualX(), p.getActualY()));
+	}
+	else if (p.getZDirection() == 1 && p.getDirection() == 1) //if player is going up the stairs to the left
+	{
+		s.setPosition(sf::Vector2f(p.getActualX(), p.getActualY() - (.25f * (64 - (p.getActualX() - (p.getBlockX() * 64)))) + 0));
+	}
+	else if (p.getZDirection() == 1 && p.getDirection() == 3) //if player is going up the stairs to the right
+	{
+		s.setPosition(sf::Vector2f(p.getActualX(), p.getActualY() - (.5f * (64 - ((p.getBlockX() * 64) - p.getActualX()))) + 0));
+	}
+	else if (p.getZDirection() == -1 && p.getDirection() == 1) //if player is going down the stairs to the left
+	{
+		s.setPosition(sf::Vector2f(p.getActualX(), p.getActualY() + (.25f * (64 - (p.getActualX() - (p.getBlockX() * 64)))) + 0));
+	}
+	else if (p.getZDirection() == -1 && p.getDirection() == 3) //if player is going down the stairs to the right
+	{
+		s.setPosition(sf::Vector2f(p.getActualX(), p.getActualY() - (.5f * (64 - ((p.getBlockX() * 64) - p.getActualX()))) + 0));
+	}
 	window.draw(s);
 }
 
 void Level::setName(string name)
 {
 	Level::name = name;
+}
+
+void Level::requestLevelChange(string name, int x, int y, int d)
+{
+	Level::toLevelName = name;
+	Level::toLevelX = x;
+	Level::toLevelY = y;
+	Level::toLevelDirection = d;
+	Level::levelRequestsChange = true;
 }
