@@ -28,7 +28,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -121,18 +121,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="Battle.cpp" />
+    <ClCompile Include="Controls.cpp" />
     <ClCompile Include="Events.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Monster.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Entity.h" />
+    <ClInclude Include="Battle.h" />
+    <ClInclude Include="Controls.h" />
+    <ClInclude Include="Variables.h" />
     <ClInclude Include="Events.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="Main.h" />
+    <ClInclude Include="Monster.h" />
+    <ClInclude Include="MonsterBase.h" />
+    <ClInclude Include="MonsterStats.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Teleport.h" />
     <ClInclude Include="Tile.h" />

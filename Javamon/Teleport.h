@@ -2,6 +2,8 @@
 #include <cstdint>
 #include <string>
 
+#include "Variables.h"
+
 using namespace std;
 
 class Teleport
@@ -11,7 +13,7 @@ private:
 	int y;
 	int toX;
 	int toY;
-	int direction; //0 up, 1 left, 2 down, 3 right
+	Direction direction; //0 up, 1 left, 2 down, 3 right
 	bool toAnotherLevel;
 	string name;
 	int zdirection; //0 if standard teleport, 1 if up stairs, -1 if down stairs
@@ -27,7 +29,7 @@ public:
 		toX = -2;
 		toY = -2;
 		zdirection = 0;
-		direction = 0;
+		direction = Direction::UP;
 		rug = false;
 	}
 	/*
@@ -37,7 +39,7 @@ public:
 	Params:
 	Type: 0 if standard teleport, 1 if going upstairs, -1 if going downstairs
 	*/
-	Teleport(int x, int y, int toX, int toY, int direction, int zdirection)
+	Teleport(int x, int y, int toX, int toY, Direction direction, int zdirection)
 	{
 		toAnotherLevel = false;
 		Teleport::x = x;
@@ -55,7 +57,7 @@ public:
 	Params:
 	Type: 0 if standard teleport, 1 if going upstairs, -1 if going downstairs
 	*/
-	Teleport(int x, int y, string name, int toX, int toY, int direction, int zdirection)
+	Teleport(int x, int y, string name, int toX, int toY, Direction direction, int zdirection)
 	{
 		toAnotherLevel = true;
 		Teleport::x = x;
@@ -72,7 +74,7 @@ public:
 	int getY() { return y; }
 	int getToX() { return toX; }
 	int getToY() { return toY; }
-	int getDirection(){return direction;}
+	Direction getDirection(){return direction;}
 	int getZDirection() { return zdirection; }
 	bool interLevel() { return toAnotherLevel; }
 	bool intraLevel() { return !toAnotherLevel; }

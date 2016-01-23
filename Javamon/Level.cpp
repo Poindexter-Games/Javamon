@@ -93,6 +93,7 @@ Level::Level(string auth, string pack, string level)
 	{
 		//...for each line in input...
 		cout << "l: " << line << endl;
+
 		if (line.substr(0, 8).compare("setName,") == 0)
 		{
 			dispName = line.substr(8, line.length() - 8);
@@ -106,7 +107,10 @@ Level::Level(string auth, string pack, string level)
 
 void Level::newLevel(int n, int x, int y, int d)
 {
+	mode = Mode::REG;
+
 	levelRequestsChange = false;
+	levelRequestsBattle = false;
 
 	Level::auth = "Poindexter";
 	Level::pack = "Test";
@@ -119,6 +123,7 @@ void Level::newLevel(int n, int x, int y, int d)
 		width = 11;
 		height = 9;
 		numTeleports = 2;
+		numNPCS = 0;
 		if (x == -1 && y == -1 && d == -1)
 		{
 			//This means that this level is the first level being initialized (user just started the game)
@@ -126,20 +131,17 @@ void Level::newLevel(int n, int x, int y, int d)
 			p.setBlockY(7);
 			p.setActualX(5 * BLOCK_SIZE);
 			p.setActualY(7 * BLOCK_SIZE);
-			p.setDirection(2);
+			p.setDirection(Direction::DOWN);
 		}
 		else
 		{
 			//This means that the player has moved from a different level to this one and the other level has already designated its toX and toY co-ordinates
-			p.setBlockX(x);
-			p.setBlockY(y);
-			p.setActualX(x * BLOCK_SIZE);
-			p.setActualY(y * BLOCK_SIZE);
+			p.place(x, y);
 			//This offsets the player and allows them to walk into the level, or off of the stairs
-			if (d == 0) { p.setDirection(0); p.setActualY((y + .5) * BLOCK_SIZE); }
-			if (d == 1) { p.setDirection(1); p.setActualX((x + .5) * BLOCK_SIZE); }
-			if (d == 2) { p.setDirection(2); p.setActualY((y - .5) * BLOCK_SIZE); }
-			if (d == 3) { p.setDirection(3); p.setActualX((x - .5) * BLOCK_SIZE); }
+			if (d == 0) { p.setDirection(Direction::UP   ); p.setActualY((y + .5f) * BLOCK_SIZE); }
+			if (d == 1) { p.setDirection(Direction::LEFT ); p.setActualX((x + .5f) * BLOCK_SIZE); }
+			if (d == 2) { p.setDirection(Direction::DOWN ); p.setActualY((y - .5f) * BLOCK_SIZE); }
+			if (d == 3) { p.setDirection(Direction::RIGHT); p.setActualX((x - .5f) * BLOCK_SIZE); }
 		}
 	}
 	else if (n == 1) //Red's living room in pkmn fr
@@ -148,26 +150,24 @@ void Level::newLevel(int n, int x, int y, int d)
 		width = 12;
 		height = 9;
 		numTeleports = 1;
+		numNPCS = 2;
 		if (x == -1 && y == -1 && d == -1)
 		{
 			p.setBlockX(1);
 			p.setBlockY(1);
 			p.setActualX(1 * BLOCK_SIZE);
 			p.setActualY(1 * BLOCK_SIZE);
-			p.setDirection(2);
+			p.setDirection(Direction::DOWN);
 		}
 		else
 		{
 			//This means that the player has moved from a different level to this one and the other level has already designated its toX and toY co-ordinates
-			p.setBlockX(x);
-			p.setBlockY(y);
-			p.setActualX(x * BLOCK_SIZE);
-			p.setActualY(y * BLOCK_SIZE);
+			p.place(x, y);
 			//This offsets the player and allows them to walk into the level, or off of the stairs
-			if (d == 0) { p.setDirection(0); p.setActualY((y + .5) * BLOCK_SIZE); }
-			if (d == 1) { p.setDirection(1); p.setActualX((x + .5) * BLOCK_SIZE); }
-			if (d == 2) { p.setDirection(2); p.setActualY((y - .5) * BLOCK_SIZE); }
-			if (d == 3) { p.setDirection(3); p.setActualX((x - .5) * BLOCK_SIZE); }
+			if (d == 0) { p.setDirection(Direction::UP   ); p.setActualY((y + .5f) * BLOCK_SIZE); }
+			if (d == 1) { p.setDirection(Direction::LEFT ); p.setActualX((x + .5f) * BLOCK_SIZE); }
+			if (d == 2) { p.setDirection(Direction::DOWN ); p.setActualY((y - .5f) * BLOCK_SIZE); }
+			if (d == 3) { p.setDirection(Direction::RIGHT); p.setActualX((x - .5f) * BLOCK_SIZE); }
 		}
 	}
 
@@ -182,6 +182,12 @@ void Level::newLevel(int n, int x, int y, int d)
 		{
 			map[i][j] = Tile(0, 0, 0);
 		}
+	}
+	
+	npcs = new Player[numNPCS];
+	for (int i = 0; i < numNPCS; i++)
+	{
+		npcs[i] = Player();
 	}
 
 	teleports = new Teleport[numTeleports];
@@ -211,8 +217,8 @@ void Level::newLevel(int n, int x, int y, int d)
 		map[8][3] = Tile(80, 2, 0);
 		map[9][3] = Tile(81, 2, 0);
 		//Map 0 teleport edits
-		teleports[0] = Teleport(10, 8, 0, 8, 2, 0);
-		teleports[1] = Teleport(9, 2, "Level_FRLG_1", 9, 2, 1, -1);
+		teleports[0] = Teleport(10, 8, 0, 8, Direction::DOWN, 0);
+		teleports[1] = Teleport(9, 2, "Level_FRLG_1", 9, 2, Direction::LEFT, -1);
 	}
 	else if (n == 1)
 	{
@@ -236,7 +242,14 @@ void Level::newLevel(int n, int x, int y, int d)
 		map[10][3] = Tile(82, 2, 0);
 		map[11][3] = Tile(83, 2, 0);
 		//Map 1 teleport edits
-		teleports[0] = Teleport(10, 2, "Level_FRLG_0",  10, 2, 3, 1);
+		teleports[0] = Teleport(10, 2, "Level_FRLG_0",  10, 2, Direction::RIGHT, 1);
+		//Map 1 npc edits
+		npcs[0].setGender(Gender::FEMALE);
+		npcs[0].place(7, 4);
+		npcs[0].setDirection(Direction::LEFT);
+
+		npcs[1].place(4, 4);
+		npcs[1].setDirection(Direction::RIGHT);
 	}
 
 	textureMap = sf::Image();
@@ -244,6 +257,11 @@ void Level::newLevel(int n, int x, int y, int d)
 
 	costumeMap = sf::Image();
 	costumeMap.loadFromFile("C:/Users/Karl/Source/Repos/Javamon/Javamon/Resources/Video/Player.png");
+
+	sf::Image dialogBoxImg;
+	dialogBoxImg.loadFromFile("C:/Users/Karl/Source/Repos/Javamon/Javamon/Resources/Video/DialogBox.png");
+	dialogBox = sf::Texture();
+	dialogBox.loadFromImage(dialogBoxImg);
 
 	textures = new sf::Texture[256];
 	for (int i = 0; i < 256; i++) //Creates a list of textures from the spritesheet
@@ -260,220 +278,190 @@ void Level::newLevel(int n, int x, int y, int d)
 	}
 }
 
-void Level::update(bool* digitalControls)
+void Level::update(Controls & c)
 {
-	// 0   w
-	//123 asd
-	if(p.isLocked()) //If the player is standing in his tile
+	if (mode == Mode::REG)
 	{
-		//Check if player is standing on a teleport
-
-		for (int i = 0; i < numTeleports; i++)
+		if (p.isLocked()) //If the player is standing in his tile
 		{
-			Teleport t = teleports[i];
-			if (p.getBlockX() == t.getX() && p.getBlockY() == t.getY())
-			{
-				if (t.intraLevel())
-				{
-					//Local Teleport, (inside of the same level)
-					p.setBlockX(t.getToX());
-					p.setBlockY(t.getToY());
-					p.setActualX(t.getToX() * BLOCK_SIZE);
-					p.setActualY(t.getToY() * BLOCK_SIZE);
-					p.setDirection(t.getDirection());
-				}
-				else
-				{
-					//Out of file teleport, old java code below. TODO replace with new C++ listener code
-					//l.switchLevels(t.level, t.toX, t.toY, t.getDirection());
-					requestLevelChange(t.getName(), t.getToX(), t.getToY(), t.getDirection());
-				}
-			}
-		}
+			//Check if player is standing on a teleport
 
-		//End teleport check
-		//Begin check if player wants to move
-
-
-		if (digitalControls[p.getDirection()] == true && p.isAllowedToMove()) //If user is pressing the direction that the character is facing
-		{
-			if (p.getDirection() == 0) //Is player's direction up
-			{
-				if (p.getBlockY ()!= 0 && Tile::movementValid(map[p.getBlockX()][p.getBlockY()], map[p.getBlockX()][p.getBlockY()-1]))
-				{
-					p.setBlockY(p.getBlockY() - 1);
-					p.adjustActualY(-3.2f);
-				}
-			}
-			else if (p.getDirection() == 1) //Left
-			{
-				if (p.getBlockX() != 0 && Tile::movementValid(map[p.getBlockX()][p.getBlockY()], map[p.getBlockX()-1][p.getBlockY()]))
-				{
-					p.setBlockX(p.getBlockX() - 1);
-					p.adjustActualX(-3.2f);
-				}
-			}
-			else if (p.getDirection() == 2) //Down
-			{
-				if (p.getBlockY() != (height - 1) && Tile::movementValid(map[p.getBlockX()][p.getBlockY()], map[p.getBlockX()][p.getBlockY()+1]))
-				{
-					p.setBlockY(p.getBlockY() + 1);
-					p.adjustActualY(3.2f);
-				}
-			}
-			else if (p.getDirection() == 3) //Right
-			{
-				if (p.getBlockX() != (width - 1) && Tile::movementValid(map[p.getBlockX()][p.getBlockY()], map[p.getBlockX()+1][p.getBlockY()]))
-				{
-					p.setBlockX(p.getBlockX() + 1);
-					p.adjustActualX(3.2f);
-				}
-			}
-			cout << p.getBlockX() << " " << p.getBlockY() << endl;
-			//The next code is to detect if the player is moving onto a teleport, and if he is, start displaying the going up or down animation if it is needed
 			for (int i = 0; i < numTeleports; i++)
 			{
-				if (teleports[i].getX() == p.getBlockX() && teleports[i].getY() == p.getBlockY())
+				Teleport t = teleports[i];
+				if (p.getBlockX() == t.getX() && p.getBlockY() == t.getY())
 				{
-					p.setZDirection(teleports[i].getZDirection());
-					break;
-				}
-			}
-		}
-		else
-		{
-			if (digitalControls[0] && !digitalControls[1] && !digitalControls[2] && !digitalControls[3])
-				p.setDirection(0);
-			else if (!digitalControls[0] && digitalControls[1] && !digitalControls[2] && !digitalControls[3])
-				p.setDirection(1);
-			else if (!digitalControls[0] && !digitalControls[1] && digitalControls[2] && !digitalControls[3])
-				p.setDirection(2);
-			else if (!digitalControls[0] && !digitalControls[1] && !digitalControls[2] && digitalControls[3])
-				p.setDirection(3);
-		}
-	}
-	else //If the player is not standing in his tile, e.g. he is walking
-	{
-		if (p.getActualY() - 3.2f>(float)p.getBlockY() * BLOCK_SIZE) p.adjustActualY(-3.2f);
-		else if ((int)p.getActualY() > p.getBlockY() * BLOCK_SIZE) p.setActualY((float)p.getBlockY() * BLOCK_SIZE);
-
-		if (p.getActualX() - 3.2f>(float)p.getBlockX() * BLOCK_SIZE) p.adjustActualX(-3.2f);
-		else if ((int)p.getActualX()>p.getBlockX() * BLOCK_SIZE) p.setActualX((float)p.getBlockX() * BLOCK_SIZE);
-
-		if (p.getActualY() + 3.2f<(float)p.getBlockY() * BLOCK_SIZE) p.adjustActualY(3.2f);
-		else if ((int)p.getActualY()<p.getBlockY() * BLOCK_SIZE) p.setActualY((float)p.getBlockY() * BLOCK_SIZE);
-
-		if (p.getActualX() + 3.2f < (float)p.getBlockX() * BLOCK_SIZE) p.adjustActualX(3.2f);
-		else if((int)p.getActualX()<p.getBlockX() * BLOCK_SIZE) p.setActualX((float)p.getBlockX() * BLOCK_SIZE);
-	}
-
-	/*
-	This is outrageous! Another section of random Java code laying around!
-	if(p.x==p.targetX && p.y == p.targetY)
-		{
-			for(int i = 0; i < teleports.size(); i++)
-			{
-				Teleport t = teleports.get(i);
-				if(p.x == t.x * 60 && p.y == t.y * 60)
-				{
-					if(t.level.equals("local"))
+					if (t.intraLevel())
 					{
-						//Local Teleport
-						p.x = t.toX * 60;
-						p.y = t.toY * 60;
-						p.targetX = t.toX * 60;
-						p.targetY = t.toY * 60;
+						//Local Teleport, (inside of the same level)
+						p.setBlockX(t.getToX());
+						p.setBlockY(t.getToY());
+						p.setActualX((float)(t.getToX() * BLOCK_SIZE));
+						p.setActualY((float)(t.getToY() * BLOCK_SIZE));
+						p.setDirection(t.getDirection());
 					}
 					else
 					{
-						//Out of file teleport
-						l.switchLevels(t.level, t.toX, t.toY, t.getDirection());
+						//Out of file teleport, old java code below. TODO replace with new C++ listener code
+						//l.switchLevels(t.level, t.toX, t.toY, t.getDirection());
+						requestLevelChange(t.getName(), t.getToX(), t.getToY(), t.getDirection());
 					}
 				}
 			}
-			
-			if(p.d.equals(d)) //<C++> If the player direction equals the direction the user wants to go in </C++>
+
+			if (c.isPressed(p.getDirection()) == true && p.isAllowedToMove()) //If user wants to move
 			{
-				boolean doesMove = false;
-				float oldX = -1, oldY = -1;	
-				
-				//Check for altitude and move
-				try
+				bool upBlocked = false;
+				bool leftBlocked = false;
+				bool downBlocked = false;
+				bool rightBlocked = false;
+
+				//keep player from leaving the boundaries
+				if (p.getBlockY() == 0) { upBlocked = true; }
+				else if (p.getBlockX() == 0) { leftBlocked = true; }
+				else if ((p.getBlockY() == (height - 1))) { downBlocked = true; }
+				else if ((p.getBlockX() == (width - 1))) { rightBlocked = true; }
+
+				//check to make sure npcs aren't in the way
+				for (int i = 0; i < numNPCS; i++)
 				{
-					if((d==Direction.NORTH && (north.altitude<=current.altitude || north.altitude==current.altitude+1)) && time > 80)
+					if (npcs[i].isVisible())
 					{
-						doesMove = true;
-						p.targetY-=60;
-						oldX = p.x; oldY = p.y;
-					}
-					else if((d==Direction.SOUTH && (south.altitude<=current.altitude || south.altitude==current.altitude+1)) && time > 80)
-					{
-						doesMove = true;
-						p.targetY+=60;
-						oldX = p.x; oldY = p.y;
-					}
-					else if((d==Direction.WEST && (west.altitude<=current.altitude || west.altitude==current.altitude+1)) && time > 80)
-					{
-						doesMove = true;
-						p.targetX-=60;
-						oldX = p.x; oldY = p.y;
-					}
-					else if((d==Direction.EAST && (east.altitude<=current.altitude || east.altitude==current.altitude+1)) && time > 80)
-					{
-						doesMove = true;
-						p.targetX+=60;
-						oldX = p.x; oldY = p.y;
-					}
-				}catch(NullPointerException e){}
-				
-				//Now check for people
-				try
-				{
-					for(int i = 0; i < npcs.size(); i++)
-					{
-						NPC temp = npcs.get(i);
-						if(temp.getX()==p.targetX / 60 && temp.getY()==p.targetY / 60)
+						if (!upBlocked && p.getBlockX() == npcs[i].getBlockX() && (p.getBlockY() - 1) == npcs[i].getBlockY())
 						{
-							if(doesMove && !(oldX == -1 && oldY == -1))
-							{
-								p.targetX = oldX;
-								p.targetY = oldY;
-							}
+							upBlocked = true;
+						}
+						else if (!leftBlocked && (p.getBlockX() - 1) == npcs[i].getBlockX() && p.getBlockY() == npcs[i].getBlockY())
+						{
+							leftBlocked = true;
+						}
+						else if (!downBlocked&& p.getBlockX() == npcs[i].getBlockX() && (p.getBlockY() + 1) == npcs[i].getBlockY())
+						{
+							downBlocked = true;
+						}
+						else if (!rightBlocked && (p.getBlockX() + 1) == npcs[i].getBlockX() && p.getBlockY() == npcs[i].getBlockY())
+						{
+							rightBlocked = true;
 						}
 					}
-				}catch(NullPointerException e){}
-				
-				if(p.targetX>(width-1)*60)p.targetX=(width-1)*60;
-				if(p.targetY>(height-1)*60)p.targetY=(height-1)*60;
+				}
+
+				//Final movement validity check
+				if (p.getDirection() == Direction::UP)
+				{
+					if (!upBlocked && Tile::movementValid(map[p.getBlockX()][p.getBlockY()], map[p.getBlockX()][p.getBlockY() - 1]))
+					{
+						p.setBlockY(p.getBlockY() - 1);
+						p.adjustActualY(-3.2f);
+					}
+				}
+				else if (p.getDirection() == Direction::LEFT)
+				{
+					if (!leftBlocked && Tile::movementValid(map[p.getBlockX()][p.getBlockY()], map[p.getBlockX() - 1][p.getBlockY()]))
+					{
+						p.setBlockX(p.getBlockX() - 1);
+						p.adjustActualX(-3.2f);
+					}
+				}
+				else if (p.getDirection() == Direction::DOWN)
+				{
+					if (!downBlocked && Tile::movementValid(map[p.getBlockX()][p.getBlockY()], map[p.getBlockX()][p.getBlockY() + 1]))
+					{
+						p.setBlockY(p.getBlockY() + 1);
+						p.adjustActualY(3.2f);
+					}
+				}
+				else if (p.getDirection() == Direction::RIGHT)
+				{
+					if (!rightBlocked && Tile::movementValid(map[p.getBlockX()][p.getBlockY()], map[p.getBlockX() + 1][p.getBlockY()]))
+					{
+						p.setBlockX(p.getBlockX() + 1);
+						p.adjustActualX(3.2f);
+					}
+				}
+				//The next code is to detect if the player is moving onto a teleport, and if he is, start displaying the going up or down animation if it is needed
+				for (int i = 0; i < numTeleports; i++)
+				{
+					if (teleports[i].getX() == p.getBlockX() && teleports[i].getY() == p.getBlockY())
+					{
+						p.setZDirection(teleports[i].getZDirection());
+						break;
+					}
+				}
 			}
-			else if(!d.equals(Direction.NONE))
+			else if (c.isPressedForFirstTime(Control::SELECT)) //Select something, like an npc
 			{
-				p.d = d;
+				bool directionFacingIsValid = true;
+
+				if (p.getDirection() == Direction::UP && p.getBlockY() == 0) { directionFacingIsValid = false; }
+				else if (p.getDirection() == Direction::LEFT && p.getBlockX() == 0) { directionFacingIsValid = false; }
+				else if (p.getDirection() == Direction::DOWN && (p.getBlockY() == (height - 1))) { directionFacingIsValid = false; }
+				else if (p.getDirection() == Direction::RIGHT && (p.getBlockX() == (width - 1))) { directionFacingIsValid = false; }
+
+				if (directionFacingIsValid)
+				{
+					for (int i = 0; i < numNPCS; i++)
+					{
+						if (p.getDirection() == Direction::UP && p.getBlockX() == npcs[i].getBlockX() && p.getBlockY() - 1 == npcs[i].getBlockY())
+						{
+							mode = Mode::DIALOG;
+						}
+						else if (p.getDirection() == Direction::LEFT && p.getBlockX() - 1 == npcs[i].getBlockX() && p.getBlockY() == npcs[i].getBlockY())
+						{
+							mode = Mode::DIALOG;
+						}
+						else if (p.getDirection() == Direction::DOWN && p.getBlockX() == npcs[i].getBlockX() && p.getBlockY() + 1 == npcs[i].getBlockY())
+						{
+							mode = Mode::DIALOG;
+						}
+						else if (p.getDirection() == Direction::RIGHT && p.getBlockX() + 1 == npcs[i].getBlockX() && p.getBlockY() == npcs[i].getBlockY())
+						{
+							mode = Mode::DIALOG;
+						}
+					}
+				}
+			}
+			else //Change the player's direction
+			{
+				if (c.isPressed(Control::C_UP) && !c.isPressed(Control::C_LEFT) && !c.isPressed(Control::C_DOWN) && !c.isPressed(Control::C_RIGHT))
+					p.setDirection(Direction::UP);
+				else if (!c.isPressed(Control::C_UP) && c.isPressed(Control::C_LEFT) && !c.isPressed(Control::C_DOWN) && !c.isPressed(Control::C_RIGHT))
+					p.setDirection(Direction::LEFT);
+				else if (!c.isPressed(Control::C_UP) && !c.isPressed(Control::C_LEFT) && c.isPressed(Control::C_DOWN) && !c.isPressed(Control::C_RIGHT))
+					p.setDirection(Direction::DOWN);
+				else if (!c.isPressed(Control::C_UP) && !c.isPressed(Control::C_LEFT) && !c.isPressed(Control::C_DOWN) && c.isPressed(Control::C_RIGHT))
+					p.setDirection(Direction::RIGHT);
 			}
 		}
-		else  //<C++> If the player is in-between blocks </C++>
+		else //If the player is not standing in his tile, e.g. he is walking
 		{
-			if(p.x+p.speed<p.targetX) p.x+=p.speed;
-			else if(p.x<p.targetX) p.x = p.targetX;
-			
-			if(p.x-p.speed>p.targetX) p.x-=p.speed;
-			else if(p.x>p.targetX) p.x = p.targetX;
-			
-			
-			if(p.y+p.speed<p.targetY) p.y+=p.speed;
-			else if(p.y<p.targetY) p.y = p.targetY;
-			
-			if(p.y-p.speed>p.targetY) p.y-=p.speed;
-			else if(p.y>p.targetY) p.y = p.targetY;
+			if (p.getActualY() - 3.2f>(float)p.getBlockY() * BLOCK_SIZE) p.adjustActualY(-3.2f);
+			else if ((int)p.getActualY() > p.getBlockY() * BLOCK_SIZE) p.setActualY((float)p.getBlockY() * BLOCK_SIZE);
+
+			if (p.getActualX() - 3.2f>(float)p.getBlockX() * BLOCK_SIZE) p.adjustActualX(-3.2f);
+			else if ((int)p.getActualX()>p.getBlockX() * BLOCK_SIZE) p.setActualX((float)p.getBlockX() * BLOCK_SIZE);
+
+			if (p.getActualY() + 3.2f<(float)p.getBlockY() * BLOCK_SIZE) p.adjustActualY(3.2f);
+			else if ((int)p.getActualY()<p.getBlockY() * BLOCK_SIZE) p.setActualY((float)p.getBlockY() * BLOCK_SIZE);
+
+			if (p.getActualX() + 3.2f < (float)p.getBlockX() * BLOCK_SIZE) p.adjustActualX(3.2f);
+			else if ((int)p.getActualX()<p.getBlockX() * BLOCK_SIZE) p.setActualX((float)p.getBlockX() * BLOCK_SIZE);
 		}
-	*/
+	}
+	else if (mode == Mode::DIALOG)
+	{
+		if (c.isPressedForFirstTime(Control::SELECT))
+		{
+			mode = Mode::REG;
+		}
+	}
 }
 
 void Level::render(sf::RenderWindow & window)
 {
 	//Set the view
 	sf::View view;
-	view.setSize(sf::Vector2f(1280, 720));
+	view.setSize(sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
 	view.setCenter(sf::Vector2f(p.getActualX() + 32, p.getActualY() + 32));
 	window.setView(view);
 
@@ -511,6 +499,30 @@ void Level::render(sf::RenderWindow & window)
 		s.setPosition(sf::Vector2f(p.getActualX(), p.getActualY() - (.5f * (64 - ((p.getBlockX() * 64) - p.getActualX()))) + 0));
 	}
 	window.draw(s);
+
+	//DRAW NPCS
+	for (int i = 0; i < numNPCS; i++)
+	{
+		if (npcs[i].isVisible())
+		{
+			sf::Sprite s(costumes[npcs[i].getDirection() + (npcs[i].getGender() * 4)]);
+			s.setPosition(sf::Vector2f(npcs[i].getActualX(), npcs[i].getActualY()));
+			window.draw(s);
+		}
+	}
+
+	if (mode == Mode::DIALOG)
+	{
+		//Set the view
+		sf::View view;
+		view.setSize(sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
+		view.setCenter(sf::Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2));
+		window.setView(view);
+
+		sf::Sprite s(dialogBox);
+		s.setPosition(sf::Vector2f(0, 720-200));
+		window.draw(s);
+	}
 }
 
 void Level::setName(string name)

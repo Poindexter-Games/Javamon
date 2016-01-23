@@ -10,6 +10,8 @@
 #include <iostream>
 #include <fstream>
 
+#include "Variables.h"
+#include "Controls.h"
 #include "Teleport.h"
 #include "Tile.h"
 #include "Player.h"
@@ -19,7 +21,8 @@ using namespace std;
 class Level
 {
 private:
-	int BLOCK_SIZE = 64; //This is a constant value that states the size of blocks, this will be useful if we program for higher resolutions
+	enum Mode {REG, DIALOG};
+	Mode mode;
 
 	string auth; //This is generally the author of the packs' name
 	string pack; //This is the individual pack name
@@ -28,10 +31,14 @@ private:
 	string dispName; //This is the user friendly name
 
 	Tile **map;
-	Teleport *teleports; //List of teleports
 	int width;
 	int height;
+
+	Teleport *teleports; //List of teleports
 	int numTeleports; //Number of teleports
+
+	Player* npcs;
+	int numNPCS;
 
 	sf::Image textureMap;
 	sf::Texture* textures;
@@ -39,9 +46,12 @@ private:
 	sf::Image costumeMap;
 	sf::Texture* costumes;
 
+	sf::Texture dialogBox;
+
 	Player p;
 
 	bool levelRequestsChange;
+	bool levelRequestsBattle;
 	string toLevelName;
 	int toLevelX;
 	int toLevelY;
@@ -53,7 +63,7 @@ public:
 
 	void newLevel(int, int, int, int);
 
-	void update(bool*);
+	void update(Controls&);
 	void render(sf::RenderWindow&);
 
 	void setName(string);
@@ -63,6 +73,7 @@ public:
 	string getName(){return name;}
 
 	bool isRequestingLevelChange() { return levelRequestsChange; }
+	bool isRequestingBattleScreen() { return levelRequestsBattle; }
 	void requestLevelChange(string, int, int, int);
 
 	string getToLevelName() { return toLevelName; }

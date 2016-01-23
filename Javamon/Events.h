@@ -8,22 +8,18 @@
 
 #include <SFML\Graphics.hpp>
 
+#include "Controls.h"
+
 using namespace std;
 
 class Events
 {
 public:
-	void eventListener(sf::Event& event, sf::RenderWindow& window);
-	bool getKeyPressed(std::string key);
-	bool getMouseClicked(std::string button);
+	void eventListener(sf::Event& event, sf::RenderWindow& window, Controls&);
 	bool getWindowClosed();
 private:
 	// Booleans for key events
-	bool aPressed = false, dPressed = false, wPressed = false, sPressed = false, shiftPressed = false, windowClosed = false;
-
-	bool leftClick = false; //Left mouse button 
-
-	int mouseX, mouseY;
+	bool windowClosed = false;
 };
 
 

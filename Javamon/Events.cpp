@@ -2,7 +2,7 @@
 
 using namespace std;
 
-void Events::eventListener(sf::Event& event, sf::RenderWindow& window)
+void Events::eventListener(sf::Event& event, sf::RenderWindow& window, Controls& c)
 {
 	//	Look for events and deal with them
 	while (window.pollEvent(event))  //pollEvent function checks whether any events have occured, if so will return true until all events have been dealt with
@@ -14,108 +14,88 @@ void Events::eventListener(sf::Event& event, sf::RenderWindow& window)
 			windowClosed = true;
 		}
 
-		if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::A)
+		if(event.type == sf::Event::KeyPressed)
 		{
-			aPressed = true;
+			if (event.key.code == c.getUpKey())
+			{
+				c.setPressed(Control::C_UP, true);
+			}
+			if (event.key.code == c.getLeftKey())
+			{
+				c.setPressed(Control::C_LEFT, true);
+			}
+			if (event.key.code == c.getDownKey())
+			{
+				c.setPressed(Control::C_DOWN, true);
+			}
+			if (event.key.code == c.getRightKey())
+			{
+				c.setPressed(Control::C_RIGHT, true);
+			}
+			if (event.key.code == c.getSelectKey())
+			{
+				c.setPressed(Control::SELECT, true);
+			}
+			if (event.key.code == c.getCancelKey())
+			{
+				c.setPressed(Control::CANCEL, true);
+			}
 		}
-
-		if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::A)
+		else if (event.type == sf::Event::MouseButtonPressed)
 		{
-			aPressed = false;
+			if (event.mouseButton.button == sf::Mouse::Left)
+			{
+				c.setPressed(Control::MOUSE_LEFT, true);
+			}
+			else if(event.mouseButton.button == sf::Mouse::Right)
+			{
+				c.setPressed(Control::MOUSE_RIGHT, true);
+			}
 		}
-
-		if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::D)
+		else if (event.type == sf::Event::KeyReleased)
 		{
-			dPressed = true;
+			if (event.key.code == c.getUpKey())
+			{
+				c.setPressed(Control::C_UP, false);
+			}
+			if (event.key.code == c.getLeftKey())
+			{
+				c.setPressed(Control::C_LEFT, false);
+			}
+			if (event.key.code == c.getDownKey())
+			{
+				c.setPressed(Control::C_DOWN, false);
+			}
+			if (event.key.code == c.getRightKey())
+			{
+				c.setPressed(Control::C_RIGHT, false);
+			}
+			if (event.key.code == c.getSelectKey())
+			{
+				c.setPressed(Control::SELECT, false);
+			}
+			if (event.key.code == c.getCancelKey())
+			{
+				c.setPressed(Control::CANCEL, false);
+			}
 		}
-
-		if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::D)
+		else if (event.type == sf::Event::MouseButtonReleased)
 		{
-			dPressed = false;
-		}
-
-		if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::S)
-		{
-			sPressed = true;
-		}
-
-		if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::S)
-		{
-			sPressed = false;
-		}
-
-		if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::W)
-		{
-			wPressed = true;
-		}
-
-		if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::W)
-		{
-			wPressed = false;
-		}
-
-		if (event.type == sf::Event::KeyPressed && (event.key.code == sf::Keyboard::LShift || event.key.code == sf::Keyboard::RShift))
-		{
-			shiftPressed = true;
-		}
-
-		if (event.type == sf::Event::KeyReleased && (event.key.code == sf::Keyboard::LShift || event.key.code == sf::Keyboard::RShift))
-		{
-			shiftPressed = false;
-		}
-
-		if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
-		{
-			leftClick = true;
+			if (event.mouseButton.button == sf::Mouse::Left)
+			{
+				c.setPressed(Control::MOUSE_LEFT, false);
+			}
+			else if (event.mouseButton.button == sf::Mouse::Right)
+			{
+				c.setPressed(Control::MOUSE_RIGHT, false);
+			}
 		}
 
 		if (event.type == sf::Event::MouseMoved)
 		{
-			mouseX = event.mouseMove.x;
-			mouseY = event.mouseMove.y;
+			c.setMousePos(event.mouseMove.x, event.mouseMove.y);
 		}
 
-	}
-}
-
-bool Events::getKeyPressed(std::string key)
-{
-	if ((key == "A" || key == "a") && aPressed)
-	{
-		return true;
-	}
-	else if ((key == "W" || key == "w") && wPressed)
-	{
-		return true;
-	}
-	else if ((key == "D" || key == "d") && dPressed)
-	{
-		return true;
-	}
-	else if ((key == "S" || key == "s") && sPressed)
-	{
-		return true;
-	}
-	else if ((key == "LShift" || key == "RShift") && shiftPressed)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-bool Events::getMouseClicked(std::string button)
-{
-	if ((button == "L" || button == "l") && leftClick)
-	{
-		leftClick = false;
-		return true;
-	}
-	else
-	{
-		return false;
 	}
 }
 

@@ -6,11 +6,14 @@
 #include <iostream>
 #include <sstream>
 #include <SFML/Window/Keyboard.hpp>
-#include <locale>
+#include <fcntl.h> //This is for
+#include <io.h>    //something text related
 
 //	Project Includes
+#include "Variables.h"
+#include "Controls.h"
 #include "Events.h"
-#include "Entity.h"
 #include "Level.h"
+#include "Battle.h"
 
 #endif
