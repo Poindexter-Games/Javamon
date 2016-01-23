@@ -18,13 +18,21 @@ Controls::Controls()
 	rightPressedTime = 0;
 	rightKey = sf::Keyboard::D;
 
-	selectPressed = false;
-	selectPressedTime = 0;
-	selectKey = sf::Keyboard::L;
+	acceptPressed = false;
+	acceptPressedTime = 0;
+	acceptKey = sf::Keyboard::Numpad6;
 
 	cancelPressed = false;
 	cancelPressedTime = 0;
-	cancelKey = sf::Keyboard::J;
+	cancelKey = sf::Keyboard::Numpad4;
+
+	startPressed = false;
+	startPressedTime = 0;
+	startKey = sf::Keyboard::Numpad3;
+
+	selectPressed = false;
+	selectPressedTime = 0;
+	selectKey = sf::Keyboard::Numpad1;
 
 	leftClickPressed = false;
 	leftClickPressedTime = 0;

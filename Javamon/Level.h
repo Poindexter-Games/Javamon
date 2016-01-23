@@ -47,6 +47,7 @@ private:
 	sf::Texture* costumes;
 
 	sf::Texture dialogBox;
+	int dialogNPCNum;
 
 	Player p;
 
@@ -73,11 +74,14 @@ public:
 	string getName(){return name;}
 
 	bool isRequestingLevelChange() { return levelRequestsChange; }
-	bool isRequestingBattleScreen() { return levelRequestsBattle; }
 	void requestLevelChange(string, int, int, int);
 
 	string getToLevelName() { return toLevelName; }
 	int getToLevelX() { return toLevelX; }
 	int getToLevelY() { return toLevelY; }
 	int getToLevelDirection() { return toLevelDirection; }
+
+
+	bool isRequestingBattleScreen() { return levelRequestsBattle; }
+	void requestBattleScreen();
 };

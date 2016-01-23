@@ -72,6 +72,14 @@ int main()
 			}
 			gs = GameState::LEVEL;
 		}
+		if (level.isRequestingBattleScreen())
+		{
+			gs = GameState::BATTLE;
+		}
+		if (battle.isOver())
+		{
+			gs == GameState::LEVEL;
+		}
 
 		//	Perform logic based upon events
 		if (eventHandler.getWindowClosed())

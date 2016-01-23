@@ -9,6 +9,8 @@
 #include <SFML\Graphics.hpp>
 
 #include "Controls.h"
+#include "Level.h"
+#include "Battle.h"
 
 using namespace std;
 

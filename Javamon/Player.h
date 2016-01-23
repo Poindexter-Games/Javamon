@@ -22,15 +22,19 @@ private:
 	float actualY;
 	bool movementAllowed;
 
+	string dialog; //Dialogue
 	string anteBattleQuote; //Quote before the battle
 	string postBattleQuote; //Quote after the battle
 
-	Monster** monster; //Inventory of monsters
+	bool wantsToBattle;
+	Monster* monsters; //Inventory of monsters
 	int numMonsters; //Number of monsters in inventory. This must be between 0 and 6 (inclusive).
 
 	bool visible; //If true, shows NPC and gives them a hitbox
 public:
-	Player();
+	Player(); //
+	Player(string); //Talking NPC
+	Player(string, Monster* party, int partySize); //Battling NPC
 
 	bool isNPC() { return npc; }
 
@@ -78,4 +82,7 @@ public:
 	bool isVisible(){return visible;}
 	void setVisible() { visible = true; }
 	void setInvisible() { visible = false; }
+
+	bool getWantsToBattle() { return wantsToBattle; }
+	void setWantsToBattle(bool b) { wantsToBattle = b; }
 };

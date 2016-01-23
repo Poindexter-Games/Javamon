@@ -32,13 +32,21 @@ void Events::eventListener(sf::Event& event, sf::RenderWindow& window, Controls&
 			{
 				c.setPressed(Control::C_RIGHT, true);
 			}
-			if (event.key.code == c.getSelectKey())
+			if (event.key.code == c.getAcceptKey())
 			{
-				c.setPressed(Control::SELECT, true);
+				c.setPressed(Control::ACCEPT, true);
 			}
 			if (event.key.code == c.getCancelKey())
 			{
 				c.setPressed(Control::CANCEL, true);
+			}
+			if (event.key.code == c.getStartKey())
+			{
+				c.setPressed(Control::START, true);
+			}
+			if (event.key.code == c.getSelectKey())
+			{
+				c.setPressed(Control::SELECT, true);
 			}
 		}
 		else if (event.type == sf::Event::MouseButtonPressed)
@@ -70,13 +78,21 @@ void Events::eventListener(sf::Event& event, sf::RenderWindow& window, Controls&
 			{
 				c.setPressed(Control::C_RIGHT, false);
 			}
-			if (event.key.code == c.getSelectKey())
+			if (event.key.code == c.getAcceptKey())
 			{
-				c.setPressed(Control::SELECT, false);
+				c.setPressed(Control::ACCEPT, false);
 			}
 			if (event.key.code == c.getCancelKey())
 			{
 				c.setPressed(Control::CANCEL, false);
+			}
+			if (event.key.code == c.getStartKey())
+			{
+				c.setPressed(Control::START, false);
+			}
+			if (event.key.code == c.getSelectKey())
+			{
+				c.setPressed(Control::SELECT, false);
 			}
 		}
 		else if (event.type == sf::Event::MouseButtonReleased)
@@ -97,6 +113,7 @@ void Events::eventListener(sf::Event& event, sf::RenderWindow& window, Controls&
 		}
 
 	}
+
 }
 
 bool Events::getWindowClosed()

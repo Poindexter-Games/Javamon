@@ -11,42 +11,42 @@ class Controls
 {
 private:
 	bool upPressed;
-	bool upPressedLastTime;
-	int  upPressedTime;
+	unsigned int upPressedTime;
 	sf::Keyboard::Key upKey;
 
 	bool leftPressed;
-	bool leftPressedLastTime;
-	int  leftPressedTime;
+	unsigned int leftPressedTime;
 	sf::Keyboard::Key leftKey;
 
 	bool downPressed;
-	bool downPressedLastTime;
-	int  downPressedTime;
-	sf::Keyboard::Key  downKey;
+	unsigned int downPressedTime;
+	sf::Keyboard::Key downKey;
 
 	bool rightPressed;
-	bool rightPressedLastTime;
-	int  rightPressedTime;
+	unsigned int rightPressedTime;
 	sf::Keyboard::Key rightKey;
 
-	bool selectPressed;
-	bool selectPressedLastTime;
-	int  selectPressedTime;
-	sf::Keyboard::Key selectKey;
+	bool acceptPressed;
+	unsigned int acceptPressedTime;
+	sf::Keyboard::Key acceptKey;
 
 	bool cancelPressed;
-	bool cancelPressedLastTime;
-	int  cancelPressedTime;
+	unsigned int cancelPressedTime;
 	sf::Keyboard::Key cancelKey;
 
+	bool startPressed;
+	unsigned int startPressedTime;
+	sf::Keyboard::Key startKey;
+
+	bool selectPressed;
+	unsigned int selectPressedTime;
+	sf::Keyboard::Key selectKey;
+
 	bool rightClickPressed;
-	bool rightClickPressedLastTime;
-	int  rightClickPressedTime;
+	unsigned int rightClickPressedTime;
 
 	bool leftClickPressed;
-	bool leftClickPressedLastTime;
-	int  leftClickPressedTime;
+	unsigned int leftClickPressedTime;
 
 	int mouseX;
 	int mouseY;
@@ -64,10 +64,14 @@ public:
 		else downPressedTime = 0;
 		if (rightPressed) rightPressedTime++;
 		else rightPressedTime = 0;
-		if (selectPressed) selectPressedTime++;
-		else selectPressedTime = 0;
+		if (acceptPressed) acceptPressedTime++;
+		else acceptPressedTime = 0;
 		if (cancelPressed) cancelPressedTime++;
 		else cancelPressedTime = 0;
+		if (startPressed) startPressedTime++;
+		else startPressedTime = 0;
+		if (selectPressed) selectPressedTime++;
+		else selectPressedTime = 0;
 		if (leftClickPressed) leftPressedTime++;
 		else leftClickPressedTime = 0;
 		if (rightClickPressed) rightPressedTime++;
@@ -88,10 +92,14 @@ public:
 			return downPressed;
 		case C_RIGHT:
 			return rightPressed;
-		case SELECT:
-			return selectPressed;
+		case ACCEPT:
+			return acceptPressed;
 		case CANCEL:
 			return cancelPressed;
+		case START:
+			return startPressed;
+		case SELECT:
+			return selectPressed;
 		case MOUSE_LEFT:
 			return leftClickPressed;
 		case MOUSE_RIGHT:
@@ -111,10 +119,14 @@ public:
 			return downPressedTime == 1;
 		case C_RIGHT:
 			return rightPressedTime == 1;
-		case SELECT:
-			return selectPressedTime == 1;
+		case ACCEPT:
+			return acceptPressedTime == 1;
 		case CANCEL:
 			return cancelPressedTime == 1;
+		case START:
+			return startPressedTime == 1;
+		case SELECT:
+			return selectPressedTime == 1;
 		case MOUSE_LEFT:
 			return leftClickPressedTime == 1;
 		case MOUSE_RIGHT:
@@ -126,8 +138,10 @@ public:
 	sf::Keyboard::Key getLeftKey() { return leftKey; }
 	sf::Keyboard::Key getDownKey() { return downKey; }
 	sf::Keyboard::Key getRightKey() { return rightKey; }
-	sf::Keyboard::Key getSelectKey() { return selectKey; }
+	sf::Keyboard::Key getAcceptKey() { return acceptKey; }
 	sf::Keyboard::Key getCancelKey() { return cancelKey; }
+	sf::Keyboard::Key getStartKey() { return startKey; }
+	sf::Keyboard::Key getSelectKey() { return selectKey; }
 
 	void setPressed(Control c, bool pressed)
 	{
@@ -145,11 +159,16 @@ public:
 		case C_RIGHT:
 			rightPressed = pressed;
 			break;
-		case SELECT:
-			selectPressed = pressed;
+		case ACCEPT:
+			acceptPressed = pressed;
 			break;
 		case CANCEL:
 			cancelPressed = pressed;
+		case START:
+			startPressed = pressed;
+			break;
+		case SELECT:
+			selectPressed = pressed;
 			break;
 		case MOUSE_LEFT:
 			leftClickPressed = pressed;
@@ -175,5 +194,17 @@ public:
 		if (d == Direction::RIGHT && rightPressed == true)
 			return true;
 		return false;
+	}
+	int getTimePressed(Direction d)
+	{
+		if (d == Direction::UP)
+			return upPressedTime;
+		if (d == Direction::LEFT)
+			return leftPressedTime;
+		if (d == Direction::DOWN)
+			return downPressedTime;
+		if (d == Direction::RIGHT)
+			return rightPressedTime;
+		return 0;
 	}
 };
