@@ -100,7 +100,7 @@ int main()
 		window.draw(bg);
 		if (gs == GameState::LEVEL)
 		{
-			level.render(window);
+			level.render(window, controls);
 		}
 		if (gs == GameState::BATTLE)
 		{

@@ -11,7 +11,7 @@ class Player
 {
 private:
 	bool npc;
-	string name;
+	wstring name;
 	Gender sex;
 
 	int x; //block x
@@ -22,9 +22,9 @@ private:
 	float actualY;
 	bool movementAllowed;
 
-	string dialog; //Dialogue
-	string anteBattleQuote; //Quote before the battle
-	string postBattleQuote; //Quote after the battle
+	wstring dialog; //Dialogue
+	wstring anteBattleQuote; //Quote before the battle
+	wstring postBattleQuote; //Quote after the battle
 
 	bool wantsToBattle;
 	Monster* monsters; //Inventory of monsters
@@ -33,12 +33,12 @@ private:
 	bool visible; //If true, shows NPC and gives them a hitbox
 public:
 	Player(); //
-	Player(string); //Talking NPC
-	Player(string, Monster* party, int partySize); //Battling NPC
+	Player(wstring); //Talking NPC
+	Player(wstring, Monster* party, int partySize); //Battling NPC
 
 	bool isNPC() { return npc; }
 
-	string getName() { return name; }
+	wstring getName() { return name; }
 	bool isMale(){return sex == 0;}
 	bool isFemale(){return sex == 1;}
 	void setGender(Gender sex) { Player::sex = sex; }
@@ -76,8 +76,9 @@ public:
 	/*Locked states if the player is seated correctly on the tile*/
 	bool isLocked(){return lockedX() && lockedY();}
 
-	string getPostBattleQuote() { return postBattleQuote; }
-	string getAnteBattleQuote() { return anteBattleQuote; }
+	wstring getDialog() { return dialog; }
+	wstring getPostBattleQuote() { return postBattleQuote; }
+	wstring getAnteBattleQuote() { return anteBattleQuote; }
 
 	bool isVisible(){return visible;}
 	void setVisible() { visible = true; }

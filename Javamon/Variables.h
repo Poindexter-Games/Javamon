@@ -5,9 +5,25 @@
 const float SCREEN_HEIGHT = 720;
 const float SCREEN_WIDTH = 1280;
 const int FRAME_RATE_LIMIT = 60;
-const std::wstring WINDOW_TITLE = L"ジャヴァモンスター";
+const std::wstring WINDOW_TITLE = L"Javamon";
 const int BLOCK_SIZE = 64;
 const int PLAYER_HEIGHT = (int)(BLOCK_SIZE * 1.25f);
+
+/*
+The resources string needs to be changed for which ever developer is working on the project.
+So save your path file location to resources in this comment so we can all switch out the latest commit to our
+own resources file and everything will run properly.
+
+Karl's:
+C:/Users/Karl/Source/Repos/Javamon/Javamon/Resources/
+
+Tyler's:
+?
+
+Clay's:
+?
+*/
+const std::string RESOURCES = "C:/Users/Karl/Source/Repos/Javamon/Javamon/Resources/";
 
 enum Gender { MALE = 0, FEMALE = 1, NEUTER = 2 };
 enum GameState { LEVEL = 0, LOADING = 1, BATTLE = 2 };
