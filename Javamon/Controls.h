@@ -183,6 +183,8 @@ public:
 		mouseX = x;
 		mouseY = y;
 	}
+	int getMouseX() { return mouseX; }
+	int getMouseY() { return mouseY; }
 	bool isPressed(Direction d)
 	{
 		if (d == Direction::UP && upPressed == true)

@@ -4,7 +4,7 @@ Player::Player()
 	npc = false;
 
 	//common stuff
-	name = "Gei Hakkâ";
+	name = L"Gei Hakkâ";
 	sex = Gender::MALE;
 	x = 0;
 	y = 0;
@@ -14,9 +14,9 @@ Player::Player()
 	actualY = 0;
 	movementAllowed = true;
 
-	dialog = "DIALOG NOT LOADED.";
-	anteBattleQuote = "BATTLE QUOTE NOT LOADED.";
-	postBattleQuote = "BATTLE QUOTE NOT LOADED.";
+	dialog = L"DIALOGUE NOT LOADED.";
+	anteBattleQuote = L"BATTLE QUOTE NOT LOADED.";
+	postBattleQuote = L"BATTLE QUOTE NOT LOADED.";
 
 	numMonsters = 0;
 
@@ -24,14 +24,14 @@ Player::Player()
 	visible = true;
 	wantsToBattle = false;
 }
-Player::Player(string quote)
+Player::Player(wstring quote)
 {
 	Player::dialog = quote;
 
 	npc = true;
 
 	//common stuff
-	name = "Pedestrian";
+	name = L"Pedestrian";
 	sex = Gender::MALE;
 	x = 0;
 	y = 0;
@@ -41,8 +41,9 @@ Player::Player(string quote)
 	actualY = 0;
 	movementAllowed = false;
 
-	anteBattleQuote = "HOW DID YOU START A BATTLE WITH ME?";
-	postBattleQuote = "HOW DID YOU DEFEAT ME?";
+	dialog = L"It is nice and sunny out today.";
+	anteBattleQuote = L"HOW DID YOU START A BATTLE WITH ME?";
+	postBattleQuote = L"HOW DID YOU DEFEAT ME?";
 
 	numMonsters = 0;
 
@@ -50,14 +51,14 @@ Player::Player(string quote)
 	visible = true;
 	wantsToBattle = false;
 }
-Player::Player(string quote, Monster* party, int partySize)
+Player::Player(wstring quote, Monster* party, int partySize)
 {
 	Player::dialog = quote;
 
 	npc = true;
 
 	//common stuff
-	name = "Trainer";
+	name = L"Trainer";
 	sex = Gender::MALE;
 	x = 0;
 	y = 0;
@@ -67,8 +68,9 @@ Player::Player(string quote, Monster* party, int partySize)
 	actualY = 0;
 	movementAllowed = false;
 
-	anteBattleQuote = "You'll never beat me!";
-	postBattleQuote = "You're too good!";
+	quote = L"Fix this quote later?";
+	anteBattleQuote = L"You'll never beat me!";
+	postBattleQuote = L"You're too good!";
 
 	monsters = party;
 	numMonsters = partySize;

@@ -4,6 +4,8 @@ using namespace std;
 
 Level::Level()
 {
+	sf::FileInputStream fs;
+
 	Level::auth = "Poindexter";
 	Level::pack = "Test";
 	Level::name = "TestLevel";
@@ -29,10 +31,10 @@ Level::Level()
 	map[3][1] = Tile(2, 1, 0);
 
 	textureMap = sf::Image();
-	textureMap.loadFromFile("C:/Users/Karl/Source/Repos/Javamon/Javamon/Resources/Packs/" + auth + "/" + pack + "/" + name + "/Spritesheet.png");
+	textureMap.loadFromFile(RESOURCES + "Packs/" + auth + "/" + pack + "/" + name + "/Spritesheet.png");
 
 	costumeMap = sf::Image();
-	costumeMap.loadFromFile("C:/Users/Karl/Source/Repos/Javamon/Javamon/Resources/Video/Player.png");
+	costumeMap.loadFromFile(RESOURCES + "Video/Player.png");
 
 	/*
 	//Listening to Leeroy jenkins remix 10 hours
@@ -88,7 +90,7 @@ Level::Level(string auth, string pack, string level)
 	Level::name = level;
 
 	ifstream file;
-	file.open("C:/Users/Karl/Source/Repos/Javamon/Javamon/Resources/Packs/" + auth + "/" + pack + "/" + level + "/Level.txt");
+	file.open(RESOURCES + "Packs/" + auth + "/" + pack + "/" + level + "/Level.txt");
 	for (string line; getline(file, line); )
 	{
 		//...for each line in input...
@@ -257,13 +259,13 @@ void Level::newLevel(int n, int x, int y, int d)
 	}
 
 	textureMap = sf::Image();
-	textureMap.loadFromFile("C:/Users/Karl/Source/Repos/Javamon/Javamon/Resources/Packs/" + auth + "/" + pack + "/" + name + "/Spritesheet.png");
+	textureMap.loadFromFile(RESOURCES + "Packs/" + auth + "/" + pack + "/" + name + "/Spritesheet.png");
 
 	costumeMap = sf::Image();
-	costumeMap.loadFromFile("C:/Users/Karl/Source/Repos/Javamon/Javamon/Resources/Video/Player.png");
+	costumeMap.loadFromFile(RESOURCES + "Video/Player.png");
 
 	sf::Image dialogBoxImg;
-	dialogBoxImg.loadFromFile("C:/Users/Karl/Source/Repos/Javamon/Javamon/Resources/Video/DialogBox.png");
+	dialogBoxImg.loadFromFile(RESOURCES + "Video/DialogBox.png");
 	dialogBox = sf::Texture();
 	dialogBox.loadFromImage(dialogBoxImg);
 
@@ -473,7 +475,7 @@ void Level::update(Controls & c)
 	}
 }
 
-void Level::render(sf::RenderWindow & window)
+void Level::render(sf::RenderWindow & window, Controls & c)
 {
 	//Set the view
 	sf::View view;
@@ -491,30 +493,11 @@ void Level::render(sf::RenderWindow & window)
 			window.draw(s);
 		}
 	}
-	//Draw character
-	sf::Sprite s(costumes[p.getDirection() + (p.getGender() * 4)]);
-	//The rendering class actually handles the player appearing to move up and down the steps rather than editing the actual coordinates and making some really strange code
-	if(p.getZDirection() == 0)
+	//Draw character if above NPC
+	if (!ifPlayerIsUnderNPC())
 	{
-		s.setPosition(sf::Vector2f(p.getActualX(), p.getActualY() - (PLAYER_HEIGHT - BLOCK_SIZE)));
+		drawPlayer(window);
 	}
-	else if (p.getZDirection() == 1 && p.getDirection() == 1) //if player is going up the stairs to the left
-	{
-		s.setPosition(sf::Vector2f(p.getActualX(), p.getActualY() - (.25f * (64 - (p.getActualX() - (p.getBlockX() * 64)))) - (PLAYER_HEIGHT - BLOCK_SIZE) ));
-	}
-	else if (p.getZDirection() == 1 && p.getDirection() == 3) //if player is going up the stairs to the right
-	{
-		s.setPosition(sf::Vector2f(p.getActualX(), p.getActualY() - (.5f * (64 - ((p.getBlockX() * 64) - p.getActualX()))) - (PLAYER_HEIGHT - BLOCK_SIZE) ));
-	}
-	else if (p.getZDirection() == -1 && p.getDirection() == 1) //if player is going down the stairs to the left
-	{
-		s.setPosition(sf::Vector2f(p.getActualX(), p.getActualY() + (.25f * (64 - (p.getActualX() - (p.getBlockX() * 64)))) - (PLAYER_HEIGHT - BLOCK_SIZE) ));
-	}
-	else if (p.getZDirection() == -1 && p.getDirection() == 3) //if player is going down the stairs to the right
-	{
-		s.setPosition(sf::Vector2f(p.getActualX(), p.getActualY() - (.5f * (64 - ((p.getBlockX() * 64) - p.getActualX()))) - (PLAYER_HEIGHT - BLOCK_SIZE) ));
-	}
-	window.draw(s);
 
 	//DRAW NPCS
 	for (int i = 0; i < numNPCS; i++)
@@ -527,6 +510,12 @@ void Level::render(sf::RenderWindow & window)
 		}
 	}
 
+	//Draw character if below npc
+	if (ifPlayerIsUnderNPC())
+	{
+		drawPlayer(window);
+	}
+
 	if (mode == Mode::DIALOG)
 	{
 		//Set the view
@@ -536,9 +525,47 @@ void Level::render(sf::RenderWindow & window)
 		window.setView(view);
 
 		sf::Sprite s(dialogBox);
-		s.setPosition(sf::Vector2f(0, 720-200));
+		s.setPosition(sf::Vector2f(0, SCREEN_HEIGHT - 200));
 		window.draw(s);
+
+		sf::Text t;
+		sf::Font f;
+		f.loadFromFile(RESOURCES + "Video/yumindb.ttf");
+		t.setFont(f);
+		t.setColor(sf::Color::Black);
+		t.setCharacterSize(32);
+		t.setStyle(sf::Text::Regular);
+		t.setPosition(sf::Vector2f(10, SCREEN_HEIGHT - 200 + 10));
+		t.setString(npcs[dialogNPCNum].getDialog());
+		window.draw(t);
 	}
+}
+
+void Level::drawPlayer(sf::RenderWindow & window)
+{
+	sf::Sprite s(costumes[p.getDirection() + (p.getGender() * 4)]);
+	//The rendering class actually handles the player appearing to move up and down the steps rather than editing the actual coordinates and making some really strange code
+	if (p.getZDirection() == 0)
+	{
+		s.setPosition(sf::Vector2f(p.getActualX(), p.getActualY() - (PLAYER_HEIGHT - BLOCK_SIZE)));
+	}
+	else if (p.getZDirection() == 1 && p.getDirection() == 1) //if player is going up the stairs to the left
+	{
+		s.setPosition(sf::Vector2f(p.getActualX(), p.getActualY() - (.25f * (64 - (p.getActualX() - (p.getBlockX() * 64)))) - (PLAYER_HEIGHT - BLOCK_SIZE)));
+	}
+	else if (p.getZDirection() == 1 && p.getDirection() == 3) //if player is going up the stairs to the right
+	{
+		s.setPosition(sf::Vector2f(p.getActualX(), p.getActualY() - (.5f * (64 - ((p.getBlockX() * 64) - p.getActualX()))) - (PLAYER_HEIGHT - BLOCK_SIZE)));
+	}
+	else if (p.getZDirection() == -1 && p.getDirection() == 1) //if player is going down the stairs to the left
+	{
+		s.setPosition(sf::Vector2f(p.getActualX(), p.getActualY() + (.25f * (64 - (p.getActualX() - (p.getBlockX() * 64)))) - (PLAYER_HEIGHT - BLOCK_SIZE)));
+	}
+	else if (p.getZDirection() == -1 && p.getDirection() == 3) //if player is going down the stairs to the right
+	{
+		s.setPosition(sf::Vector2f(p.getActualX(), p.getActualY() - (.5f * (64 - ((p.getBlockX() * 64) - p.getActualX()))) - (PLAYER_HEIGHT - BLOCK_SIZE)));
+	}
+	window.draw(s);
 }
 
 void Level::setName(string name)

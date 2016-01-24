@@ -9,6 +9,7 @@
 #include <SFML/Graphics/Rect.hpp>
 #include <iostream>
 #include <fstream>
+#include <SFML/Graphics/Text.hpp>
 
 #include "Variables.h"
 #include "Controls.h"
@@ -65,7 +66,7 @@ public:
 	void newLevel(int, int, int, int);
 
 	void update(Controls&);
-	void render(sf::RenderWindow&);
+	void render(sf::RenderWindow&, Controls&);
 
 	void setName(string);
 
@@ -84,4 +85,29 @@ public:
 
 	bool isRequestingBattleScreen() { return levelRequestsBattle; }
 	void requestBattleScreen();
+
+	bool ifPlayerIsUnderNPC()
+	{
+		if (p.getBlockY() == 0)
+		{
+			return false;
+		}
+		for (int i = 0; i < numNPCS; i++)
+		{
+			if (npcs[i].getBlockX() == p.getBlockX() && npcs[i].getBlockY() == p.getBlockY() - 1)
+			{
+				return true;
+			}
+			if (npcs[i].getBlockX() == p.getBlockX() - 1 && npcs[i].getBlockY() == p.getBlockY() - 1)
+			{
+				return true;
+			}
+			if (npcs[i].getBlockX() == p.getBlockX() + 1 && npcs[i].getBlockY() == p.getBlockY() - 1)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	void drawPlayer(sf::RenderWindow&);
 };
