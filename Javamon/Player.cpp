@@ -14,7 +14,7 @@ Player::Player()
 	actualY = 0;
 	movementAllowed = true;
 
-	dialog = L"DIALOGUE NOT LOADED.";
+	dialog = L"THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG.";
 	anteBattleQuote = L"BATTLE QUOTE NOT LOADED.";
 	postBattleQuote = L"BATTLE QUOTE NOT LOADED.";
 

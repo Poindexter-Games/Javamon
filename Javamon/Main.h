@@ -12,6 +12,7 @@
 //	Project Includes
 #include "Variables.h"
 #include "Controls.h"
+#include "KText.h"
 #include "Events.h"
 #include "Level.h"
 #include "Battle.h"

@@ -2,12 +2,14 @@
 
 int main()
 {
+	Language lang = Language::EN_US;
 
 	sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), WINDOW_TITLE);
 	window.setFramerateLimit(FRAME_RATE_LIMIT); //Cap the framerate at 60fps
 	window.setKeyRepeatEnabled(false);
 	
 	Controls controls;
+	KText font(lang);
 
 	sf::Event event; //Object for handling/storing events
 	Events eventHandler;
@@ -100,7 +102,7 @@ int main()
 		window.draw(bg);
 		if (gs == GameState::LEVEL)
 		{
-			level.render(window, controls);
+			level.render(window, font);
 		}
 		if (gs == GameState::BATTLE)
 		{

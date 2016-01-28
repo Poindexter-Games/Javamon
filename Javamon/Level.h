@@ -13,6 +13,7 @@
 
 #include "Variables.h"
 #include "Controls.h"
+#include "KText.h"
 #include "Teleport.h"
 #include "Tile.h"
 #include "Player.h"
@@ -66,7 +67,8 @@ public:
 	void newLevel(int, int, int, int);
 
 	void update(Controls&);
-	void render(sf::RenderWindow&, Controls&);
+	void render(sf::RenderWindow&, KText&);
+	void drawDialog(sf::RenderWindow&, KText&);
 
 	void setName(string);
 
