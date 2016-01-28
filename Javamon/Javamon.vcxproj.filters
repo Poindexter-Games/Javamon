@@ -39,6 +39,9 @@
     <ClCompile Include="Controls.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="KText.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Level.h">
@@ -75,6 +78,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Controls.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KText.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

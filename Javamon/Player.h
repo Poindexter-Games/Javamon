@@ -80,6 +80,8 @@ public:
 	wstring getPostBattleQuote() { return postBattleQuote; }
 	wstring getAnteBattleQuote() { return anteBattleQuote; }
 
+	void setDialog(wstring dialog) { Player::dialog = dialog; }
+
 	bool isVisible(){return visible;}
 	void setVisible() { visible = true; }
 	void setInvisible() { visible = false; }
