@@ -61,7 +61,7 @@ private:
 	int toLevelDirection;
 public:
 	Level();
-	Level(int, int, int, int); //Test method
+	Level(int, int, int, int); //Testing Constructor
 	Level(string, string, string); //Regular way to load level, unimplemented, use the test method
 
 	void newLevel(int, int, int, int);

@@ -28,31 +28,38 @@ void KText::levelDialog(sf::RenderWindow & window, wstring dialog)
 	window.setView(view);
 
 	int row = 0;
-	int i_offset = 0;
+	int x = 0;
 
 	for (int i = 0; i < dialog.length(); i++)
 	{
+		bool draw = false;
 		wchar_t w = dialog[i];
 		sf::Sprite c;
 		if (w == '\n') //enter
 		{
 			row++;
-			i_offset = i - i_offset + 1;
+			x = 0;
 		}
-		if (w <= 255) //basic latin
+		if ((32 <= w && w <= 126) || (161 <= w && w <= 255)) //basic latin
 		{
+			draw = true;
 			c = sf::Sprite(basic_latin, sf::IntRect((w % 16) * FONT_SIZE, ((w - (w % 16)) / 16) * FONT_SIZE, FONT_SIZE, FONT_SIZE));
 		}
 		else if (12288 <= w && w <= 12543) //1st japanese section of unicode stuff
 		{
+			draw = true;
 			c = sf::Sprite(japanese, sf::IntRect((w % 16) * FONT_SIZE, (((w - (w % 16)) / 16)-768) * FONT_SIZE, FONT_SIZE, FONT_SIZE));
 		}
 		else if (65281 <= w && w <= 65518) //2nd part of japanese stuff in unicode
 		{
+			draw = true;
 			c = sf::Sprite(japanese, sf::IntRect((w % 16) * FONT_SIZE, (((w - (w % 16)) / 16) - 4064) * FONT_SIZE, FONT_SIZE, FONT_SIZE));
 		}
-		if(w != '\n')
-			c.setPosition(sf::Vector2f(28 + ((i - i_offset) * 48), DIALOG_BOX_LOW + 28 + (row * FONT_SIZE)));
+		if (draw)
+		{
+			c.setPosition(sf::Vector2f(20 + x, DIALOG_BOX_LOW + 20 + (row * FONT_SIZE)));
+			x += FONT_SIZE; //THIS WILL BE EDITED TO ALLOW FOR CHARACTERS OF DIFFERENT WIDTHS
+		}
 		window.draw(c);
 	}
 }
