@@ -11,7 +11,7 @@ const int PLAYER_HEIGHT = (int)(BLOCK_SIZE * 1.25f);
 const int DIALOG_BOX_HEIGHT = 200;
 const int DIALOG_BOX_LOW = SCREEN_HEIGHT - DIALOG_BOX_HEIGHT;
 
-const int FONT_SIZE = 48;
+const int FONT_SIZE = 32;
 
 const std::string RESOURCES = "Resources/";
 const std::string VIDEO = RESOURCES + "Video/";
