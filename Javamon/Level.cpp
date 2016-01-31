@@ -136,7 +136,7 @@ Level::Level(string auth, string pack, string level)
 	}
 	file.close();
 
-	wcout << L"Width: " << to_wstring(width) << L" Height: " << to_wstring(height) << endl;
+	std::wcout << L"Width: " << to_wstring(width) << L" Height: " << to_wstring(height) << endl;
 
 	//End of file loading testing code. -Karl
 
@@ -212,7 +212,7 @@ void Level::newLevel(int n, int x, int y, int d)
 		Level::name = "Level_FRLG";
 		width = 11;
 		height = 9;
-		numTeleports = 2;
+		numTeleports = 1;
 		numNPCs = 0;
 		if (x == -1 && y == -1 && d == -1)
 		{
@@ -308,8 +308,7 @@ void Level::newLevel(int n, int x, int y, int d)
 		map[8][3] = Tile(80, 2, 0);
 		map[9][3] = Tile(81, 2, 0);
 		//Map 0 teleport edits
-		teleports[0] = Teleport(10, 8, 0, 8, Direction::DOWN, 0);
-		teleports[1] = Teleport(9, 2, "Level_FRLG_1", 9, 2, Direction::LEFT, -1);
+		teleports[0] = Teleport(9, 2, "Level_FRLG_1", 9, 2, Direction::LEFT, -1);
 	}
 	else if (n == 1)
 	{
