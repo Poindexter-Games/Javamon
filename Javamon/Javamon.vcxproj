@@ -135,7 +135,10 @@
     <ClInclude Include="Battle.h" />
     <ClInclude Include="Controls.h" />
     <ClInclude Include="KText.h" />
+<<<<<<< HEAD
     <ClInclude Include="StringEditor.h" />
+=======
+>>>>>>> origin/master
     <ClInclude Include="Variables.h" />
     <ClInclude Include="Events.h" />
     <ClInclude Include="Level.h" />

@@ -95,7 +95,11 @@ public:
 		{
 			return false;
 		}
+<<<<<<< HEAD
 		for (int i = 0; i < numNPCs; i++)
+=======
+		for (int i = 0; i < numNPCS; i++)
+>>>>>>> origin/master
 		{
 			if (npcs[i].getBlockX() == p.getBlockX() && npcs[i].getBlockY() == p.getBlockY() - 1)
 			{
