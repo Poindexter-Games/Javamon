@@ -79,32 +79,119 @@ Level::Level(int n, int x, int y, int d)
 
 Level::Level(string auth, string pack, string level)
 {
-
-	//TODO Implement loading from resource/pack/level.txt
-	name = level;
-
 	//This is some testing code, it doesn't work correctly, so it will be removed soon 
+
+	mode = Mode::REG;
+	levelRequestsChange = false;
+	levelRequestsBattle = false;
+	dialogNPCNum = -1;
 
 	Level::auth = auth;
 	Level::pack = pack;
 	Level::name = level;
 
-	ifstream file;
-	file.open(RESOURCES + "Packs/" + auth + "/" + pack + "/" + level + "/Level.txt");
-	for (string line; getline(file, line); )
-	{
-		//...for each line in input...
-		cout << "l: " << line << endl;
+	bool dispNameLoaded = false;
+	bool widthLoaded = false;
+	bool heightLoaded = false;
+	bool numNPCsLoaded = false;
+	bool numTeleportsLoaded = false;
 
-		if (line.substr(0, 8).compare("setName,") == 0)
+	Level::p = Player();
+
+	wifstream file;
+	file.open(RESOURCES + "Packs/" + auth + "/" + pack + "/" + level + "/Level.txt");
+
+	wstring line;			//This is the file of the line
+	getline(file, line);	//This is to ignore the first line of the file, which contains the BOM character
+	wstring param;			//This is the wstring to hold what command/parameter is to be used
+
+	for (bool b = true; b;)
+	{
+		getline(file, line);													//Get line
+		param = StringEditor::popOffParameter(line);							//Get command
+
+		StringEditor::echo(L"PARAM: " + param);
+
+		if (param.compare(L"setName"))
 		{
-			dispName = line.substr(8, line.length() - 8);
-			cout << dispName << endl;
+			StringEditor::echo(L"Parameter was set name");
 		}
+		if (param.compare(L"setWidth"))
+		{
+			wstring width = StringEditor::popOffParameter(param);
+			//Level::width = stoi(width);
+		}
+		if (param.compare(L"setHeight"))
+		{
+			wstring height = StringEditor::popOffParameter(param);
+			//Level::height = stoi(height);
+		}
+
+		if (line.compare(L"endFile"))
+		{
+			b = false;
+		}
+
+		StringEditor::echo(L"==========END OF LOOP ITERATION============");		//Tell command prompt that the user has read a line
 	}
 	file.close();
 
+	wcout << L"Width: " << to_wstring(width) << L" Height: " << to_wstring(height) << endl;
+
 	//End of file loading testing code. -Karl
+
+	//Creating Arrays
+	if (!widthLoaded) width = 5;
+	if (!heightLoaded) height = 5;
+
+
+	map = new Tile*[width];
+	for (int i = 0; i < width; i++)
+	{
+		map[i] = new Tile[height];
+	}
+	for (int i = 0; i < width; i++)
+	{
+		for (int j = 0; j < height; j++)
+		{
+			map[i][j] = Tile(0, 0, 0);
+		}
+	}
+
+	npcs = new Player[numNPCs];
+	for (int i = 0; i < numNPCs; i++)
+	{
+		npcs[i] = Player();
+	}
+
+	teleports = new Teleport[numTeleports];
+
+	//LOADING IMAGES
+
+	textureMap = sf::Image();
+	textureMap.loadFromFile(PACKS + auth + "/" + pack + "/" + level + "/Spritesheet.png");
+
+	costumeMap = sf::Image();
+	costumeMap.loadFromFile(RESOURCES + "Video/Player.png");
+
+	sf::Image dialogBoxImg;
+	dialogBoxImg.loadFromFile(RESOURCES + "Video/DialogBox.png");
+	dialogBox = sf::Texture();
+	dialogBox.loadFromImage(dialogBoxImg);
+
+	textures = new sf::Texture[256];
+	for (int i = 0; i < 256; i++) //Creates a list of textures from the spritesheet
+	{
+		textures[i] = sf::Texture();
+		textures[i].loadFromImage(textureMap, sf::IntRect((i % 16) * BLOCK_SIZE, (int)(i / 16) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE));
+	}
+
+	costumes = new sf::Texture[8];
+	for (int i = 0; i < 8; i++) //Creates a list of textures from the spritesheet
+	{
+		costumes[i] = sf::Texture();
+		costumes[i].loadFromImage(costumeMap, sf::IntRect((i % 4) * BLOCK_SIZE, (int)(i / 4) * PLAYER_HEIGHT, BLOCK_SIZE, PLAYER_HEIGHT));
+	}
 }
 
 void Level::newLevel(int n, int x, int y, int d)
@@ -126,7 +213,7 @@ void Level::newLevel(int n, int x, int y, int d)
 		width = 11;
 		height = 9;
 		numTeleports = 2;
-		numNPCS = 0;
+		numNPCs = 0;
 		if (x == -1 && y == -1 && d == -1)
 		{
 			//This means that this level is the first level being initialized (user just started the game)
@@ -153,7 +240,7 @@ void Level::newLevel(int n, int x, int y, int d)
 		width = 12;
 		height = 9;
 		numTeleports = 1;
-		numNPCS = 2;
+		numNPCs = 2;
 		if (x == -1 && y == -1 && d == -1)
 		{
 			p.setBlockX(1);
@@ -187,8 +274,8 @@ void Level::newLevel(int n, int x, int y, int d)
 		}
 	}
 	
-	npcs = new Player[numNPCS];
-	for (int i = 0; i < numNPCS; i++)
+	npcs = new Player[numNPCs];
+	for (int i = 0; i < numNPCs; i++)
 	{
 		npcs[i] = Player();
 	}
@@ -198,7 +285,7 @@ void Level::newLevel(int n, int x, int y, int d)
 	//MAP EDITS HERE
 	if (n == 0)
 	{
-		dispName = "FRLG_0";
+		dispName = L"FRLG_0";
 		//Map 0 block edits
 		for (int i = 0; i < width; i++)
 		{
@@ -226,7 +313,7 @@ void Level::newLevel(int n, int x, int y, int d)
 	}
 	else if (n == 1)
 	{
-		dispName = "FRLG_1";
+		dispName = L"FRLG_1";
 		//Map 1 block edits
 		for (int i = 0; i < width; i++)
 		{
@@ -335,7 +422,7 @@ void Level::update(Controls & c)
 				else if ((p.getBlockX() == (width - 1))) { rightBlocked = true; }
 
 				//check to make sure npcs aren't in the way
-				for (int i = 0; i < numNPCS; i++)
+				for (int i = 0; i < numNPCs; i++)
 				{
 					if (npcs[i].isVisible())
 					{
@@ -412,7 +499,7 @@ void Level::update(Controls & c)
 
 				if (directionFacingIsValid)
 				{
-					for (int i = 0; i < numNPCS; i++)
+					for (int i = 0; i < numNPCs; i++)
 					{
 						if (p.getDirection() == Direction::UP && p.getBlockX() == npcs[i].getBlockX() && p.getBlockY() - 1 == npcs[i].getBlockY())
 						{
@@ -506,7 +593,7 @@ void Level::render(sf::RenderWindow & window, KText & font)
 	}
 
 	//DRAW NPCS
-	for (int i = 0; i < numNPCS; i++)
+	for (int i = 0; i < numNPCs; i++)
 	{
 		if (npcs[i].isVisible())
 		{

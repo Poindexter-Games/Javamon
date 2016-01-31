@@ -12,6 +12,7 @@
 #include <SFML/Graphics/Text.hpp>
 
 #include "Variables.h"
+#include "StringEditor.h"
 #include "Controls.h"
 #include "KText.h"
 #include "Teleport.h"
@@ -30,7 +31,7 @@ private:
 	string pack; //This is the individual pack name
 	string name; //This is the name for programming purposes, not the user display name
 
-	string dispName; //This is the user friendly name
+	wstring dispName; //This is the user friendly name
 
 	Tile **map;
 	int width;
@@ -40,7 +41,7 @@ private:
 	int numTeleports; //Number of teleports
 
 	Player* npcs;
-	int numNPCS;
+	int numNPCs;
 
 	sf::Image textureMap;
 	sf::Texture* textures;
@@ -94,7 +95,7 @@ public:
 		{
 			return false;
 		}
-		for (int i = 0; i < numNPCS; i++)
+		for (int i = 0; i < numNPCs; i++)
 		{
 			if (npcs[i].getBlockX() == p.getBlockX() && npcs[i].getBlockY() == p.getBlockY() - 1)
 			{
