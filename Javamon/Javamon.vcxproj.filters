@@ -83,18 +83,9 @@
     <ClInclude Include="KText.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-<<<<<<< HEAD
     <ClInclude Include="StringEditor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-=======
-<<<<<<< HEAD
-    <ClInclude Include="StringEditor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-=======
->>>>>>> origin/master
->>>>>>> origin/master
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Video\Player.png">

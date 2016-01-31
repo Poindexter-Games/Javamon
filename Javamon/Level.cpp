@@ -90,10 +90,6 @@ Level::Level(string auth, string pack, string level)
 	Level::pack = pack;
 	Level::name = level;
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> origin/master
 	bool dispNameLoaded = false;
 	bool widthLoaded = false;
 	bool heightLoaded = false;
@@ -110,14 +106,6 @@ Level::Level(string auth, string pack, string level)
 	wstring param;			//This is the wstring to hold what command/parameter is to be used
 
 	for (bool b = true; b;)
-<<<<<<< HEAD
-=======
-=======
-	ifstream file;
-	file.open(RESOURCES + "Packs/" + auth + "/" + pack + "/" + level + "/Level.txt");
-	for (string line; getline(file, line); )
->>>>>>> origin/master
->>>>>>> origin/master
 	{
 		getline(file, line);													//Get line
 		param = StringEditor::popOffParameter(line);							//Get command
@@ -604,15 +592,7 @@ void Level::render(sf::RenderWindow & window, KText & font)
 	}
 
 	//DRAW NPCS
-<<<<<<< HEAD
 	for (int i = 0; i < numNPCs; i++)
-=======
-<<<<<<< HEAD
-	for (int i = 0; i < numNPCs; i++)
-=======
-	for (int i = 0; i < numNPCS; i++)
->>>>>>> origin/master
->>>>>>> origin/master
 	{
 		if (npcs[i].isVisible())
 		{
