@@ -79,3 +79,12 @@ Player::Player(wstring quote, Monster* party, int partySize)
 	visible = true;
 	wantsToBattle = true;
 }
+
+void Player::place(int x, int y, Direction d)
+{
+	Player::x = x;
+	Player::y = y;
+	actualX = (float)(x * BLOCK_SIZE);
+	actualY = (float)(y * BLOCK_SIZE);
+	direction = d;
+}

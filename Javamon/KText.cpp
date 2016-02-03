@@ -1,5 +1,7 @@
 ﻿#include "KText.h"
 
+//Description is located in the header file
+
 KText::KText(Language lang)
 {
 	KText::lang = lang;
@@ -54,8 +56,9 @@ void KText::levelDialog(sf::RenderWindow & window, wstring dialog)
 		wchar_t w = dialog[i];
 		sf::Sprite c;
 		charWidth = FONT_SIZE;
-		if (w == '\n') //enter
+		if (w == '\n') //If w is the enter key
 		{
+			//Go down a row and adjust all the way to the left side of the dialog box, also display the enter key with a width of zero
 			row++;
 			x = 0;
 			charWidth = 0;
@@ -82,7 +85,7 @@ void KText::levelDialog(sf::RenderWindow & window, wstring dialog)
 			c = sf::Sprite(japanese, sf::IntRect((w % 16) * FONT_SIZE, (((w - (w % 16)) / 16) - 4064) * FONT_SIZE, FONT_SIZE * .5, FONT_SIZE));
 			charWidth = .5 * FONT_SIZE;
 		}
-		else if (65440 <= w && w <= 65519) //2nd part of japanese stuff in unicode, but back to full width character
+		else if (65440 <= w && w <= 65519) //2nd part of japanese stuff in unicode, but back to full width characters
 		{
 			draw = true;
 			c = sf::Sprite(japanese, sf::IntRect((w % 16) * FONT_SIZE, (((w - (w % 16)) / 16) - 4064) * FONT_SIZE, FONT_SIZE, FONT_SIZE));
@@ -90,7 +93,8 @@ void KText::levelDialog(sf::RenderWindow & window, wstring dialog)
 		if (draw)
 		{
 			c.setPosition(sf::Vector2f(20 + x, DIALOG_BOX_LOW + 20 + (row * FONT_SIZE)));
-			x += charWidth; //THIS WILL BE EDITED TO ALLOW FOR CHARACTERS OF DIFFERENT WIDTHS
+			x += charWidth;
+			//Set the x value of the next character to += the width of the last character
 		}
 		window.draw(c);
 	}

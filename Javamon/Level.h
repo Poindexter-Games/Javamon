@@ -25,21 +25,45 @@ using namespace std;
 class Level
 {
 private:
+	/*
+	Mode is going to be moved into the player class soon so not every player
+	in a level forced into dialog mode when one player reads/talks to something
+	*/
 	enum Mode {REG, DIALOG};
 	Mode mode;
 
-	sf::String auth; //This is generally the author of the packs' name
-	sf::String pack; //This is the individual pack name
-	sf::String name; //This is the name for programming purposes, not the user display name
+	/*
+	Author is the subfolder under Resources/Packs/
+	This is generally named after the author of the pack
+	*/
+	sf::String auth;
 
-	sf::String dispName; //This is the user friendly name
+	/*
+	Pack is the subfolder folder under Resources/Packs/%auth%
+	This is generally named after the pack (mod)
+	*/
+	sf::String pack;
+
+	/*
+	This is the subfolder under Resources/Packs/%auth%/%pack%
+	This is not the name used for the level switch sign
+	*/
+	sf::String name;
+
+	/*
+	This is the language friendly name for in-game mentions of the level
+	*/
+	sf::String dispName;
 
 	Tile **map;
 	int width;
 	int height;
+	int spawnX;
+	int spawnY;
+	Direction spawnDirection;
 
-	Teleport *teleports; //List of teleports
-	int numTeleports; //Number of teleports
+	Teleport *teleports;	//List of teleports
+	int numTeleports;		//Number of teleports
 
 	Player* npcs;
 	int numNPCs;
@@ -62,10 +86,21 @@ private:
 	int toLevelY;
 	Direction toLevelDirection;
 
-	void loadLevel(Language, wstring, wstring, wstring); //methods that are shared by the constructor that creates the level from scratch and the one that creates a level from another level
+	/*
+	Contains methods shared by both constructors
+	*/
+	void loadLevel(Language, wstring, wstring, wstring);
 public:
-	Level(Language, wstring, wstring, wstring); //Regular way to load level, unimplemented, use the test method
-	Level(Language, wstring, wstring, wstring, int, int, Direction); //Regular way to load a level but by teleports
+	/*
+	Constructor for initializing the level
+	*/
+	Level(Language, wstring, wstring, wstring);
+	/*
+	Constructor for initializing the level with certain player properties
+	This method will be depreciated soon because instantiating levels
+	with player properties is bad
+	*/
+	Level(Language, wstring, wstring, wstring, int, int, Direction);
 
 	void update(Controls&);
 	void render(sf::RenderWindow&, KText&);
@@ -78,10 +113,10 @@ public:
 	bool isRequestingLevelChange() { return levelRequestsChange; }
 	void requestLevelChange(wstring, int, int, Direction);
 
-	sf::String getToLevelName() { return toLevelName; }
-	int getToLevelX() { return toLevelX; }
-	int getToLevelY() { return toLevelY; }
-	Direction getToLevelDirection() { return toLevelDirection; }
+	sf::String	getToLevelName()		{ return toLevelName; }
+	int			getToLevelX()			{ return toLevelX; }
+	int			getToLevelY()			{ return toLevelY; }
+	Direction	getToLevelDirection()	{ return toLevelDirection; }
 
 
 	bool isRequestingBattleScreen() { return levelRequestsBattle; }

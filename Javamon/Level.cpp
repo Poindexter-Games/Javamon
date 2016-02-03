@@ -5,18 +5,19 @@ using namespace std;
 Level::Level(Language l, wstring auth, wstring pack, wstring level)
 {
 	loadLevel(l, auth, pack, level);
+	//Set the remaining stuff
+	p.place(spawnX, spawnY, spawnDirection);
 }
 
 Level::Level(Language l, wstring auth, wstring pack, wstring level, int x, int y, Direction d)
 {
 	loadLevel(l, auth, pack, level);
 	//Set the remaining stuff
+	p.place(x, y, d);
 }
 
 void Level::loadLevel(Language l, wstring auth, wstring pack, wstring level)
 {
-	//This is some testing code, it doesn't work correctly, so it will be removed soon 
-
 	mode = Mode::REG;
 	levelRequestsChange = false;
 	levelRequestsBattle = false;
@@ -29,29 +30,42 @@ void Level::loadLevel(Language l, wstring auth, wstring pack, wstring level)
 	bool dispNameLoaded = false;
 	bool widthLoaded = false;
 	bool heightLoaded = false;
-	bool numNPCsLoaded = false;
-	bool numTeleportsLoaded = false;
+	bool spawnXLoaded = false;
+	bool spawnYLoaded = false;
+	bool spawnDirectionLoaded = false;
+	bool mapCreated = false;
+	bool npcsCreated = false;
+	bool teleportsCreated = false;
 
 	Level::p = Player();
 
+	/*
+	FileI is the Level.txt that the game is building the level from
+	FileO is the Log.txt that the game is writing an error log to (once I implement it)
+	*/
+
 	locale locale("");					//This will read the user's locale, so the program can determine string encoding since wifstream uses a regular string to load a file
-	string path = sf::String(RESOURCES + L"Packs/" + Level::auth + L"/" + pack + L"/" + level + L"/Level.txt").toAnsiString(locale);
+	string pathi = sf::String(RESOURCES + L"Packs/" + Level::auth + L"/" + pack + L"/" + level + L"/Level.txt").toAnsiString(locale);
+	//string patho = sf::String(RESOURCES + L"Packs/" + Level::auth + L"/" + pack + L"/" + level +   L"/Log.txt").toAnsiString(locale);
 
-	wifstream file;
-	file.open(path);
+	wifstream filei;
+	filei.open(pathi);
 
+	//wofstream fileo;
+	//fileo.open(patho);
 
 	wstring line;			//This is the file of the line
-	getline(file, line);	//This is to ignore the first line of the file, which contains the BOM character
+	getline(filei, line);	//This is to ignore the first line of the file, which contains the BOM character
 	int paramNum;
 	wstring* param;			//This is the wstring to hold what command/parameter is to be used
 
 	for (bool b = true; b;)
 	{
 		StringEditor::echo(L"==========START OF LOOP ITERATION============");
-		getline(file, line);										//Get the line from the file
+		getline(filei, line);										//Get the line from the file
 		paramNum = StringEditor::getNumberOfSegments(line);
 		if (paramNum == 0) continue;								//This means the line was blank
+		if (paramNum == -1) StringEditor::echo(L"ERROR: " + line);
 		param = new wstring[paramNum];
 		param = StringEditor::breakApart(line);
 
@@ -67,7 +81,7 @@ void Level::loadLevel(Language l, wstring auth, wstring pack, wstring level)
 				b = false;
 			}
 		}
-		if (paramNum == 2)
+		else if (paramNum == 2)
 		{
 			if (param[0].compare(L"setWidth") == 0)
 			{
@@ -81,48 +95,143 @@ void Level::loadLevel(Language l, wstring auth, wstring pack, wstring level)
 			}
 			if (param[0].compare(L"setSpawnX") == 0)
 			{
-				height = stoi(param[1]);
-				heightLoaded = true;
+				spawnX = stoi(param[1]);
+				spawnXLoaded = true;
 			}
 			if (param[0].compare(L"setSpawnY") == 0)
 			{
-				height = stoi(param[1]);
-				heightLoaded = true;
+				spawnY = stoi(param[1]);
+				spawnYLoaded = true;
+			}
+			if (param[0].compare(L"setSpawnDirection") == 0)
+			{
+				int d = -1;
+				if (param[1].compare(L"UP") == 0) d = 0;
+				if (param[1].compare(L"LEFT") == 0) d = 1;
+				if (param[1].compare(L"DOWN") == 0) d = 2;
+				if (param[1].compare(L"RIGHT") == 0) d = 3;
+				p.setDirection(to_Direction(d));
+				spawnDirectionLoaded = true;
+			}
+			if (param[0].compare(L"setNumberOfTeleports") == 0)
+			{
+				numTeleports = stoi(param[1]);
+				teleports = new Teleport[numTeleports];
+				teleportsCreated = true;
+			}
+			if (param[0].compare(L"setNumberOfNPCs") == 0)
+			{
+				numNPCs = stoi(param[1]);
+				npcs = new Player[numNPCs];
+				npcsCreated = true;
+			}
+		}
+		else if (paramNum == 5)
+		{
+			if (param[0].compare(L"setRow") == 0 && mapCreated)
+			{
+				for (int i = 0; i < width; i++)
+				{
+					map[i][stoi(param[1])] = Tile(stoi(param[2]), stoi(param[3]), stoi(param[4]));
+				}
+			}
+			if (param[0].compare(L"setCol") == 0 && mapCreated)
+			{
+				for (int i = 0; i < height; i++)
+				{
+					map[stoi(param[1])][i] = Tile(stoi(param[2]), stoi(param[3]), stoi(param[4]));
+				}
+			}
+		}
+		else if (paramNum == 6)
+		{
+			if (param[0].compare(L"setBlock") == 0 && mapCreated)
+			{
+				map[stoi(param[1])][stoi(param[2])] = Tile(stoi(param[3]), stoi(param[4]), stoi(param[5]));
+			}
+		}
+		else if (paramNum == 8)
+		{
+			if (param[0].compare(L"setTeleport") == 0 && teleportsCreated)
+			{
+				int d = -1;
+				if (param[6].compare(L"UP") == 0) d = 0;
+				if (param[6].compare(L"LEFT") == 0) d = 1;
+				if (param[6].compare(L"DOWN") == 0) d = 2;
+				if (param[6].compare(L"RIGHT") == 0) d = 3;
+				teleports[stoi(param[1])] = Teleport(stoi(param[2]), stoi(param[3]), stoi(param[4]), stoi(param[5]), to_Direction(d), stoi(param[7]));
+			}
+		}
+		else if (paramNum == 9)
+		{
+			if (param[0].compare(L"setTeleport") == 0 && teleportsCreated)
+			{
+				int d = -1;
+				if (param[7].compare(L"UP") == 0) d = 0;
+				if (param[7].compare(L"LEFT") == 0) d = 1;
+				if (param[7].compare(L"DOWN") == 0) d = 2;
+				if (param[7].compare(L"RIGHT") == 0) d = 3;
+				teleports[stoi(param[1])] = Teleport(stoi(param[2]), stoi(param[3]), param[4], stoi(param[5]), stoi(param[6]), to_Direction(d), stoi(param[8]));
 			}
 		}
 
+		if (!mapCreated && heightLoaded && widthLoaded)
+		{
+			map = new Tile*[width];
+			for (int i = 0; i < width; i++)
+			{
+				map[i] = new Tile[height];
+			}
+			for (int i = 0; i < width; i++)
+			{
+				for (int j = 0; j < height; j++)
+				{
+					map[i][j] = Tile(0, 0, 0);
+				}
+			}
+			mapCreated = true;
+		}
 
 		StringEditor::echo(L"==========END OF LOOP ITERATION============");
 	}
-	file.close();
+	filei.close();
+	//fileo.close();
 
 	//End of file loading testing code. -Karl
 
 	//Creating Arrays
 	if (!widthLoaded) width = 5;
 	if (!heightLoaded) height = 5;
-
-
-	map = new Tile*[width];
-	for (int i = 0; i < width; i++)
+	if (!spawnXLoaded) spawnX == width - 1;
+	if (!spawnYLoaded) spawnY == height - 1;
+	if (!spawnDirectionLoaded) spawnDirection == Direction::RIGHT;
+	if (!mapCreated)
 	{
-		map[i] = new Tile[height];
-	}
-	for (int i = 0; i < width; i++)
-	{
-		for (int j = 0; j < height; j++)
+		map = new Tile*[width];
+		for (int i = 0; i < width; i++)
 		{
-			map[i][j] = Tile(0, 0, 0);
+			map[i] = new Tile[height];
+		}
+		for (int i = 0; i < width; i++)
+		{
+			for (int j = 0; j < height; j++)
+			{
+				map[i][j] = Tile(0, 0, 0);
+			}
 		}
 	}
-
-	npcs = new Player[numNPCs];
-	for (int i = 0; i < numNPCs; i++)
+	
+	if (!npcsCreated)
 	{
-		npcs[i] = Player();
+		numNPCs = 0;
+		npcs = new Player[numNPCs];
 	}
 
-	teleports = new Teleport[numTeleports];
+	if (!teleportsCreated)
+	{
+		numTeleports = 0;
+		teleports = new Teleport[numTeleports];
+	}
 
 	//LOADING IMAGES
 
@@ -168,11 +277,7 @@ void Level::update(Controls & c)
 					if (t.intraLevel())
 					{
 						//Local Teleport, (inside of the same level)
-						p.setBlockX(t.getToX());
-						p.setBlockY(t.getToY());
-						p.setActualX((float)(t.getToX() * BLOCK_SIZE));
-						p.setActualY((float)(t.getToY() * BLOCK_SIZE));
-						p.setDirection(t.getDirection());
+						p.place(t.getToX(), t.getToY(), t.getDirection());
 					}
 					else
 					{

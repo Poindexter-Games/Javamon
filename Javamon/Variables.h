@@ -23,3 +23,11 @@ enum GameState { LEVEL = 0, LOADING = 1, BATTLE = 2 };
 enum Direction { UP = 0, LEFT = 1, DOWN = 2, RIGHT = 3 };
 enum Control { C_UP = 0, C_LEFT = 1, C_DOWN = 2, C_RIGHT = 3, ACCEPT = 4, CANCEL = 5, START = 6, SELECT = 7, MOUSE_LEFT = 8, MOUSE_RIGHT = 9 };
 enum Language { EN_US = 0, JA_JP = 1};
+
+static Direction to_Direction(int i)
+{
+	if (i == 0) return UP;
+	if (i == 1) return LEFT;
+	if (i == 2) return DOWN;
+	return RIGHT;
+}

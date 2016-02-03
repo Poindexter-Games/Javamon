@@ -4,20 +4,21 @@
 
 int StringEditor::getBreakPosition(wstring str, int endOfSegmentNumber)
 {
+	if (endOfSegmentNumber == 0) return -1;
 	int s = 0;
 	for (int i = 0; i < str.length(); i++)
 	{
 		if (str[i] == L',' || str[i] == L';')
 		{
+			s++;
 			if (s == endOfSegmentNumber)
 			{
 				return i;
 			}
-			s++;
 		}
 	}
 	//This means that the segment number was invalid
-	return -1;
+	return -2;
 }
 
 int StringEditor::getNumberOfSegments(wstring str)
@@ -52,12 +53,11 @@ wstring* StringEditor::breakApart(wstring str)
 {
 	int s = getNumberOfSegments(str);
 	wstring* strs = new wstring[s];
-	int lastPos = 0;
 	for (int i = 0; i < s; i++)
 	{
-		int pos = getBreakPosition(str, 0);
-		strs[i] = str.substr(lastPos, pos);
-		lastPos = pos + 1;
+		int pos0 = getBreakPosition(str, i);
+		int pos1 = getBreakPosition(str, i + 1);
+		strs[i] = str.substr(pos0 + 1, (pos1 - 1) - (pos0));
 	}
 	return strs;
 }

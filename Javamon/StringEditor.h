@@ -19,11 +19,13 @@ private:
 	Returns the location of a certain commma or semicolon
 	The first comma (or semicolon) is marked as endOfSegmentNumber equaling ZERO
 
-	Returns -1 if the end of segment number was out of range
+	Returns -2 if the end of segment number was out of range
+	Returns -1 for the beginning of the string if(endOfSegment == 0)
+	Returns location of comma or semi colon
 
 	Author: Karl Piepho
 	Date Created: Feb 2,2016
-	Date Revised: Feb 2,2016
+	Date Revised: Feb 3,2016
 	*/
 	static int getBreakPosition(wstring, int);
 public:
@@ -47,7 +49,7 @@ public:
 
 	Author: Karl Piepho
 	Date Created: Feb 2,2016
-	Date Revised: Feb 2,2016
+	Date Revised: Feb 3,2016
 	*/
 	static wstring* breakApart(wstring);
 	/*

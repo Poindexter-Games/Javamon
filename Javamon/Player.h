@@ -50,13 +50,7 @@ public:
 	void setZDirection(int zd) { zdirection = zd; }
 	void setActualX(float actualX) { Player::actualX = actualX; }
 	void setActualY(float actualY) { Player::actualY = actualY; }
-	void place(int x, int y)
-	{
-		Player::x = x;
-		Player::y = y;
-		actualX = (float) (x * BLOCK_SIZE);
-		actualY = (float) (y * BLOCK_SIZE);
-	}
+	void place(int, int, Direction);
 
 	void adjustActualX(float adjust) { Player::actualX += adjust; }
 	void adjustActualY(float adjust) { Player::actualY += adjust; }

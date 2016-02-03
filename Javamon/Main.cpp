@@ -56,6 +56,7 @@ int main()
 			wstring auth = level.getAuth().toWideString();
 			wstring pack = level.getPack().toWideString();
 			wstring name = level.getToLevelName().toWideString();
+			wcout << auth << L" " << pack << L" " << name << endl;
 			int x = level.getToLevelX();
 			int y = level.getToLevelY();
 			int d = level.getToLevelDirection();
@@ -101,8 +102,6 @@ int main()
 		
 
 	}
-
-
 	//	Cleanup / Exit Game
 	window.close();
 
