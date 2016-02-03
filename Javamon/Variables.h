@@ -1,11 +1,12 @@
 ﻿#pragma once
 
+#include <SFML/System/String.hpp>
 #include <iostream>
 
 const float SCREEN_HEIGHT = 720;
 const float SCREEN_WIDTH = 1280;
 const int FRAME_RATE_LIMIT = 60;
-const std::wstring WINDOW_TITLE = L"Javamon";
+const sf::String WINDOW_TITLE = L"Javamon";
 const int BLOCK_SIZE = 64;
 const int PLAYER_HEIGHT = (int)(BLOCK_SIZE * 1.25f);
 const int DIALOG_BOX_HEIGHT = 200;
@@ -13,9 +14,9 @@ const int DIALOG_BOX_LOW = SCREEN_HEIGHT - DIALOG_BOX_HEIGHT;
 
 const int FONT_SIZE = 32;
 
-const std::string RESOURCES = "Resources/";
-const std::string VIDEO = RESOURCES + "Video/";
-const std::string PACKS = RESOURCES + "Packs/";
+const sf::String RESOURCES = L"Resources/";
+const sf::String VIDEO = RESOURCES + L"Video/";
+const sf::String PACKS = RESOURCES + L"Packs/";
 
 enum Gender { MALE = 0, FEMALE = 1, NEUTER = 2 };
 enum GameState { LEVEL = 0, LOADING = 1, BATTLE = 2 };

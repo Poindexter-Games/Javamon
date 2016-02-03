@@ -16,6 +16,7 @@ private:
 	Language lang; //This will determine how many leters are loaded
 	sf::Texture basic_latin;
 	sf::Texture japanese;
+	int* latinWidths;
 public:
 	KText(Language); //This will instantiate the texture stuff
 

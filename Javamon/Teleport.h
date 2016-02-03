@@ -1,10 +1,14 @@
 #pragma once
+
 #include <cstdint>
-#include <string>
+#include <SFML/System/String.hpp>
 
 #include "Variables.h"
 
 using namespace std;
+
+//THIS CLASS NEEDS TO BE BROKEN INTO A .CPP FILE
+//KARL PIEPHO
 
 class Teleport
 {
@@ -15,7 +19,7 @@ private:
 	int toY;
 	Direction direction; //0 up, 1 left, 2 down, 3 right
 	bool toAnotherLevel;
-	string name;
+	sf::String name;
 	int zdirection; //0 if standard teleport, 1 if up stairs, -1 if down stairs
 	bool rug; //if true, level will draw a rug at teleport's location TODO
 	int texture; //texture number for teleport rug TODO
@@ -57,7 +61,7 @@ public:
 	Params:
 	Type: 0 if standard teleport, 1 if going upstairs, -1 if going downstairs
 	*/
-	Teleport(int x, int y, string name, int toX, int toY, Direction direction, int zdirection)
+	Teleport(int x, int y, sf::String name, int toX, int toY, Direction direction, int zdirection)
 	{
 		toAnotherLevel = true;
 		Teleport::x = x;
@@ -78,7 +82,7 @@ public:
 	int getZDirection() { return zdirection; }
 	bool interLevel() { return toAnotherLevel; }
 	bool intraLevel() { return !toAnotherLevel; }
-	string getName() { return name; }
+	sf::String getName() { return name; }
 	bool drawRug() { return rug; }
 	int rugNum() { return texture; }
 };

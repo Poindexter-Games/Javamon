@@ -2,82 +2,18 @@
 
 using namespace std;
 
-Level::Level()
+Level::Level(Language l, wstring auth, wstring pack, wstring level)
 {
-	sf::FileInputStream fs;
-
-	Level::auth = "Poindexter";
-	Level::pack = "Test";
-	Level::name = "TestLevel";
-	width = 8;
-	height = 8;
-
-	Player p;
-
-	map = new Tile*[width];
-	for (int i = 0; i < width; i++)
-	{
-		map[i] = new Tile[height];
-	}
-	for (int i = 0; i < width; i++)
-	{
-		for (int j = 0; j < height; j++)
-		{
-			map[i][j] = Tile(0, 0, 0);
-		}
-	}
-	//TEMPORARY EDIT MAP HERE
-	map[2][1] = Tile(1, 2, 0);
-	map[3][1] = Tile(2, 1, 0);
-
-	textureMap = sf::Image();
-	textureMap.loadFromFile(RESOURCES + "Packs/" + auth + "/" + pack + "/" + name + "/Spritesheet.png");
-
-	costumeMap = sf::Image();
-	costumeMap.loadFromFile(RESOURCES + "Video/Player.png");
-
-	/*
-	//Listening to Leeroy jenkins remix 10 hours
-	//Time straight = 54:07 (54 minutes 07 seconds) I couldn't make it to an hour...
-
-	for(int i = 0; i < blocks.size(); i++)
-	{
-	g.drawImage(images.get(blocks.get(i).imageId()), ((i%width)*60)+xOffset, (Math.roundDown(i/width)*60)+yOffset, null);
-	}
-	*/
-
-	textures = new sf::Texture[256];
-	for (int i = 0; i < 256; i++) //Creates a list of textures from the spritesheet
-	{
-		textures[i] = sf::Texture();
-		textures[i].loadFromImage(textureMap, sf::IntRect((i % 16) * BLOCK_SIZE, (int)(i / 16) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE));
-	}
-
-	costumes = new sf::Texture[8];
-	for (int i = 0; i < 8; i++) //Creates a list of textures from the spritesheet
-	{
-		costumes[i] = sf::Texture();
-		costumes[i].loadFromImage(costumeMap, sf::IntRect((i % 4) * BLOCK_SIZE, (int)(i / 4) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE));
-	}
-
-	//==
-
-	/*
-	void loadLevel
-	{
-		fstream file;
-		file.open("");
-		file.close();
-	}
-	*/	
+	loadLevel(l, auth, pack, level);
 }
 
-Level::Level(int n, int x, int y, int d)
+Level::Level(Language l, wstring auth, wstring pack, wstring level, int x, int y, Direction d)
 {
-	newLevel(n, x, y, d);
+	loadLevel(l, auth, pack, level);
+	//Set the remaining stuff
 }
 
-Level::Level(string auth, string pack, string level)
+void Level::loadLevel(Language l, wstring auth, wstring pack, wstring level)
 {
 	//This is some testing code, it doesn't work correctly, so it will be removed soon 
 
@@ -98,45 +34,67 @@ Level::Level(string auth, string pack, string level)
 
 	Level::p = Player();
 
+	locale locale("");					//This will read the user's locale, so the program can determine string encoding since wifstream uses a regular string to load a file
+	string path = sf::String(RESOURCES + L"Packs/" + Level::auth + L"/" + pack + L"/" + level + L"/Level.txt").toAnsiString(locale);
+
 	wifstream file;
-	file.open(RESOURCES + "Packs/" + auth + "/" + pack + "/" + level + "/Level.txt");
+	file.open(path);
+
 
 	wstring line;			//This is the file of the line
 	getline(file, line);	//This is to ignore the first line of the file, which contains the BOM character
-	wstring param;			//This is the wstring to hold what command/parameter is to be used
+	int paramNum;
+	wstring* param;			//This is the wstring to hold what command/parameter is to be used
 
 	for (bool b = true; b;)
 	{
-		getline(file, line);													//Get line
-		param = StringEditor::popOffParameter(line);							//Get command
+		StringEditor::echo(L"==========START OF LOOP ITERATION============");
+		getline(file, line);										//Get the line from the file
+		paramNum = StringEditor::getNumberOfSegments(line);
+		if (paramNum == 0) continue;								//This means the line was blank
+		param = new wstring[paramNum];
+		param = StringEditor::breakApart(line);
 
-		StringEditor::echo(L"PARAM: " + param);
-
-		if (param.compare(L"setName"))
+		for (int i = 0; i < paramNum; i++)
 		{
-			StringEditor::echo(L"Parameter was set name");
-		}
-		if (param.compare(L"setWidth"))
-		{
-			wstring width = StringEditor::popOffParameter(param);
-			//Level::width = stoi(width);
-		}
-		if (param.compare(L"setHeight"))
-		{
-			wstring height = StringEditor::popOffParameter(param);
-			//Level::height = stoi(height);
+			StringEditor::echo(i, param[i]);
 		}
 
-		if (line.compare(L"endFile"))
+		if (paramNum == 1)
 		{
-			b = false;
+			if (param[0].compare(L"closeFile") == 0)
+			{
+				b = false;
+			}
+		}
+		if (paramNum == 2)
+		{
+			if (param[0].compare(L"setWidth") == 0)
+			{
+				width = stoi(param[1]);
+				widthLoaded = true;
+			}
+			if (param[0].compare(L"setHeight") == 0)
+			{
+				height = stoi(param[1]);
+				heightLoaded = true;
+			}
+			if (param[0].compare(L"setSpawnX") == 0)
+			{
+				height = stoi(param[1]);
+				heightLoaded = true;
+			}
+			if (param[0].compare(L"setSpawnY") == 0)
+			{
+				height = stoi(param[1]);
+				heightLoaded = true;
+			}
 		}
 
-		StringEditor::echo(L"==========END OF LOOP ITERATION============");		//Tell command prompt that the user has read a line
+
+		StringEditor::echo(L"==========END OF LOOP ITERATION============");
 	}
 	file.close();
-
-	std::wcout << L"Width: " << to_wstring(width) << L" Height: " << to_wstring(height) << endl;
 
 	//End of file loading testing code. -Karl
 
@@ -170,188 +128,6 @@ Level::Level(string auth, string pack, string level)
 
 	textureMap = sf::Image();
 	textureMap.loadFromFile(PACKS + auth + "/" + pack + "/" + level + "/Spritesheet.png");
-
-	costumeMap = sf::Image();
-	costumeMap.loadFromFile(RESOURCES + "Video/Player.png");
-
-	sf::Image dialogBoxImg;
-	dialogBoxImg.loadFromFile(RESOURCES + "Video/DialogBox.png");
-	dialogBox = sf::Texture();
-	dialogBox.loadFromImage(dialogBoxImg);
-
-	textures = new sf::Texture[256];
-	for (int i = 0; i < 256; i++) //Creates a list of textures from the spritesheet
-	{
-		textures[i] = sf::Texture();
-		textures[i].loadFromImage(textureMap, sf::IntRect((i % 16) * BLOCK_SIZE, (int)(i / 16) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE));
-	}
-
-	costumes = new sf::Texture[8];
-	for (int i = 0; i < 8; i++) //Creates a list of textures from the spritesheet
-	{
-		costumes[i] = sf::Texture();
-		costumes[i].loadFromImage(costumeMap, sf::IntRect((i % 4) * BLOCK_SIZE, (int)(i / 4) * PLAYER_HEIGHT, BLOCK_SIZE, PLAYER_HEIGHT));
-	}
-}
-
-void Level::newLevel(int n, int x, int y, int d)
-{
-	mode = Mode::REG;
-
-	levelRequestsChange = false;
-	levelRequestsBattle = false;
-	dialogNPCNum = -1;
-
-	Level::auth = "Poindexter";
-	Level::pack = "Test";
-
-	Level::p = Player();
-
-	if (n == 0) //Red's room in pkmn fr
-	{
-		Level::name = "Level_FRLG";
-		width = 11;
-		height = 9;
-		numTeleports = 1;
-		numNPCs = 0;
-		if (x == -1 && y == -1 && d == -1)
-		{
-			//This means that this level is the first level being initialized (user just started the game)
-			p.setBlockX(5);
-			p.setBlockY(7);
-			p.setActualX(5 * BLOCK_SIZE);
-			p.setActualY(7 * BLOCK_SIZE);
-			p.setDirection(Direction::DOWN);
-		}
-		else
-		{
-			//This means that the player has moved from a different level to this one and the other level has already designated its toX and toY co-ordinates
-			p.place(x, y);
-			//This offsets the player and allows them to walk into the level, or off of the stairs
-			if (d == 0) { p.setDirection(Direction::UP   ); p.setActualY((y + .5f) * BLOCK_SIZE); }
-			if (d == 1) { p.setDirection(Direction::LEFT ); p.setActualX((x + .5f) * BLOCK_SIZE); }
-			if (d == 2) { p.setDirection(Direction::DOWN ); p.setActualY((y - .5f) * BLOCK_SIZE); }
-			if (d == 3) { p.setDirection(Direction::RIGHT); p.setActualX((x - .5f) * BLOCK_SIZE); }
-		}
-	}
-	else if (n == 1) //Red's living room in pkmn fr
-	{
-		Level::name = "Level_FRLG";
-		width = 12;
-		height = 9;
-		numTeleports = 1;
-		numNPCs = 2;
-		if (x == -1 && y == -1 && d == -1)
-		{
-			p.setBlockX(1);
-			p.setBlockY(1);
-			p.setActualX(1 * BLOCK_SIZE);
-			p.setActualY(1 * BLOCK_SIZE);
-			p.setDirection(Direction::DOWN);
-		}
-		else
-		{
-			//This means that the player has moved from a different level to this one and the other level has already designated its toX and toY co-ordinates
-			p.place(x, y);
-			//This offsets the player and allows them to walk into the level, or off of the stairs
-			if (d == 0) { p.setDirection(Direction::UP   ); p.setActualY((y + .5f) * BLOCK_SIZE); }
-			if (d == 1) { p.setDirection(Direction::LEFT ); p.setActualX((x + .5f) * BLOCK_SIZE); }
-			if (d == 2) { p.setDirection(Direction::DOWN ); p.setActualY((y - .5f) * BLOCK_SIZE); }
-			if (d == 3) { p.setDirection(Direction::RIGHT); p.setActualX((x - .5f) * BLOCK_SIZE); }
-		}
-	}
-
-	map = new Tile*[width];
-	for (int i = 0; i < width; i++)
-	{
-		map[i] = new Tile[height];
-	}
-	for (int i = 0; i < width; i++)
-	{
-		for (int j = 0; j < height; j++)
-		{
-			map[i][j] = Tile(0, 0, 0);
-		}
-	}
-	
-	npcs = new Player[numNPCs];
-	for (int i = 0; i < numNPCs; i++)
-	{
-		npcs[i] = Player();
-	}
-
-	teleports = new Teleport[numTeleports];
-
-	//MAP EDITS HERE
-	if (n == 0)
-	{
-		dispName = L"FRLG_0";
-		//Map 0 block edits
-		for (int i = 0; i < width; i++)
-		{
-			map[i][0] = Tile(1, 2, 0);
-		}
-		for (int i = 0; i < width; i++)
-		{
-			map[i][1] = Tile(17, 2, 0);
-		}
-		for (int i = 0; i < width; i++)
-		{
-			map[i][2] = Tile(16, 0, 0);
-		}
-		map[10][8] = Tile(2, 0, 0);
-		map[0][8] = Tile(18, 0, 0);
-
-		map[8][1] = Tile(48, 2, 0);
-		map[8][2] = Tile(64, 2, 0);
-		map[9][2] = Tile(65, 0, 0); //This is the block where the teleport is located
-		map[8][3] = Tile(80, 2, 0);
-		map[9][3] = Tile(81, 2, 0);
-		//Map 0 teleport edits
-		teleports[0] = Teleport(9, 2, "Level_FRLG_1", 9, 2, Direction::LEFT, -1);
-	}
-	else if (n == 1)
-	{
-		dispName = L"FRLG_1";
-		//Map 1 block edits
-		for (int i = 0; i < width; i++)
-		{
-			map[i][0] = Tile(1, 2, 0);
-		}
-		for (int i = 0; i < width; i++)
-		{
-			map[i][1] = Tile(17, 2, 0);
-		}
-		for (int i = 0; i < width; i++)
-		{
-			map[i][2] = Tile(16, 0, 0);
-		}
-		map[10][1] = Tile(50, 2, 0);
-		map[11][1] = Tile(51, 2, 0);
-		map[10][2] = Tile(66, 0, 0); //This is the block where the teleport is located
-		map[11][2] = Tile(67, 2, 0);
-		map[10][3] = Tile(82, 2, 0);
-		map[11][3] = Tile(83, 2, 0);
-		//Map 1 teleport edits
-		teleports[0] = Teleport(10, 2, "Level_FRLG_0",  10, 2, Direction::RIGHT, 1);
-		//Map 1 npc edits
-		npcs[0].setGender(Gender::FEMALE);
-		npcs[0].place(7, 4);
-		npcs[0].setDirection(Direction::LEFT);
-
-		//npcs[0].setDialog(L"トバイキローはだれ？");
-		npcs[0].setDialog(L"You down with Donald?");
-
-		npcs[1].place(4, 4);
-		npcs[1].setDirection(Direction::RIGHT);
-		npcs[1].setDialog(L"You're gonna feel the\nburn of Bernie Sanders.");
-		npcs[1].setWantsToBattle(true);
-	}
-
-	//LOADING IMAGES
-
-	textureMap = sf::Image();
-	textureMap.loadFromFile(RESOURCES + "Packs/" + auth + "/" + pack + "/" + name + "/Spritesheet.png");
 
 	costumeMap = sf::Image();
 	costumeMap.loadFromFile(RESOURCES + "Video/Player.png");
@@ -416,9 +192,9 @@ void Level::update(Controls & c)
 
 				//keep player from leaving the boundaries
 				if (p.getBlockY() == 0) { upBlocked = true; }
-				else if (p.getBlockX() == 0) { leftBlocked = true; }
-				else if ((p.getBlockY() == (height - 1))) { downBlocked = true; }
-				else if ((p.getBlockX() == (width - 1))) { rightBlocked = true; }
+				if (p.getBlockX() == 0) { leftBlocked = true; }
+				if ((p.getBlockY() == (height - 1))) { downBlocked = true; }
+				if ((p.getBlockX() == (width - 1))) { rightBlocked = true; }
 
 				//check to make sure npcs aren't in the way
 				for (int i = 0; i < numNPCs; i++)
@@ -614,6 +390,66 @@ void Level::render(sf::RenderWindow & window, KText & font)
 	}
 }
 
+void Level::drawDialog(sf::RenderWindow & window, KText & font)
+{
+	/*
+	  THIS METHOD IS GOING TO EXPORTED TO IT'S OWN CLASS SOON, DON'T FRET
+	  THIS METHOD ALSO IS GOING TO BE VERY BIG AND COMPLICATED, THEREFORE I (KARL) WILL WORK ON IT BECAUSE IT REQUIRES
+	DEPTH OF KNOWLEDGE IN PROGRAMMING FOR NON-ASCII SYMBOLS AND OTHER FANCY TECHNIQUES I AM ADDING. 
+	-KARL PIEPHO
+	*/
+
+
+	//Set the view
+	sf::View view;
+	view.setSize(sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
+	view.setCenter(sf::Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2));
+	window.setView(view);
+
+	sf::Sprite s(dialogBox);
+	s.setPosition(0, DIALOG_BOX_LOW);
+	window.draw(s);
+
+	font.levelDialog(window, npcs[dialogNPCNum].getDialog());
+}
+
+void Level::requestLevelChange(wstring name, int x, int y, Direction d)
+{
+	Level::toLevelName = name;
+	Level::toLevelX = x;
+	Level::toLevelY = y;
+	Level::toLevelDirection = d;
+	Level::levelRequestsChange = true;
+}
+void Level::requestBattleScreen()
+{
+	Level::levelRequestsBattle = true;
+}
+
+bool Level::ifPlayerIsUnderNPC()
+{
+	if (p.getBlockY() == 0)
+	{
+		return false;
+	}
+	for (int i = 0; i < numNPCs; i++)
+	{
+		if (npcs[i].getBlockX() == p.getBlockX() && npcs[i].getBlockY() == p.getBlockY() - 1)
+		{
+			return true;
+		}
+		if (npcs[i].getBlockX() == p.getBlockX() - 1 && npcs[i].getBlockY() == p.getBlockY() - 1)
+		{
+			return true;
+		}
+		if (npcs[i].getBlockX() == p.getBlockX() + 1 && npcs[i].getBlockY() == p.getBlockY() - 1)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 void Level::drawPlayer(sf::RenderWindow & window)
 {
 	sf::Sprite s(costumes[p.getDirection() + (p.getGender() * 4)]);
@@ -639,45 +475,4 @@ void Level::drawPlayer(sf::RenderWindow & window)
 		s.setPosition(sf::Vector2f(p.getActualX(), p.getActualY() - (.5f * (64 - ((p.getBlockX() * 64) - p.getActualX()))) - (PLAYER_HEIGHT - BLOCK_SIZE)));
 	}
 	window.draw(s);
-}
-
-void Level::drawDialog(sf::RenderWindow & window, KText & font)
-{
-	/*
-	  THIS METHOD IS GOING TO EXPORTED TO IT'S OWN CLASS SOON, DON'T FRET
-	  THIS METHOD ALSO IS GOING TO BE VERY BIG AND COMPLICATED, THEREFORE I (KARL) WILL WORK ON IT BECAUSE IT REQUIRES
-	DEPTH OF KNOWLEDGE IN PROGRAMMING FOR NON-ASCII SYMBOLS AND OTHER FANCY TECHNIQUES I AM ADDING. 
-	-KARL PIEPHO
-	*/
-
-
-	//Set the view
-	sf::View view;
-	view.setSize(sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
-	view.setCenter(sf::Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2));
-	window.setView(view);
-
-	sf::Sprite s(dialogBox);
-	s.setPosition(0, DIALOG_BOX_LOW);
-	window.draw(s);
-
-	font.levelDialog(window, npcs[dialogNPCNum].getDialog());
-}
-
-void Level::setName(string name)
-{
-	Level::name = name;
-}
-
-void Level::requestLevelChange(string name, int x, int y, int d)
-{
-	Level::toLevelName = name;
-	Level::toLevelX = x;
-	Level::toLevelY = y;
-	Level::toLevelDirection = d;
-	Level::levelRequestsChange = true;
-}
-void Level::requestBattleScreen()
-{
-	Level::levelRequestsBattle = true;
 }

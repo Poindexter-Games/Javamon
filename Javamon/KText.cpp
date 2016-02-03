@@ -18,6 +18,23 @@ KText::KText(Language lang)
 		japanese = sf::Texture();
 		japanese.loadFromImage(japaneseImg);
 	}
+	latinWidths = new int[256];
+	for (int i = 0; i < 256; i++) { latinWidths[i] = FONT_SIZE; }
+	latinWidths[33] = 18; //!
+	latinWidths[34] = 23; //"
+	latinWidths[35] = 31; //#
+	latinWidths[36] = 24; //$
+	latinWidths[37] = 28; //%
+	latinWidths[38] = 27; //&
+	latinWidths[39] = 16; //'
+	latinWidths[40] = 22; //(
+	latinWidths[41] = 22; //)
+	latinWidths[42] = 26; //*
+	latinWidths[43] = 23; //+
+	latinWidths[44] = 14; //,
+	latinWidths[45] = 24; //-
+	latinWidths[46] = 8; //.
+	latinWidths[47] = 27; //slash
 }
 
 void KText::levelDialog(sf::RenderWindow & window, wstring dialog)
@@ -29,28 +46,43 @@ void KText::levelDialog(sf::RenderWindow & window, wstring dialog)
 
 	int row = 0;
 	int x = 0;
+	int charWidth = 0;
 
 	for (int i = 0; i < dialog.length(); i++)
 	{
 		bool draw = false;
 		wchar_t w = dialog[i];
 		sf::Sprite c;
+		charWidth = FONT_SIZE;
 		if (w == '\n') //enter
 		{
 			row++;
 			x = 0;
+			charWidth = 0;
 		}
 		if ((32 <= w && w <= 126) || (161 <= w && w <= 255)) //basic latin
 		{
 			draw = true;
-			c = sf::Sprite(basic_latin, sf::IntRect((w % 16) * FONT_SIZE, ((w - (w % 16)) / 16) * FONT_SIZE, FONT_SIZE, FONT_SIZE));
+			c = sf::Sprite(basic_latin, sf::IntRect((w % 16) * FONT_SIZE, ((w - (w % 16)) / 16) * FONT_SIZE, latinWidths[w], FONT_SIZE));
+			charWidth = latinWidths[w];
 		}
 		else if (12288 <= w && w <= 12543) //1st japanese section of unicode stuff
 		{
 			draw = true;
 			c = sf::Sprite(japanese, sf::IntRect((w % 16) * FONT_SIZE, (((w - (w % 16)) / 16)-768) * FONT_SIZE, FONT_SIZE, FONT_SIZE));
 		}
-		else if (65281 <= w && w <= 65518) //2nd part of japanese stuff in unicode
+		else if (65281 <= w && w <= 65376) //2nd part of japanese stuff in unicode
+		{
+			draw = true;
+			c = sf::Sprite(japanese, sf::IntRect((w % 16) * FONT_SIZE, (((w - (w % 16)) / 16) - 4064) * FONT_SIZE, FONT_SIZE, FONT_SIZE));
+		}
+		else if (65377 <= w && w <= 65439) //2nd part of japanese stuff in unicode, but halfwidth stuff
+		{
+			draw = true;
+			c = sf::Sprite(japanese, sf::IntRect((w % 16) * FONT_SIZE, (((w - (w % 16)) / 16) - 4064) * FONT_SIZE, FONT_SIZE * .5, FONT_SIZE));
+			charWidth = .5 * FONT_SIZE;
+		}
+		else if (65440 <= w && w <= 65519) //2nd part of japanese stuff in unicode, but back to full width character
 		{
 			draw = true;
 			c = sf::Sprite(japanese, sf::IntRect((w % 16) * FONT_SIZE, (((w - (w % 16)) / 16) - 4064) * FONT_SIZE, FONT_SIZE, FONT_SIZE));
@@ -58,7 +90,7 @@ void KText::levelDialog(sf::RenderWindow & window, wstring dialog)
 		if (draw)
 		{
 			c.setPosition(sf::Vector2f(20 + x, DIALOG_BOX_LOW + 20 + (row * FONT_SIZE)));
-			x += FONT_SIZE; //THIS WILL BE EDITED TO ALLOW FOR CHARACTERS OF DIFFERENT WIDTHS
+			x += charWidth; //THIS WILL BE EDITED TO ALLOW FOR CHARACTERS OF DIFFERENT WIDTHS
 		}
 		window.draw(c);
 	}

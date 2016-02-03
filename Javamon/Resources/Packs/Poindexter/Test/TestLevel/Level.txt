@@ -1,6 +1,6 @@
 ﻿openFile;
 setName,en-US,Foobar;
-//setName,ja-JP,リモーア;
+setName,ja-JP,リモーア;
 setWidth,10;
 setHeight,10;
 setSpawnX,9;
@@ -9,4 +9,4 @@ setDefaultBlock,1,0,0;
 setBlock,1,1,1,0,0;
 setNumberOfTeleports,0;
 setNumberOfNPCs,0;
-endFile;
+closeFile;

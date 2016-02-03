@@ -3,6 +3,7 @@
 int main()
 {
 	Language lang = Language::EN_US;
+	//Test
 
 	sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), WINDOW_TITLE);
 	window.setFramerateLimit(FRAME_RATE_LIMIT); //Cap the framerate at 60fps
@@ -16,8 +17,8 @@ int main()
 
 	GameState gs = GameState::LEVEL;
 
-	Level level(0, -1, -1, -1);
-	//Level level("Poindexter", "Test", "TestLevel");
+	//Level level(0, -1, -1, -1);
+	Level level(lang, L"Poindexter", L"Test", L"TestLevel");
 
 	Battle battle;
 
@@ -52,26 +53,13 @@ int main()
 		if(level.isRequestingLevelChange())
 		{
 			gs = GameState::LOADING;
-			string auth = level.getAuth();
-			string pack = level.getPack();
-			string name = level.getToLevelName();
+			wstring auth = level.getAuth().toWideString();
+			wstring pack = level.getPack().toWideString();
+			wstring name = level.getToLevelName().toWideString();
 			int x = level.getToLevelX();
 			int y = level.getToLevelY();
 			int d = level.getToLevelDirection();
-			cout << name << endl;
-			if (name.compare("Level_FRLG_1")==0) //DEBUG METHOD
-			{
-				level.newLevel(1, level.getToLevelX(), level.getToLevelY(), level.getToLevelDirection());
-			}
-			else if (name.compare("Level_FRLG_0") == 0) //DEBUG METHOD
-			{
-				level.newLevel(0, level.getToLevelX(), level.getToLevelY(), level.getToLevelDirection());
-			}
-			else //Standard Method
-			{
-				//need to edit constructor to account for teleporting into the stage
-				level = Level(auth, pack, level.getToLevelName());
-			}
+			level = Level(lang, auth, pack, name, level.getToLevelX(), level.getToLevelY(), level.getToLevelDirection());
 			gs = GameState::LEVEL;
 		}
 		if (level.isRequestingBattleScreen())

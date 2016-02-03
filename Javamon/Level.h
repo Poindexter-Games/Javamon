@@ -10,6 +10,7 @@
 #include <iostream>
 #include <fstream>
 #include <SFML/Graphics/Text.hpp>
+#include <SFML/System/String.hpp>
 
 #include "Variables.h"
 #include "StringEditor.h"
@@ -27,11 +28,11 @@ private:
 	enum Mode {REG, DIALOG};
 	Mode mode;
 
-	string auth; //This is generally the author of the packs' name
-	string pack; //This is the individual pack name
-	string name; //This is the name for programming purposes, not the user display name
+	sf::String auth; //This is generally the author of the packs' name
+	sf::String pack; //This is the individual pack name
+	sf::String name; //This is the name for programming purposes, not the user display name
 
-	wstring dispName; //This is the user friendly name
+	sf::String dispName; //This is the user friendly name
 
 	Tile **map;
 	int width;
@@ -56,61 +57,36 @@ private:
 
 	bool levelRequestsChange;
 	bool levelRequestsBattle;
-	string toLevelName;
+	sf::String toLevelName;
 	int toLevelX;
 	int toLevelY;
-	int toLevelDirection;
-public:
-	Level();
-	Level(int, int, int, int); //Testing Constructor
-	Level(string, string, string); //Regular way to load level, unimplemented, use the test method
+	Direction toLevelDirection;
 
-	void newLevel(int, int, int, int);
+	void loadLevel(Language, wstring, wstring, wstring); //methods that are shared by the constructor that creates the level from scratch and the one that creates a level from another level
+public:
+	Level(Language, wstring, wstring, wstring); //Regular way to load level, unimplemented, use the test method
+	Level(Language, wstring, wstring, wstring, int, int, Direction); //Regular way to load a level but by teleports
 
 	void update(Controls&);
 	void render(sf::RenderWindow&, KText&);
 	void drawDialog(sf::RenderWindow&, KText&);
 
-	void setName(string);
-
-	string getAuth(){return auth;}
-	string getPack(){return pack;}
-	string getName(){return name;}
+	sf::String getAuth(){return auth;}
+	sf::String getPack(){return pack;}
+	sf::String getName(){return name;}
 
 	bool isRequestingLevelChange() { return levelRequestsChange; }
-	void requestLevelChange(string, int, int, int);
+	void requestLevelChange(wstring, int, int, Direction);
 
-	string getToLevelName() { return toLevelName; }
+	sf::String getToLevelName() { return toLevelName; }
 	int getToLevelX() { return toLevelX; }
 	int getToLevelY() { return toLevelY; }
-	int getToLevelDirection() { return toLevelDirection; }
+	Direction getToLevelDirection() { return toLevelDirection; }
 
 
 	bool isRequestingBattleScreen() { return levelRequestsBattle; }
 	void requestBattleScreen();
 
-	bool ifPlayerIsUnderNPC()
-	{
-		if (p.getBlockY() == 0)
-		{
-			return false;
-		}
-		for (int i = 0; i < numNPCs; i++)
-		{
-			if (npcs[i].getBlockX() == p.getBlockX() && npcs[i].getBlockY() == p.getBlockY() - 1)
-			{
-				return true;
-			}
-			if (npcs[i].getBlockX() == p.getBlockX() - 1 && npcs[i].getBlockY() == p.getBlockY() - 1)
-			{
-				return true;
-			}
-			if (npcs[i].getBlockX() == p.getBlockX() + 1 && npcs[i].getBlockY() == p.getBlockY() - 1)
-			{
-				return true;
-			}
-		}
-		return false;
-	}
+	bool ifPlayerIsUnderNPC();
 	void drawPlayer(sf::RenderWindow&);
 };
