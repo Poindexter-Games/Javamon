@@ -2,8 +2,10 @@
 
 int main()
 {
-	Language lang = Language::EN_US;
-	//Test
+	//Sets the command prompt to display utf-8 text (use Lucida Console as your font)
+	_setmode(_fileno(stdout), _O_U8TEXT);
+	//The string should be set to "en_US"
+	Language lang = Language("en_US");
 
 	sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), WINDOW_TITLE);
 	window.setFramerateLimit(FRAME_RATE_LIMIT); //Cap the framerate at 60fps
@@ -17,7 +19,7 @@ int main()
 
 	GameState gs = GameState::LEVEL;
 
-	//Level level(0, -1, -1, -1);
+	MainMenu mainMenu(lang);
 	Level level(lang, L"Poindexter", L"Test", L"TestLevel");
 
 	Battle battle;
@@ -60,7 +62,7 @@ int main()
 			int x = level.getToLevelX();
 			int y = level.getToLevelY();
 			int d = level.getToLevelDirection();
-			level = Level(lang, auth, pack, name, level.getToLevelX(), level.getToLevelY(), level.getToLevelDirection());
+			level = Level(lang, auth, pack, name, level.getToLevelX(), level.getToLevelY(), level.getToLevelDirection(), level.getToLevelZDirection());
 			gs = GameState::LEVEL;
 		}
 		if (level.isRequestingBattleScreen())
@@ -84,6 +86,10 @@ int main()
 		{
 			level.update(controls);
 		}
+		if (gs == GameState::MAIN_MENU)
+		{
+			mainMenu.update(controls);
+		}
 
 		//	Render graphical changes
 		window.clear();
@@ -92,6 +98,10 @@ int main()
 		if (gs == GameState::LEVEL)
 		{
 			level.render(window, font);
+		}
+		if (gs == GameState::MAIN_MENU)
+		{
+			mainMenu.render(window, font);
 		}
 		if (gs == GameState::BATTLE)
 		{

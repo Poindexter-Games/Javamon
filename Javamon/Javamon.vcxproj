@@ -124,19 +124,31 @@
   <ItemGroup>
     <ClCompile Include="Battle.cpp" />
     <ClCompile Include="Controls.cpp" />
+    <ClCompile Include="Element.cpp" />
+    <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Events.cpp" />
+    <ClCompile Include="KFile.cpp" />
     <ClCompile Include="KText.cpp" />
+    <ClCompile Include="Language.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Screen.cpp" />
     <ClCompile Include="StringEditor.cpp" />
     <ClCompile Include="Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Battle.h" />
     <ClInclude Include="Controls.h" />
+    <ClInclude Include="Element.h" />
+    <ClInclude Include="Entity.h" />
+    <ClInclude Include="KFile.h" />
     <ClInclude Include="KText.h" />
+    <ClInclude Include="Language.h" />
+    <ClInclude Include="MainMenu.h" />
+    <ClInclude Include="Screen.h" />
     <ClInclude Include="StringEditor.h" />
     <ClInclude Include="Variables.h" />
     <ClInclude Include="Events.h" />
@@ -148,9 +160,6 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Teleport.h" />
     <ClInclude Include="Tile.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="Resources\Video\Player.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

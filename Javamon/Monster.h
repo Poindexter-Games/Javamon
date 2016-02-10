@@ -11,16 +11,16 @@ using namespace std;
 
 class Monster
 {
+public:
+	Monster();
+
+	void restore() { health = stats.getHealth(); }
+
+	int getHealth() { return health; }
 private:
 	MonsterBase base;
 	string name;
 	Gender sex;
 	MonsterStats stats;
-	int currentHealth;
-public:
-	Monster();
-
-	void restore() { currentHealth = stats.getHealth(); }
-
-	int getCurrentHealth() { return currentHealth; }
+	int health;
 };

@@ -9,11 +9,11 @@ Level::Level(Language l, wstring auth, wstring pack, wstring level)
 	p.place(spawnX, spawnY, spawnDirection);
 }
 
-Level::Level(Language l, wstring auth, wstring pack, wstring level, int x, int y, Direction d)
+Level::Level(Language l, wstring auth, wstring pack, wstring level, int x, int y, Direction d, int zdir)
 {
 	loadLevel(l, auth, pack, level);
 	//Set the remaining stuff
-	p.place(x, y, d);
+	p.place(x, y, d, zdir);
 }
 
 void Level::loadLevel(Language l, wstring auth, wstring pack, wstring level)
@@ -59,15 +59,17 @@ void Level::loadLevel(Language l, wstring auth, wstring pack, wstring level)
 	int paramNum;
 	wstring* param;			//This is the wstring to hold what command/parameter is to be used
 
+	StringEditor::echo(L"====================START OF NEW LEVEL====================");
+
 	for (bool b = true; b;)
 	{
-		StringEditor::echo(L"==========START OF LOOP ITERATION============");
 		getline(filei, line);										//Get the line from the file
 		paramNum = StringEditor::getNumberOfSegments(line);
 		if (paramNum == 0) continue;								//This means the line was blank
-		if (paramNum == -1) StringEditor::echo(L"ERROR: " + line);
-		param = new wstring[paramNum];
-		param = StringEditor::breakApart(line);
+		if (paramNum == -1) StringEditor::echo(L"ERROR: " + line);	//This means there was an error with the line
+		StringEditor::echo(L"==========START OF LOOP ITERATION============");
+		param = new wstring[paramNum];								//Set the parameter array length to the number of parameters
+		param = StringEditor::breakApart(line);						//Break the line apart into the parameters by commas and semi colons
 
 		for (int i = 0; i < paramNum; i++)
 		{
@@ -261,14 +263,27 @@ void Level::loadLevel(Language l, wstring auth, wstring pack, wstring level)
 	}
 }
 
+Level::~Level()
+{
+	//delete[] map;
+	//delete[] teleports;
+	//delete[] npcs;
+	//delete[] textures;
+	//delete[] costumes;
+}
+
 void Level::update(Controls & c)
 {
 	if (mode == Mode::REG)
 	{
 		if (p.isLocked()) //If the player is standing in his tile
 		{
-			//Check if player is standing on a teleport
+			p.setZDirection(0);
+			/*
+			CREATE A VARIABLE TO STOP THIS HORRIFIC ANIMATION
+			*/
 
+			//Check if player is standing on a teleport
 			for (int i = 0; i < numTeleports; i++)
 			{
 				Teleport t = teleports[i];
@@ -283,7 +298,9 @@ void Level::update(Controls & c)
 					{
 						//Out of file teleport, old java code below. TODO replace with new C++ listener code
 						//l.switchLevels(t.level, t.toX, t.toY, t.getDirection());
-						requestLevelChange(t.getName(), t.getToX(), t.getToY(), t.getDirection());
+						requestLevelChange(t.getName(), t.getToX(), t.getToY(), t.getDirection(), t.getZDirection());
+						return;
+						//Let's try this
 					}
 				}
 			}
@@ -518,12 +535,13 @@ void Level::drawDialog(sf::RenderWindow & window, KText & font)
 	font.levelDialog(window, npcs[dialogNPCNum].getDialog());
 }
 
-void Level::requestLevelChange(wstring name, int x, int y, Direction d)
+void Level::requestLevelChange(wstring name, int x, int y, Direction d, int zdir)
 {
 	Level::toLevelName = name;
 	Level::toLevelX = x;
 	Level::toLevelY = y;
 	Level::toLevelDirection = d;
+	Level::toLevelZDirection = zdir;
 	Level::levelRequestsChange = true;
 }
 void Level::requestBattleScreen()

@@ -1,0 +1,7 @@
+﻿openFile;
+single_player=Single Player
+multi_player=Multi Player
+settings=Settings
+quit=Quit
+loading=Loading...
+endFile;

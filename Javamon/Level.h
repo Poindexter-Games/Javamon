@@ -24,6 +24,42 @@ using namespace std;
 
 class Level
 {
+public:
+	/*
+	Constructor for initializing the level
+	*/
+	Level(Language, wstring, wstring, wstring);
+	/*
+	Constructor for initializing the level with certain player properties
+	This method will be depreciated soon because instantiating levels
+	with player properties is bad
+	*/
+	Level(Language, wstring, wstring, wstring, int, int, Direction, int);
+	~Level();
+
+	void update(Controls&);
+	void render(sf::RenderWindow&, KText&);
+	void drawDialog(sf::RenderWindow&, KText&);
+
+	sf::String getAuth() { return auth; }
+	sf::String getPack() { return pack; }
+	sf::String getName() { return name; }
+
+	bool isRequestingLevelChange() { return levelRequestsChange; }
+	void requestLevelChange(wstring, int, int, Direction, int);
+
+	sf::String	getToLevelName() { return toLevelName; }
+	int			getToLevelX() { return toLevelX; }
+	int			getToLevelY() { return toLevelY; }
+	Direction	getToLevelDirection() { return toLevelDirection; }
+	int			getToLevelZDirection() { return toLevelZDirection; }
+
+
+	bool isRequestingBattleScreen() { return levelRequestsBattle; }
+	void requestBattleScreen();
+
+	bool ifPlayerIsUnderNPC();
+	void drawPlayer(sf::RenderWindow&);
 private:
 	/*
 	Mode is going to be moved into the player class soon so not every player
@@ -85,43 +121,10 @@ private:
 	int toLevelX;
 	int toLevelY;
 	Direction toLevelDirection;
+	int toLevelZDirection;
 
 	/*
 	Contains methods shared by both constructors
 	*/
 	void loadLevel(Language, wstring, wstring, wstring);
-public:
-	/*
-	Constructor for initializing the level
-	*/
-	Level(Language, wstring, wstring, wstring);
-	/*
-	Constructor for initializing the level with certain player properties
-	This method will be depreciated soon because instantiating levels
-	with player properties is bad
-	*/
-	Level(Language, wstring, wstring, wstring, int, int, Direction);
-
-	void update(Controls&);
-	void render(sf::RenderWindow&, KText&);
-	void drawDialog(sf::RenderWindow&, KText&);
-
-	sf::String getAuth(){return auth;}
-	sf::String getPack(){return pack;}
-	sf::String getName(){return name;}
-
-	bool isRequestingLevelChange() { return levelRequestsChange; }
-	void requestLevelChange(wstring, int, int, Direction);
-
-	sf::String	getToLevelName()		{ return toLevelName; }
-	int			getToLevelX()			{ return toLevelX; }
-	int			getToLevelY()			{ return toLevelY; }
-	Direction	getToLevelDirection()	{ return toLevelDirection; }
-
-
-	bool isRequestingBattleScreen() { return levelRequestsBattle; }
-	void requestBattleScreen();
-
-	bool ifPlayerIsUnderNPC();
-	void drawPlayer(sf::RenderWindow&);
 };

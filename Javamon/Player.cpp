@@ -88,3 +88,24 @@ void Player::place(int x, int y, Direction d)
 	actualY = (float)(y * BLOCK_SIZE);
 	direction = d;
 }
+
+void Player::place(int x, int y, Direction d, int zdir)
+{
+	Player::x = x;
+	Player::y = y;
+	actualX = (float)(x * BLOCK_SIZE);
+	actualY = (float)(y * BLOCK_SIZE);
+	if (zdir != 0)
+	{
+		if (d == Direction::LEFT)
+		{
+			actualX = (float)((x * BLOCK_SIZE) + (.5f * BLOCK_SIZE));
+		}
+		else if (d == Direction::RIGHT)
+		{
+			actualX = (float)((x * BLOCK_SIZE) - (.5f * BLOCK_SIZE));
+		}
+	}
+	direction = d;
+	zdirection = zdir;
+}

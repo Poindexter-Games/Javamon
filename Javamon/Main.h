@@ -6,13 +6,15 @@
 #include <iostream>
 #include <sstream>
 #include <SFML/Window/Keyboard.hpp>
-#include <fcntl.h> //This is for
-#include <io.h>    //something text related
+#include <io.h>		//These are for outputting utf-8
+#include <fcntl.h>	//characters to the command prompt
 
 //	Project Includes
 #include "Variables.h"
 #include "Controls.h"
+#include "Language.h"
 #include "KText.h"
+#include "MainMenu.h"
 #include "Events.h"
 #include "Level.h"
 #include "Battle.h"

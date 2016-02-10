@@ -4,9 +4,10 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <string>
-#include <iostream>
 
 #include "Variables.h"
+#include "Language.h"
+#include "StringEditor.h"
 
 using namespace std;
 
@@ -43,6 +44,10 @@ public:
 	movement portion of the game.
 	*/
 	void levelDialog(sf::RenderWindow &, wstring);
+	/*
+	This renders the word loading
+	*/
+	void simpleMessage(sf::RenderWindow &, wstring);
 
 	/*
 	This is for converting the Japanese Hiragana syllabary to the Katakana syllabary.
