@@ -16,7 +16,7 @@
 #include "KText.h"
 #include "MainMenu.h"
 #include "Events.h"
-#include "Level.h"
+#include "Singleplayer.h"
 #include "Battle.h"
 
 #endif

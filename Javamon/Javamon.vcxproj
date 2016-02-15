@@ -136,6 +136,7 @@
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Screen.cpp" />
+    <ClCompile Include="Singleplayer.cpp" />
     <ClCompile Include="StringEditor.cpp" />
     <ClCompile Include="Tile.cpp" />
   </ItemGroup>
@@ -149,6 +150,7 @@
     <ClInclude Include="Language.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="Screen.h" />
+    <ClInclude Include="Singleplayer.h" />
     <ClInclude Include="StringEditor.h" />
     <ClInclude Include="Variables.h" />
     <ClInclude Include="Events.h" />

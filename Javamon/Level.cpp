@@ -2,265 +2,214 @@
 
 using namespace std;
 
-Level::Level(Language l, wstring auth, wstring pack, wstring level)
+Level::Level()
 {
-	loadLevel(l, auth, pack, level);
-	//Set the remaining stuff
+	//loadLevel(L"Poindexter", L"Error", L"Error");
+}
+
+Level::Level(sf::String auth, sf::String pack, sf::String level, int dummyVariable)
+{
+	loadLevel(auth, pack, level);
+	Player p;
 	p.place(spawnX, spawnY, spawnDirection);
+	players.push_back(p);
 }
 
-Level::Level(Language l, wstring auth, wstring pack, wstring level, int x, int y, Direction d, int zdir)
+Level::Level(sf::String auth, sf::String pack, sf::String level, Player p)
 {
-	loadLevel(l, auth, pack, level);
-	//Set the remaining stuff
-	p.place(x, y, d, zdir);
+	loadLevel(auth, pack, level);
+	players.push_back(p);
 }
 
-void Level::loadLevel(Language l, wstring auth, wstring pack, wstring level)
+void Level::loadLevel(sf::String auth, sf::String pack, sf::String name)
 {
-	mode = Mode::REG;
-	levelRequestsChange = false;
-	levelRequestsBattle = false;
-	dialogNPCNum = -1;
-
+	requestsLevelChange = false;
 	Level::auth = auth;
 	Level::pack = pack;
-	Level::name = level;
+	Level::name = name;
 
-	bool dispNameLoaded = false;
+	KFile file(PACKS + auth + L"/" + pack + L"/" + name + L"/Level.txt");
+
+	int width = 0;
+	int height = 0;
 	bool widthLoaded = false;
 	bool heightLoaded = false;
-	bool spawnXLoaded = false;
-	bool spawnYLoaded = false;
-	bool spawnDirectionLoaded = false;
-	bool mapCreated = false;
-	bool npcsCreated = false;
-	bool teleportsCreated = false;
+	bool mapLoaded = false;
 
-	Level::p = Player();
+	bool spawnStuffLoaded = false;
 
-	/*
-	FileI is the Level.txt that the game is building the level from
-	FileO is the Log.txt that the game is writing an error log to (once I implement it)
-	*/
+	sf::String* segments;
+	int length;
 
-	locale locale("");					//This will read the user's locale, so the program can determine string encoding since wifstream uses a regular string to load a file
-	string pathi = sf::String(RESOURCES + L"Packs/" + Level::auth + L"/" + pack + L"/" + level + L"/Level.txt").toAnsiString(locale);
-	//string patho = sf::String(RESOURCES + L"Packs/" + Level::auth + L"/" + pack + L"/" + level +   L"/Log.txt").toAnsiString(locale);
-
-	wifstream filei;
-	filei.open(pathi);
-
-	//wofstream fileo;
-	//fileo.open(patho);
-
-	wstring line;			//This is the file of the line
-	getline(filei, line);	//This is to ignore the first line of the file, which contains the BOM character
-	int paramNum;
-	wstring* param;			//This is the wstring to hold what command/parameter is to be used
-
-	StringEditor::echo(L"====================START OF NEW LEVEL====================");
-
-	for (bool b = true; b;)
+	for (bool b = true; b; )
 	{
-		getline(filei, line);										//Get the line from the file
-		paramNum = StringEditor::getNumberOfSegments(line);
-		if (paramNum == 0) continue;								//This means the line was blank
-		if (paramNum == -1) StringEditor::echo(L"ERROR: " + line);	//This means there was an error with the line
-		StringEditor::echo(L"==========START OF LOOP ITERATION============");
-		param = new wstring[paramNum];								//Set the parameter array length to the number of parameters
-		param = StringEditor::breakApart(line);						//Break the line apart into the parameters by commas and semi colons
+		file.readLine(segments, length);
 
-		for (int i = 0; i < paramNum; i++)
-		{
-			StringEditor::echo(i, param[i]);
-		}
+		if (length == 0) continue;
 
-		if (paramNum == 1)
+		//for (int i = 0; i < length; i++)
+		//{
+		//	StringEditor::echo(segments[i]);
+		//}
+
+		if (length == 2)
 		{
-			if (param[0].compare(L"closeFile") == 0)
+			if (StringEditor::equals(segments[0], L"setWidth"))
 			{
-				b = false;
-			}
-		}
-		else if (paramNum == 2)
-		{
-			if (param[0].compare(L"setWidth") == 0)
-			{
-				width = stoi(param[1]);
+				width = stoi(segments[1].toWideString());
 				widthLoaded = true;
 			}
-			if (param[0].compare(L"setHeight") == 0)
+			else if (StringEditor::equals(segments[0], L"setHeight"))
 			{
-				height = stoi(param[1]);
+				height = stoi(segments[1].toWideString());
 				heightLoaded = true;
 			}
-			if (param[0].compare(L"setSpawnX") == 0)
+		}
+
+		if (length == 4)
+		{
+			if (StringEditor::equals(segments[0], L"setSpawn"))
 			{
-				spawnX = stoi(param[1]);
-				spawnXLoaded = true;
-			}
-			if (param[0].compare(L"setSpawnY") == 0)
-			{
-				spawnY = stoi(param[1]);
-				spawnYLoaded = true;
-			}
-			if (param[0].compare(L"setSpawnDirection") == 0)
-			{
-				int d = -1;
-				if (param[1].compare(L"UP") == 0) d = 0;
-				if (param[1].compare(L"LEFT") == 0) d = 1;
-				if (param[1].compare(L"DOWN") == 0) d = 2;
-				if (param[1].compare(L"RIGHT") == 0) d = 3;
-				p.setDirection(to_Direction(d));
-				spawnDirectionLoaded = true;
-			}
-			if (param[0].compare(L"setNumberOfTeleports") == 0)
-			{
-				numTeleports = stoi(param[1]);
-				teleports = new Teleport[numTeleports];
-				teleportsCreated = true;
-			}
-			if (param[0].compare(L"setNumberOfNPCs") == 0)
-			{
-				numNPCs = stoi(param[1]);
-				npcs = new Player[numNPCs];
-				npcsCreated = true;
+				spawnX = stoi(segments[1].toWideString());
+				spawnY = stoi(segments[2].toWideString());
+				int d = 0;
+				if (StringEditor::equals(segments[3], L"UP"))
+				{
+					d = 0;
+				}
+				if (StringEditor::equals(segments[3], L"LEFT"))
+				{
+					d = 1;
+				}
+				if (StringEditor::equals(segments[3], L"DOWN"))
+				{
+					d = 2;
+				}
+				else
+				{
+					d = 3;
+				}
+				spawnDirection = to_Direction(d);
+				spawnStuffLoaded = true;
 			}
 		}
-		else if (paramNum == 5)
+
+		if (length == 5)
 		{
-			if (param[0].compare(L"setRow") == 0 && mapCreated)
+			if (StringEditor::equals(segments[0], L"setRow"))
 			{
-				for (int i = 0; i < width; i++)
+				for (int i = 0; i < map.size(); i++)
 				{
-					map[i][stoi(param[1])] = Tile(stoi(param[2]), stoi(param[3]), stoi(param[4]));
+					map[i][stoi(segments[1].toWideString())] = Tile(stoi(segments[2].toWideString()), stoi(segments[3].toWideString()), stoi(segments[4].toWideString()));
 				}
 			}
-			if (param[0].compare(L"setCol") == 0 && mapCreated)
+			if (StringEditor::equals(segments[0], L"setCol"))
 			{
-				for (int i = 0; i < height; i++)
+				for (int i = 0; i < map[stoi(segments[1].toWideString())].size(); i++)
 				{
-					map[stoi(param[1])][i] = Tile(stoi(param[2]), stoi(param[3]), stoi(param[4]));
+					map[stoi(segments[1].toWideString())][i] = Tile(stoi(segments[2].toWideString()), stoi(segments[3].toWideString()), stoi(segments[4].toWideString()));
 				}
 			}
 		}
-		else if (paramNum == 6)
+
+		if (length == 6)
 		{
-			if (param[0].compare(L"setBlock") == 0 && mapCreated)
+			if (StringEditor::equals(segments[0], L"setBlock"))
 			{
-				map[stoi(param[1])][stoi(param[2])] = Tile(stoi(param[3]), stoi(param[4]), stoi(param[5]));
-			}
-		}
-		else if (paramNum == 8)
-		{
-			if (param[0].compare(L"setTeleport") == 0 && teleportsCreated)
-			{
-				int d = -1;
-				if (param[6].compare(L"UP") == 0) d = 0;
-				if (param[6].compare(L"LEFT") == 0) d = 1;
-				if (param[6].compare(L"DOWN") == 0) d = 2;
-				if (param[6].compare(L"RIGHT") == 0) d = 3;
-				teleports[stoi(param[1])] = Teleport(stoi(param[2]), stoi(param[3]), stoi(param[4]), stoi(param[5]), to_Direction(d), stoi(param[7]));
-			}
-		}
-		else if (paramNum == 9)
-		{
-			if (param[0].compare(L"setTeleport") == 0 && teleportsCreated)
-			{
-				int d = -1;
-				if (param[7].compare(L"UP") == 0) d = 0;
-				if (param[7].compare(L"LEFT") == 0) d = 1;
-				if (param[7].compare(L"DOWN") == 0) d = 2;
-				if (param[7].compare(L"RIGHT") == 0) d = 3;
-				teleports[stoi(param[1])] = Teleport(stoi(param[2]), stoi(param[3]), param[4], stoi(param[5]), stoi(param[6]), to_Direction(d), stoi(param[8]));
+				map[stoi(segments[1].toWideString())][stoi(segments[2].toWideString())] = Tile(stoi(segments[3].toWideString()), stoi(segments[4].toWideString()), stoi(segments[5].toWideString()));
 			}
 		}
 
-		if (!mapCreated && heightLoaded && widthLoaded)
+		if (length == 9)
 		{
-			map = new Tile*[width];
-			for (int i = 0; i < width; i++)
+			if (StringEditor::equals(segments[0], L"addTeleport"))
 			{
-				map[i] = new Tile[height];
-			}
-			for (int i = 0; i < width; i++)
-			{
-				for (int j = 0; j < height; j++)
+				int d = 0;
+				if (StringEditor::equals(segments[6], L"UP"))
 				{
-					map[i][j] = Tile(0, 0, 0);
+					d = 0;
 				}
+				else if (StringEditor::equals(segments[6], L"LEFT"))
+				{
+					d = 1;
+				}
+				else if (StringEditor::equals(segments[6], L"DOWN"))
+				{
+					d = 2;
+				}
+				else
+				{
+					d = 3;
+				}
+				float f = -1;
+				if (StringEditor::equals(segments[8], L"SHALLOW"))
+				{
+					f = .25f;
+				}
+				else
+				{
+					f = .5f;
+				}
+				Teleport t(stoi(segments[1].toWideString()), stoi(segments[2].toWideString()), segments[3], stoi(segments[4].toWideString()), stoi(segments[5].toWideString()), to_Direction(d), stoi(segments[7].toWideString()), f);
+				teleports.push_back(t);
 			}
-			mapCreated = true;
 		}
 
-		StringEditor::echo(L"==========END OF LOOP ITERATION============");
-	}
-	filei.close();
-	//fileo.close();
-
-	//End of file loading testing code. -Karl
-
-	//Creating Arrays
-	if (!widthLoaded) width = 5;
-	if (!heightLoaded) height = 5;
-	if (!spawnXLoaded) spawnX == width - 1;
-	if (!spawnYLoaded) spawnY == height - 1;
-	if (!spawnDirectionLoaded) spawnDirection == Direction::RIGHT;
-	if (!mapCreated)
-	{
-		map = new Tile*[width];
-		for (int i = 0; i < width; i++)
+		if (!mapLoaded && widthLoaded && heightLoaded)
 		{
-			map[i] = new Tile[height];
-		}
-		for (int i = 0; i < width; i++)
-		{
-			for (int j = 0; j < height; j++)
+			map.resize(width);
+			for (int x = 0; x < width; x++)
 			{
-				map[i][j] = Tile(0, 0, 0);
+				map[x].resize(height);
 			}
+
+			mapLoaded = true;
+		}
+
+		if (segments[0].toWideString().compare(L"endFile") == 0)
+		{
+			b = false;
 		}
 	}
-	
-	if (!npcsCreated)
+	file.close();
+
+	if (!mapLoaded)
 	{
-		numNPCs = 0;
-		npcs = new Player[numNPCs];
+		width = 1;
+		height = 1;
+		
+		map.resize(width);
+		for (int x = 0; x < width; x++)
+		{
+			map[x].resize(height);
+		}
+	}
+	if (!spawnStuffLoaded)
+	{
+		spawnX = 0;
+		spawnY = 0;
+		spawnDirection = Direction::RIGHT;
 	}
 
-	if (!teleportsCreated)
+	sf::Image blockSheet;
+	blockSheet.loadFromFile(PACKS + auth + L"/" + pack + L"/" + name + L"/Spritesheet.png");
+	StringEditor::echo(sf::String(PACKS + auth + L"/" + pack + L"/" + name + L"/Spritesheet.png").toWideString());
+
+	textures.resize(256);
+	for (int i = 0; i < 256; i++)
 	{
-		numTeleports = 0;
-		teleports = new Teleport[numTeleports];
+		textures[i].loadFromImage(blockSheet, sf::IntRect((i % 16) * BLOCK_SIZE, (int)(i / 16) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE));
 	}
+}
 
-	//LOADING IMAGES
+void Level::requestLevelChange(int playerNumber, sf::String toLevel)
+{
+	StringEditor::echo(L"Level requested change.");
 
-	textureMap = sf::Image();
-	textureMap.loadFromFile(PACKS + auth + "/" + pack + "/" + level + "/Spritesheet.png");
-
-	costumeMap = sf::Image();
-	costumeMap.loadFromFile(RESOURCES + "Video/Player.png");
-
-	sf::Image dialogBoxImg;
-	dialogBoxImg.loadFromFile(RESOURCES + "Video/DialogBox.png");
-	dialogBox = sf::Texture();
-	dialogBox.loadFromImage(dialogBoxImg);
-
-	textures = new sf::Texture[256];
-	for (int i = 0; i < 256; i++) //Creates a list of textures from the spritesheet
-	{
-		textures[i] = sf::Texture();
-		textures[i].loadFromImage(textureMap, sf::IntRect((i % 16) * BLOCK_SIZE, (int)(i / 16) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE));
-	}
-
-	costumes = new sf::Texture[8];
-	for (int i = 0; i < 8; i++) //Creates a list of textures from the spritesheet
-	{
-		costumes[i] = sf::Texture();
-		costumes[i].loadFromImage(costumeMap, sf::IntRect((i % 4) * BLOCK_SIZE, (int)(i / 4) * PLAYER_HEIGHT, BLOCK_SIZE, PLAYER_HEIGHT));
-	}
+	requestsLevelChange = true;
+	Level::toLevel = toLevel;
+	player = players[playerNumber];
+	players.erase(players.begin() + playerNumber);
 }
 
 Level::~Level()
@@ -272,330 +221,180 @@ Level::~Level()
 	//delete[] costumes;
 }
 
-void Level::update(Controls & c)
+void Level::update(Controls & c, int playerNumber)
 {
-	if (mode == Mode::REG)
+	if (!players[playerNumber].isLocked())
 	{
-		if (p.isLocked()) //If the player is standing in his tile
+		//If player is in transition between two blocks
+		int time = c.getTimePressed(players[playerNumber].getDirection());
+		time = ((time - (time % 15)) / 15) % 4;
+		if (time == 3)time = 1;
+		players[playerNumber].setAnimationFrame(time + 1);
+
+		if (players[playerNumber].getActualY() - 4.0f>(float)players[playerNumber].getY() * BLOCK_SIZE) players[playerNumber].adjustActualY(-4.0f);
+		else if ((int)players[playerNumber].getActualY() > players[playerNumber].getY() * BLOCK_SIZE) players[playerNumber].setActualY((float)players[playerNumber].getY() * BLOCK_SIZE);
+
+		if (players[playerNumber].getActualX() - 4.0f>(float)players[playerNumber].getX() * BLOCK_SIZE) players[playerNumber].adjustActualX(-4.0f);
+		else if ((int)players[playerNumber].getActualX()>players[playerNumber].getX() * BLOCK_SIZE) players[playerNumber].setActualX((float)players[playerNumber].getX() * BLOCK_SIZE);
+
+		if (players[playerNumber].getActualY() + 4.0f<(float)players[playerNumber].getY() * BLOCK_SIZE) players[playerNumber].adjustActualY(4.0f);
+		else if ((int)players[playerNumber].getActualY()<players[playerNumber].getY() * BLOCK_SIZE) players[playerNumber].setActualY((float)players[playerNumber].getY() * BLOCK_SIZE);
+
+		if (players[playerNumber].getActualX() + 4.0f < (float)players[playerNumber].getX() * BLOCK_SIZE) players[playerNumber].adjustActualX(4.0f);
+		else if ((int)players[playerNumber].getActualX()<players[playerNumber].getX() * BLOCK_SIZE) players[playerNumber].setActualX((float)players[playerNumber].getX() * BLOCK_SIZE);
+	}
+	else if (players[playerNumber].isLocked() && c.isOnlyOneDirectionHeldDown() && players[playerNumber].getZDirection() == 0)
+	{
+		//If player is not moving and wants to move
+
+		//Player has held down long enough to move
+		if (c.getTimePressed(players[playerNumber].getDirection()) >= 4)
 		{
-			p.setZDirection(0);
+			bool upBlocked = false;
+			bool leftBlocked = false;
+			bool downBlocked = false;
+			bool rightBlocked = false;
+
+			//keep player from leaving the boundaries
+			if (players[playerNumber].getY() == 0) { upBlocked = true; }
+			if (players[playerNumber].getX() == 0) { leftBlocked = true; }
+			if ((players[playerNumber].getY() == (map[0].size() - 1))) { downBlocked = true; }
+			if ((players[playerNumber].getX() == (map.size() - 1))) { rightBlocked = true; }
+
 			/*
-			CREATE A VARIABLE TO STOP THIS HORRIFIC ANIMATION
+			TODO NPC Check
 			*/
 
-			//Check if player is standing on a teleport
-			for (int i = 0; i < numTeleports; i++)
+			//Final movement validity check
+			if (players[playerNumber].getDirection() == Direction::UP)
 			{
-				Teleport t = teleports[i];
-				if (p.getBlockX() == t.getX() && p.getBlockY() == t.getY())
+				if (!upBlocked && Tile::movementValid(map[players[playerNumber].getX()][players[playerNumber].getY()], map[players[playerNumber].getX()][players[playerNumber].getY() - 1]))
 				{
-					if (t.intraLevel())
-					{
-						//Local Teleport, (inside of the same level)
-						p.place(t.getToX(), t.getToY(), t.getDirection());
-					}
-					else
-					{
-						//Out of file teleport, old java code below. TODO replace with new C++ listener code
-						//l.switchLevels(t.level, t.toX, t.toY, t.getDirection());
-						requestLevelChange(t.getName(), t.getToX(), t.getToY(), t.getDirection(), t.getZDirection());
-						return;
-						//Let's try this
-					}
+					players[playerNumber].setY(players[playerNumber].getY() - 1);
+					players[playerNumber].adjustActualY(-4.0f);
 				}
 			}
-
-			if (c.isPressed(p.getDirection()) == true && c.getTimePressed(p.getDirection()) > 4 && p.isAllowedToMove()) //If user wants to move
+			else if (players[playerNumber].getDirection() == Direction::LEFT)
 			{
-				bool upBlocked = false;
-				bool leftBlocked = false;
-				bool downBlocked = false;
-				bool rightBlocked = false;
-
-				//keep player from leaving the boundaries
-				if (p.getBlockY() == 0) { upBlocked = true; }
-				if (p.getBlockX() == 0) { leftBlocked = true; }
-				if ((p.getBlockY() == (height - 1))) { downBlocked = true; }
-				if ((p.getBlockX() == (width - 1))) { rightBlocked = true; }
-
-				//check to make sure npcs aren't in the way
-				for (int i = 0; i < numNPCs; i++)
+				if (!leftBlocked && Tile::movementValid(map[players[playerNumber].getX()][players[playerNumber].getY()], map[players[playerNumber].getX() - 1][players[playerNumber].getY()]))
 				{
-					if (npcs[i].isVisible())
-					{
-						if (!upBlocked && p.getBlockX() == npcs[i].getBlockX() && (p.getBlockY() - 1) == npcs[i].getBlockY())
-						{
-							upBlocked = true;
-						}
-						else if (!leftBlocked && (p.getBlockX() - 1) == npcs[i].getBlockX() && p.getBlockY() == npcs[i].getBlockY())
-						{
-							leftBlocked = true;
-						}
-						else if (!downBlocked&& p.getBlockX() == npcs[i].getBlockX() && (p.getBlockY() + 1) == npcs[i].getBlockY())
-						{
-							downBlocked = true;
-						}
-						else if (!rightBlocked && (p.getBlockX() + 1) == npcs[i].getBlockX() && p.getBlockY() == npcs[i].getBlockY())
-						{
-							rightBlocked = true;
-						}
-					}
-				}
-
-				//Final movement validity check
-				if (p.getDirection() == Direction::UP)
-				{
-					if (!upBlocked && Tile::movementValid(map[p.getBlockX()][p.getBlockY()], map[p.getBlockX()][p.getBlockY() - 1]))
-					{
-						p.setBlockY(p.getBlockY() - 1);
-						p.adjustActualY(-4.0f);
-					}
-				}
-				else if (p.getDirection() == Direction::LEFT)
-				{
-					if (!leftBlocked && Tile::movementValid(map[p.getBlockX()][p.getBlockY()], map[p.getBlockX() - 1][p.getBlockY()]))
-					{
-						p.setBlockX(p.getBlockX() - 1);
-						p.adjustActualX(-4.0f);
-					}
-				}
-				else if (p.getDirection() == Direction::DOWN)
-				{
-					if (!downBlocked && Tile::movementValid(map[p.getBlockX()][p.getBlockY()], map[p.getBlockX()][p.getBlockY() + 1]))
-					{
-						p.setBlockY(p.getBlockY() + 1);
-						p.adjustActualY(4.0f);
-					}
-				}
-				else if (p.getDirection() == Direction::RIGHT)
-				{
-					if (!rightBlocked && Tile::movementValid(map[p.getBlockX()][p.getBlockY()], map[p.getBlockX() + 1][p.getBlockY()]))
-					{
-						p.setBlockX(p.getBlockX() + 1);
-						p.adjustActualX(4.0f);
-					}
-				}
-				//The next code is to detect if the player is moving onto a teleport, and if he is, start displaying the going up or down animation if it is needed
-				for (int i = 0; i < numTeleports; i++)
-				{
-					if (teleports[i].getX() == p.getBlockX() && teleports[i].getY() == p.getBlockY())
-					{
-						p.setZDirection(teleports[i].getZDirection());
-						break;
-					}
+					players[playerNumber].setX(players[playerNumber].getX() - 1);
+					players[playerNumber].adjustActualX(-4.0f);
 				}
 			}
-			else if (c.isPressedForFirstTime(Control::ACCEPT)) //Select something, like an npc
+			else if (players[playerNumber].getDirection() == Direction::DOWN)
 			{
-				bool directionFacingIsValid = true;
-
-				if (p.getDirection() == Direction::UP && p.getBlockY() == 0) { directionFacingIsValid = false; }
-				else if (p.getDirection() == Direction::LEFT && p.getBlockX() == 0) { directionFacingIsValid = false; }
-				else if (p.getDirection() == Direction::DOWN && (p.getBlockY() == (height - 1))) { directionFacingIsValid = false; }
-				else if (p.getDirection() == Direction::RIGHT && (p.getBlockX() == (width - 1))) { directionFacingIsValid = false; }
-
-				if (directionFacingIsValid)
+				if (!downBlocked && Tile::movementValid(map[players[playerNumber].getX()][players[playerNumber].getY()], map[players[playerNumber].getX()][players[playerNumber].getY() + 1]))
 				{
-					for (int i = 0; i < numNPCs; i++)
-					{
-						if (p.getDirection() == Direction::UP && p.getBlockX() == npcs[i].getBlockX() && p.getBlockY() - 1 == npcs[i].getBlockY())
-						{
-							dialogNPCNum = i;
-							mode = Mode::DIALOG;
-						}
-						else if (p.getDirection() == Direction::LEFT && p.getBlockX() - 1 == npcs[i].getBlockX() && p.getBlockY() == npcs[i].getBlockY())
-						{
-							dialogNPCNum = i;
-							mode = Mode::DIALOG;
-						}
-						else if (p.getDirection() == Direction::DOWN && p.getBlockX() == npcs[i].getBlockX() && p.getBlockY() + 1 == npcs[i].getBlockY())
-						{
-							dialogNPCNum = i;
-							mode = Mode::DIALOG;
-						}
-						else if (p.getDirection() == Direction::RIGHT && p.getBlockX() + 1 == npcs[i].getBlockX() && p.getBlockY() == npcs[i].getBlockY())
-						{
-							dialogNPCNum = i;
-							mode = Mode::DIALOG;
-						}
-					}
+					players[playerNumber].setY(players[playerNumber].getY() + 1);
+					players[playerNumber].adjustActualY(4.0f);
 				}
 			}
-			else //Change the player's direction
+			else if (players[playerNumber].getDirection() == Direction::RIGHT)
 			{
-				if (c.isPressed(Control::C_UP) && !c.isPressed(Control::C_LEFT) && !c.isPressed(Control::C_DOWN) && !c.isPressed(Control::C_RIGHT))
-					p.setDirection(Direction::UP);
-				else if (!c.isPressed(Control::C_UP) && c.isPressed(Control::C_LEFT) && !c.isPressed(Control::C_DOWN) && !c.isPressed(Control::C_RIGHT))
-					p.setDirection(Direction::LEFT);
-				else if (!c.isPressed(Control::C_UP) && !c.isPressed(Control::C_LEFT) && c.isPressed(Control::C_DOWN) && !c.isPressed(Control::C_RIGHT))
-					p.setDirection(Direction::DOWN);
-				else if (!c.isPressed(Control::C_UP) && !c.isPressed(Control::C_LEFT) && !c.isPressed(Control::C_DOWN) && c.isPressed(Control::C_RIGHT))
-					p.setDirection(Direction::RIGHT);
+				if (!rightBlocked && Tile::movementValid(map[players[playerNumber].getX()][players[playerNumber].getY()], map[players[playerNumber].getX() + 1][players[playerNumber].getY()]))
+				{
+					players[playerNumber].setX(players[playerNumber].getX() + 1);
+					players[playerNumber].adjustActualX(4.0f);
+				}
 			}
 		}
-		else //If the player is not standing in his tile, e.g. he is walking
+		else
 		{
-			if (p.getActualY() - 4.0f>(float)p.getBlockY() * BLOCK_SIZE) p.adjustActualY(-4.0f);
-			else if ((int)p.getActualY() > p.getBlockY() * BLOCK_SIZE) p.setActualY((float)p.getBlockY() * BLOCK_SIZE);
-
-			if (p.getActualX() - 4.0f>(float)p.getBlockX() * BLOCK_SIZE) p.adjustActualX(-4.0f);
-			else if ((int)p.getActualX()>p.getBlockX() * BLOCK_SIZE) p.setActualX((float)p.getBlockX() * BLOCK_SIZE);
-
-			if (p.getActualY() + 4.0f<(float)p.getBlockY() * BLOCK_SIZE) p.adjustActualY(4.0f);
-			else if ((int)p.getActualY()<p.getBlockY() * BLOCK_SIZE) p.setActualY((float)p.getBlockY() * BLOCK_SIZE);
-
-			if (p.getActualX() + 4.0f < (float)p.getBlockX() * BLOCK_SIZE) p.adjustActualX(4.0f);
-			else if ((int)p.getActualX()<p.getBlockX() * BLOCK_SIZE) p.setActualX((float)p.getBlockX() * BLOCK_SIZE);
+			//Player hasn't held the button down for long enough so we should just change their direction
+			players[playerNumber].setDirection(c.getOnlyDirectionHeldDown());
 		}
 	}
-	else if (mode == Mode::DIALOG)
+	else if (players[playerNumber].isLocked() && !c.isOnlyOneDirectionHeldDown())
 	{
-		if (c.isPressedForFirstTime(Control::ACCEPT))
+		//If player is not moving and does not want to move
+		players[playerNumber].setAnimationFrame(0);
+	}
+	if (players[playerNumber].isLocked())
+	{
+		for (int i = 0; i < teleports.size(); i++)
 		{
-			if (npcs[dialogNPCNum].getWantsToBattle()) 
+			if (players[playerNumber].getX() == teleports[i].getX() && players[playerNumber].getY() == teleports[i].getY())
 			{
-				requestBattleScreen();
+				if (players[playerNumber].getSteepness() == .25f)
+				{
+					players[playerNumber].setSteepness(.5f);
+				}
+				else
+				{
+					players[playerNumber].setSteepness(.25f);
+				}
+
+				if (teleports[i].intraLevel())
+				{
+					players[playerNumber].place(teleports[i].getToX(), teleports[i].getToY(), teleports[i].getDirection());
+				}
+				if (teleports[i].interLevel())
+				{
+					players[playerNumber].place(teleports[i].getToX(), teleports[i].getToY(), teleports[i].getDirection(), players[playerNumber].getZDirection(), players[playerNumber].getSteepness());
+					requestLevelChange(playerNumber, teleports[i].getName());
+					return;
+				}
 			}
-			else
-			{
-				dialogNPCNum = -1;
-				mode = Mode::REG;
-			}
+		}
+	}
+
+	//The next code is to detect if the player is moving onto a teleport, and if he is, start displaying the going up or down animation if it is needed
+	players[playerNumber].setZDirection(0);
+	players[playerNumber].setSteepness(0.0f);
+	for (int i = 0; i < teleports.size(); i++)
+	{
+		if (players[playerNumber].getX() == teleports[i].getX() && players[playerNumber].getY() == teleports[i].getY())
+		{
+			players[playerNumber].setZDirection(teleports[i].getZDirection());
+			players[playerNumber].setSteepness(teleports[i].getSteepness());
 		}
 	}
 }
 
-void Level::render(sf::RenderWindow & window, KText & font)
+void Level::render(sf::RenderWindow & window, int playerNumber)
 {
 	//Set the view
 	sf::View view;
 	view.setSize(sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
-	view.setCenter(sf::Vector2f(p.getActualX() + 32, p.getActualY() + 32));
+	view.setCenter(sf::Vector2f(players[playerNumber].getActualX() + 32, players[playerNumber].getActualY() + 32));
 	window.setView(view);
 
 	//Draw blocks
-	for (int i = 0; i < width; i++)
+	for (int x = 0; x < map.size(); x++)
 	{
-		for (int j = 0; j < height; j++)
+		for (int y = 0; y < map[x].size(); y++)
 		{
-			sf::Sprite s(textures[map[i][j].getImgNum()]);
-			s.setPosition(sf::Vector2f((float)i * BLOCK_SIZE, (float)j * BLOCK_SIZE));
+			sf::Sprite s(textures[map[x][y].getImgNum()]);
+			s.setPosition(sf::Vector2f((float)x * BLOCK_SIZE, (float)y * BLOCK_SIZE));
 			window.draw(s);
 		}
 	}
 	//Draw character if above NPC
-	if (!ifPlayerIsUnderNPC())
-	{
-		drawPlayer(window);
-	}
+	players[playerNumber].render(window);
 
-	//DRAW NPCS
-	for (int i = 0; i < numNPCs; i++)
-	{
-		if (npcs[i].isVisible())
-		{
-			sf::Sprite s(costumes[npcs[i].getDirection() + (npcs[i].getGender() * 4)]);
-			s.setPosition(sf::Vector2f(npcs[i].getActualX(), npcs[i].getActualY() - (PLAYER_HEIGHT - BLOCK_SIZE)));
-			window.draw(s);
-		}
-	}
-
-	//Draw character if below npc
-	if (ifPlayerIsUnderNPC())
-	{
-		drawPlayer(window);
-	}
-
-	if (mode == Mode::DIALOG)
-	{
-		drawDialog(window, font);
-	}
-}
-
-void Level::drawDialog(sf::RenderWindow & window, KText & font)
-{
+	//DRAW NPCs
+	
 	/*
-	  THIS METHOD IS GOING TO EXPORTED TO IT'S OWN CLASS SOON, DON'T FRET
-	  THIS METHOD ALSO IS GOING TO BE VERY BIG AND COMPLICATED, THEREFORE I (KARL) WILL WORK ON IT BECAUSE IT REQUIRES
-	DEPTH OF KNOWLEDGE IN PROGRAMMING FOR NON-ASCII SYMBOLS AND OTHER FANCY TECHNIQUES I AM ADDING. 
-	-KARL PIEPHO
+	TODO Draw NPCs
 	*/
 
+	//Draw character if below npc
+	players[playerNumber].render(window);
 
-	//Set the view
-	sf::View view;
-	view.setSize(sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
-	view.setCenter(sf::Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2));
-	window.setView(view);
-
-	sf::Sprite s(dialogBox);
-	s.setPosition(0, DIALOG_BOX_LOW);
-	window.draw(s);
-
-	font.levelDialog(window, npcs[dialogNPCNum].getDialog());
+	/*if (mode == Mode::DIALOG)
+	{
+		drawDialog(window, font);
+	}*/
 }
 
-void Level::requestLevelChange(wstring name, int x, int y, Direction d, int zdir)
+bool Level::isRequestingLevelChange()
 {
-	Level::toLevelName = name;
-	Level::toLevelX = x;
-	Level::toLevelY = y;
-	Level::toLevelDirection = d;
-	Level::toLevelZDirection = zdir;
-	Level::levelRequestsChange = true;
-}
-void Level::requestBattleScreen()
-{
-	Level::levelRequestsBattle = true;
+	return requestsLevelChange;
 }
 
-bool Level::ifPlayerIsUnderNPC()
+void Level::getPlayer(Player & p, sf::String & s)
 {
-	if (p.getBlockY() == 0)
-	{
-		return false;
-	}
-	for (int i = 0; i < numNPCs; i++)
-	{
-		if (npcs[i].getBlockX() == p.getBlockX() && npcs[i].getBlockY() == p.getBlockY() - 1)
-		{
-			return true;
-		}
-		if (npcs[i].getBlockX() == p.getBlockX() - 1 && npcs[i].getBlockY() == p.getBlockY() - 1)
-		{
-			return true;
-		}
-		if (npcs[i].getBlockX() == p.getBlockX() + 1 && npcs[i].getBlockY() == p.getBlockY() - 1)
-		{
-			return true;
-		}
-	}
-	return false;
-}
-
-void Level::drawPlayer(sf::RenderWindow & window)
-{
-	sf::Sprite s(costumes[p.getDirection() + (p.getGender() * 4)]);
-	//The rendering class actually handles the player appearing to move up and down the steps rather than editing the actual coordinates and making some really strange code
-	if (p.getZDirection() == 0)
-	{
-		s.setPosition(sf::Vector2f(p.getActualX(), p.getActualY() - (PLAYER_HEIGHT - BLOCK_SIZE)));
-	}
-	else if (p.getZDirection() == 1 && p.getDirection() == 1) //if player is going up the stairs to the left
-	{
-		s.setPosition(sf::Vector2f(p.getActualX(), p.getActualY() - (.25f * (64 - (p.getActualX() - (p.getBlockX() * 64)))) - (PLAYER_HEIGHT - BLOCK_SIZE)));
-	}
-	else if (p.getZDirection() == 1 && p.getDirection() == 3) //if player is going up the stairs to the right
-	{
-		s.setPosition(sf::Vector2f(p.getActualX(), p.getActualY() - (.5f * (64 - ((p.getBlockX() * 64) - p.getActualX()))) - (PLAYER_HEIGHT - BLOCK_SIZE)));
-	}
-	else if (p.getZDirection() == -1 && p.getDirection() == 1) //if player is going down the stairs to the left
-	{
-		s.setPosition(sf::Vector2f(p.getActualX(), p.getActualY() + (.25f * (64 - (p.getActualX() - (p.getBlockX() * 64)))) - (PLAYER_HEIGHT - BLOCK_SIZE)));
-	}
-	else if (p.getZDirection() == -1 && p.getDirection() == 3) //if player is going down the stairs to the right
-	{
-		s.setPosition(sf::Vector2f(p.getActualX(), p.getActualY() - (.5f * (64 - ((p.getBlockX() * 64) - p.getActualX()))) - (PLAYER_HEIGHT - BLOCK_SIZE)));
-	}
-	window.draw(s);
+	p = player;
+	s = toLevel;
 }

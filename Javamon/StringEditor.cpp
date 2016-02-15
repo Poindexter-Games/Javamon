@@ -16,6 +16,10 @@ void StringEditor::echo(int i)
 {
 	wcout << i << endl;
 }
+void StringEditor::echo(float f)
+{
+	wcout << f << endl;
+}
 void StringEditor::echo(wstring str, int i)
 {
 	wcout << str << L" " << i << endl;

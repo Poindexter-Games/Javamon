@@ -35,6 +35,7 @@ public:
 	Date Revised: Feb 2,2016
 	*/
 	static void echo(int);
+	static void echo(float);
 	static void echo(wstring, int);
 	static void echo(int, wstring);
 

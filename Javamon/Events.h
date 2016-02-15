@@ -23,8 +23,6 @@ private:
 	// Booleans for key events
 	bool windowClosed = false;
 };
-
-
 #endif
 
 

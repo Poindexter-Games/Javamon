@@ -1,5 +1,10 @@
 #pragma once
 
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
+
+#include "Variables.h"
+
 /*
 Defines a class for displaying special tiles and or people in the Level
 
@@ -17,8 +22,11 @@ public:
 	virtual ~Entity();
 	int getX();
 	int getY();
+	void setX(int);
+	void setY(int);
+	void render(sf::RenderWindow&);
 protected:
-private:
 	int x;
 	int y;
+private:
 };

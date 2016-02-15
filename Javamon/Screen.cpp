@@ -15,7 +15,7 @@ void Screen::update(Controls c)
 	Screen::c = c;
 }
 
-void Screen::render(sf::RenderWindow & w, KText kt)
+void Screen::render(sf::RenderWindow & w)
 {
 	sf::RectangleShape r(sf::Vector2f(SCREEN_WIDTH, SCREEN_WIDTH));
 	r.setPosition(sf::Vector2f(0, 0));
@@ -27,6 +27,4 @@ void Screen::render(sf::RenderWindow & w, KText kt)
 	w.setView(view);
 	
 	w.draw(r);
-	//kt.simpleMessage(w, L"ロード中…");
-	kt.simpleMessage(w, l.getLoading().toWideString());
 }

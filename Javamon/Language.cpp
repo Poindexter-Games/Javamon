@@ -29,11 +29,6 @@ Language::Language(sf::String str)
 	{
 		file.readLine(segments, length);
 
-		for (int i = 0; i < length; i++)
-		{
-			StringEditor::echo(segments[i]);
-		}
-
 		if (segments[0].toWideString().compare(L"single_player") == 0) { single_player = sf::String(segments[1]); }
 		if (segments[0].toWideString().compare(L"multi_player") == 0) { multi_player = sf::String(segments[1]); }
 		if (segments[0].toWideString().compare(L"settings") == 0) { settings = sf::String(segments[1]); }

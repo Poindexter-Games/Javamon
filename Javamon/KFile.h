@@ -11,6 +11,7 @@
 #include <SFML/System/String.hpp>
 
 #include "Variables.h"
+#include "StringEditor.h"
 
 class KFile
 {

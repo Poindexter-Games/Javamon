@@ -2,15 +2,14 @@
 #include <string>
 
 #include <SFML/Graphics/Image.hpp>
-#include <codecvt> //This is for reading UTF-8 Files [?]
 #include <cstdint>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Rect.hpp>
 #include <iostream>
 #include <fstream>
-#include <SFML/Graphics/Text.hpp>
 #include <SFML/System/String.hpp>
+#include <vector>
 
 #include "Variables.h"
 #include "StringEditor.h"
@@ -25,48 +24,39 @@ using namespace std;
 class Level
 {
 public:
+	Level();
 	/*
-	Constructor for initializing the level
+	Constuctor for 1 player mode with loading character from save file
+	The int is a dummy variable
 	*/
-	Level(Language, wstring, wstring, wstring);
+	Level(sf::String, sf::String, sf::String, int);
 	/*
-	Constructor for initializing the level with certain player properties
-	This method will be depreciated soon because instantiating levels
-	with player properties is bad
+	Standard Constructor for 1 player mode
 	*/
-	Level(Language, wstring, wstring, wstring, int, int, Direction, int);
+	Level(sf::String, sf::String, sf::String, Player);
+
+	/*
+	Standard constructor for multiplayer mode
+	*/
+	Level(sf::String, sf::String, sf::String);
+
+	/*
+	TODO
+	*/
+	//void addPlayer(Player p);
+
 	~Level();
 
-	void update(Controls&);
-	void render(sf::RenderWindow&, KText&);
-	void drawDialog(sf::RenderWindow&, KText&);
+	void update(Controls&, int);
+	void render(sf::RenderWindow&, int);
+
+	bool isRequestingLevelChange();
+	void getPlayer(Player&, sf::String&);
 
 	sf::String getAuth() { return auth; }
 	sf::String getPack() { return pack; }
 	sf::String getName() { return name; }
-
-	bool isRequestingLevelChange() { return levelRequestsChange; }
-	void requestLevelChange(wstring, int, int, Direction, int);
-
-	sf::String	getToLevelName() { return toLevelName; }
-	int			getToLevelX() { return toLevelX; }
-	int			getToLevelY() { return toLevelY; }
-	Direction	getToLevelDirection() { return toLevelDirection; }
-	int			getToLevelZDirection() { return toLevelZDirection; }
-
-
-	bool isRequestingBattleScreen() { return levelRequestsBattle; }
-	void requestBattleScreen();
-
-	bool ifPlayerIsUnderNPC();
-	void drawPlayer(sf::RenderWindow&);
 private:
-	/*
-	Mode is going to be moved into the player class soon so not every player
-	in a level forced into dialog mode when one player reads/talks to something
-	*/
-	enum Mode {REG, DIALOG};
-	Mode mode;
 
 	/*
 	Author is the subfolder under Resources/Packs/
@@ -91,40 +81,23 @@ private:
 	*/
 	sf::String dispName;
 
-	Tile **map;
-	int width;
-	int height;
+	vector<vector<Tile>> map;
 	int spawnX;
 	int spawnY;
 	Direction spawnDirection;
 
-	Teleport *teleports;	//List of teleports
-	int numTeleports;		//Number of teleports
+	vector<Teleport> teleports;	//List of teleports
+	
+	vector<sf::Texture> textures;
 
-	Player* npcs;
-	int numNPCs;
-
-	sf::Image textureMap;
-	sf::Texture* textures;
-
-	sf::Image costumeMap;
-	sf::Texture* costumes;
-
-	sf::Texture dialogBox;
 	int dialogNPCNum;
 
-	Player p;
+	vector<Player> players;
 
-	bool levelRequestsChange;
-	bool levelRequestsBattle;
-	sf::String toLevelName;
-	int toLevelX;
-	int toLevelY;
-	Direction toLevelDirection;
-	int toLevelZDirection;
+	void loadLevel(sf::String, sf::String, sf::String);
 
-	/*
-	Contains methods shared by both constructors
-	*/
-	void loadLevel(Language, wstring, wstring, wstring);
+	bool requestsLevelChange = false;
+	Player player;
+	sf::String toLevel;
+	void requestLevelChange(int, sf::String);
 };

@@ -34,7 +34,7 @@ MainMenu::MainMenu(Language l):Screen(l)
 	quit.setPosition(sf::Vector2f(0, (.5 * SCREEN_HEIGHT) - (.5 * quit.getSize().y)));
 }
 
-void MainMenu::render(sf::RenderWindow & w, KText kt)
+void MainMenu::render(sf::RenderWindow & w)
 {
 	w.draw(logo);
 
