@@ -1,5 +1,10 @@
 #include "MainMenu.h"
 
+MainMenu::MainMenu():Screen(Language())
+{
+
+}
+
 MainMenu::MainMenu(Language l):Screen(l)
 {
 	if (StringEditor::equals(l.getLanguageCode(), L"ja_JP"))

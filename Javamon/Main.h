@@ -8,6 +8,7 @@
 #include <SFML/Window/Keyboard.hpp>
 #include <io.h>		//These are for outputting utf-8
 #include <fcntl.h>	//characters to the command prompt
+#include <cstdint>
 
 //	Project Includes
 #include "Variables.h"
@@ -20,3 +21,26 @@
 #include "Battle.h"
 
 #endif
+
+class Main
+{
+public:
+	Main(sf::RenderWindow&);
+	void update();
+	void render();
+	int32_t delta;
+private:
+	sf::RenderWindow & window;
+	Language l;
+	bool playingGame;
+
+	sf::Event event;
+	Events eventHandler;
+	Controls controls;
+
+	GameState gs;
+	MainMenu mainMenu;
+	Singleplayer sp;
+
+	sf::RectangleShape bg;
+};

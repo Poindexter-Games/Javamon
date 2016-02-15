@@ -11,6 +11,7 @@
 class Singleplayer: public Screen
 {
 public:
+	Singleplayer();
 	Singleplayer(Language, sf::String, sf::String, sf::String);
 	void update(Controls &);
 	void render(sf::RenderWindow & w);

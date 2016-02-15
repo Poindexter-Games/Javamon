@@ -6,73 +6,101 @@ int main()
 {
 	//Sets the command prompt to display utf-8 text (use Lucida Console as your font)
 	_setmode(_fileno(stdout), _O_U8TEXT);
-	//The string should be set to "en_US"
-	Language lang = Language("en_US");
 
 	sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), WINDOW_TITLE);
 	window.setFramerateLimit(FRAME_RATE_LIMIT); //Cap the framerate at 60fps
 	window.setKeyRepeatEnabled(false);
+
+	Main main(window);
+
+	//sf::Thread update(&Main::update, &main);
+	sf::Thread render(&Main::render, &main);
+
+	//update.launch();
+	render.launch();
+	main.update();
+
+	//update.wait();
+	render.wait();
+
+	return 0;
+}
+
+Main::Main(sf::RenderWindow & window) : window(window)
+{
+
+	playingGame = true;
 	
-	Controls controls;
-	KText font(lang);
+	//en_US
+	//ja_JP
+	Language lang = Language("en_US");
 
-	sf::Event event; //Object for handling/storing events
-	Events eventHandler;
+	gs = GameState::SINGLE_PLAYER;
 
-	GameState gs = GameState::SINGLE_PLAYER;
+	mainMenu = MainMenu(lang);
+	sp = Singleplayer(lang, L"Poindexter", L"Test", L"TestLevel");
 
-	MainMenu mainMenu(lang);
-	Singleplayer singleplayer(lang, L"Poindexter", L"Test", L"TestLevel");
-
-	bool playingGame = true; //Keeps the game running while true
-	
-	sf::View view;
-	view.setSize(sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
-	view.setCenter(sf::Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2));
-
-	//sf::RectangleShape bg;
-	//bg.setSize(sf::Vector2f(1280, 720));
-	//bg.setFillColor(sf::Color::Green);
-	//bg.setPosition(sf::Vector2f(0, 0));
-
-
-	sf::RectangleShape bg;
 	bg.setSize(sf::Vector2f((float)INT_MAX, (float)INT_MAX));
 	bg.setFillColor(sf::Color::Black);
 	bg.setPosition(sf::Vector2f((float)(INT_MIN / 2), (float)(INT_MIN / 2)));
-	
-	// Game loop
+
+	delta = 0;
+}
+
+void Main::update()
+{
+	sf::Clock clock;
+	bool firstRun = true;
 	while (playingGame)
 	{
-		//Listen for events
-		eventHandler.eventListener(event, window, controls);
+		if (firstRun || (float) clock.getElapsedTime().asMilliseconds() > FRAME_TIME)
+		{
+			eventHandler.eventListener(event, window, controls);
 
-		//	Perform logic based upon events
-		if (eventHandler.getWindowClosed())
-		{
-			playingGame = false;
-		}
-		
-		controls.update(); //This calculates key press time
-		
-		
-		if (gs == GameState::SINGLE_PLAYER)
-		{
-			singleplayer.update(controls);
-		}
-		if (gs == GameState::MAIN_MENU)
-		{
-			mainMenu.update(controls);
-		}
+			//	Perform logic based upon events
+			if (eventHandler.getWindowClosed())
+			{
+				playingGame = false;
+			}
 
-		//	Render graphical changes
+			controls.update(); //This calculates key press time
+
+
+			if (gs == GameState::SINGLE_PLAYER)
+			{
+				sp.update(controls);
+			}
+			if (gs == GameState::MAIN_MENU)
+			{
+				mainMenu.update(controls);
+			}
+
+			clock.restart();
+			firstRun = false;
+		}
+	}
+}
+
+void Main::render()
+{
+	sf::View view;
+	view.setSize(sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
+	view.setCenter(sf::Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2));
+	
+	while (playingGame)
+	{
+		window.draw(bg);
 		window.clear();
 		window.setView(view);
-		window.draw(bg);
 
 		if (gs == GameState::SINGLE_PLAYER)
 		{
-			singleplayer.render(window);
+			sf::RectangleShape a;
+			a.setSize(sf::Vector2f((float)BLOCK_SIZE, (float)BLOCK_SIZE));
+			a.setFillColor(sf::Color::Yellow);
+			a.setPosition(sf::Vector2f(0.0f, 0.0f));
+
+			sp.render(window);
 		}
 		if (gs == GameState::MAIN_MENU)
 		{
@@ -80,13 +108,5 @@ int main()
 		}
 
 		window.display();
-
-		
-
 	}
-	//	Cleanup / Exit Game
-	window.close();
-
-
-	return 0;
 }

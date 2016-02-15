@@ -1,10 +1,18 @@
 #include "Singleplayer.h"
 
+Singleplayer::Singleplayer():Screen(Language())
+{
+	
+}
+
 Singleplayer::Singleplayer(Language lang, sf::String auth, sf::String pack, sf::String name):Screen(lang)
 {
 	//load from save file
+	m = Mode::LOADING;
 	
 	l = Level(auth, pack, name, 0);
+
+	m = Mode::REG;
 }
 
 void Singleplayer::update(Controls & c)

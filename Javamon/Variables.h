@@ -6,6 +6,7 @@
 const float SCREEN_HEIGHT = 720;
 const float SCREEN_WIDTH = 1280;
 const int FRAME_RATE_LIMIT = 60;
+const float FRAME_TIME = 1000 / FRAME_RATE_LIMIT;
 const sf::String WINDOW_TITLE = L"Javamon";
 const int BLOCK_SIZE = 64;
 const int PLAYER_HEIGHT = (int)(BLOCK_SIZE * 1.25f);

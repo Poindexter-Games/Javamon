@@ -11,6 +11,7 @@
 class MainMenu: public Screen
 {
 public:
+	MainMenu();
 	MainMenu(Language l);
 	void render(sf::RenderWindow & w);
 private:
