@@ -6,7 +6,7 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 
-#include "Entity.h"
+#include "MovableEntity.h"
 
 #include "Language.h"
 
@@ -16,7 +16,7 @@
 
 using namespace std;
 
-class Player: public Entity
+class Player: public MovableEntity
 {
 public:
 	Player(); //
@@ -37,14 +37,9 @@ public:
 	void setDirection(Direction direction) { Player::direction = direction; }
 	void setZDirection(int zd) { zdirection = zd; }
 	void setSteepness(float s) { steepness = s; }
-	void setActualX(float actualX) { Player::actualX = actualX; }
-	void setActualY(float actualY) { Player::actualY = actualY; }
 
 	void place(int, int, Direction);
 	void place(int x, int y, Direction d, int zdir, float);
-
-	void adjustActualX(float adjust) { Player::actualX += adjust; }
-	void adjustActualY(float adjust) { Player::actualY += adjust; }
 
 	void allowMovement() { movementAllowed = true; }
 	void inhibitMovement() { movementAllowed = false; }
@@ -53,12 +48,6 @@ public:
 	Direction getDirection() { return direction; }
 	int getZDirection() { return zdirection; }
 	float getSteepness() { return steepness; }
-	float getActualX() { return actualX; }
-	float getActualY() { return actualY; }
-	bool lockedX() { return (int)actualX % BLOCK_SIZE == 0; }
-	bool lockedY() { return (int)actualY % BLOCK_SIZE == 0; }
-	/*Locked states if the player is seated correctly on the tile*/
-	bool isLocked() { return lockedX() && lockedY(); }
 
 	wstring getDialog() { return dialog; }
 	wstring getPostBattleQuote() { return postBattleQuote; }
@@ -84,8 +73,6 @@ private:
 	Direction direction;
 	int zdirection; //this is for the going up stairs or down stairs animation, 1 is up, -1 is down
 	float steepness; //this is for whether the player is traversing steep (.5) or gradual hills (.25)
-	float actualX;
-	float actualY;
 	bool movementAllowed;
 
 	wstring dialog; //Dialogue

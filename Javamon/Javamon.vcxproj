@@ -134,6 +134,8 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="Monster.cpp" />
+    <ClCompile Include="MovableEntity.cpp" />
+    <ClCompile Include="NPC.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Screen.cpp" />
     <ClCompile Include="Singleplayer.cpp" />
@@ -149,6 +151,8 @@
     <ClInclude Include="KText.h" />
     <ClInclude Include="Language.h" />
     <ClInclude Include="MainMenu.h" />
+    <ClInclude Include="MovableEntity.h" />
+    <ClInclude Include="NPC.h" />
     <ClInclude Include="Screen.h" />
     <ClInclude Include="Singleplayer.h" />
     <ClInclude Include="StringEditor.h" />

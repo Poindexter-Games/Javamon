@@ -18,8 +18,7 @@
 #include "Teleport.h"
 #include "Tile.h"
 #include "Player.h"
-
-using namespace std;
+#include "NPC.h"
 
 class Level
 {
@@ -56,6 +55,9 @@ public:
 	sf::String getAuth() { return auth; }
 	sf::String getPack() { return pack; }
 	sf::String getName() { return name; }
+
+	static enum Mode { REG = 0, LOADING = 1 };
+	Level::Mode getMode();
 private:
 
 	/*
@@ -81,6 +83,8 @@ private:
 	*/
 	sf::String dispName;
 
+	Level::Mode mode = Mode::LOADING;
+
 	vector<vector<Tile>> map;
 	int spawnX;
 	int spawnY;
@@ -93,6 +97,7 @@ private:
 	int dialogNPCNum;
 
 	vector<Player> players;
+	vector<NPC> npcs;
 
 	void loadLevel(sf::String, sf::String, sf::String);
 

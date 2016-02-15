@@ -1,24 +1,39 @@
 ﻿#include "Level.h"
 
-using namespace std;
-
 Level::Level()
 {
+	mode == Mode::LOADING;
 	//loadLevel(L"Poindexter", L"Error", L"Error");
 }
 
 Level::Level(sf::String auth, sf::String pack, sf::String level, int dummyVariable)
 {
+	mode == Mode::LOADING;
+
 	loadLevel(auth, pack, level);
 	Player p;
 	p.place(spawnX, spawnY, spawnDirection);
 	players.push_back(p);
+
+	mode = Mode::REG;
 }
 
 Level::Level(sf::String auth, sf::String pack, sf::String level, Player p)
 {
+	mode == Mode::LOADING;
+
 	loadLevel(auth, pack, level);
 	players.push_back(p);
+
+	//NPC joe;
+	//joe.loadTextures(auth, pack, level, 0);
+	//joe.setX(2);
+	//joe.setY(2);
+	//joe.setActualX((float)(2 * BLOCK_SIZE));
+	//joe.setActualY((float)(2 * BLOCK_SIZE));
+	//npcs.push_back(joe);
+
+	mode = Mode::REG;
 }
 
 void Level::loadLevel(sf::String auth, sf::String pack, sf::String name)
@@ -204,12 +219,16 @@ void Level::loadLevel(sf::String auth, sf::String pack, sf::String name)
 
 void Level::requestLevelChange(int playerNumber, sf::String toLevel)
 {
-	StringEditor::echo(L"Level requested change.");
-
-	requestsLevelChange = true;
+	mode = Level::Mode::LOADING;
 	Level::toLevel = toLevel;
 	player = players[playerNumber];
 	players.erase(players.begin() + playerNumber);
+	requestsLevelChange = true;
+}
+
+Level::Mode Level::getMode()
+{
+	return mode;
 }
 
 Level::~Level()
@@ -354,6 +373,11 @@ void Level::update(Controls & c, int playerNumber)
 
 void Level::render(sf::RenderWindow & window, int playerNumber)
 {
+	if (mode == Level::Mode::LOADING)
+		return;
+	if (playerNumber >= players.size())
+		return;
+
 	//Set the view
 	sf::View view;
 	view.setSize(sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
@@ -372,12 +396,14 @@ void Level::render(sf::RenderWindow & window, int playerNumber)
 	}
 	//Draw character if above NPC
 	players[playerNumber].render(window);
+	
 
 	//DRAW NPCs
 	
-	/*
-	TODO Draw NPCs
-	*/
+	for (int i = 0; i < npcs.size(); i++)
+	{
+		npcs[i].render(window);
+	}
 
 	//Draw character if below npc
 	players[playerNumber].render(window);

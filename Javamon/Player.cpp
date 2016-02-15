@@ -1,5 +1,5 @@
 #include "Player.h"
-Player::Player(): Entity(0, 0)
+Player::Player(): MovableEntity(0, 0)
 {
 	//common stuff
 	name = L"Gei Hakkâ";
