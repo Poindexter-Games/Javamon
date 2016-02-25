@@ -31,16 +31,35 @@ bool KFile::readLine(sf::String *& strings, int & length)
 	std::wstring str;
 	getline(file, str);
 
-	if (str.compare(L"") == 0)
+	if (StringEditor::equals(str, L""))
 	{
 		length = 0;
-		strings = new sf::String[0];
+		strings = new sf::String[length];
 		return false;
 	}
+	if (StringEditor::equals(str, L"}"))
+	{
+		length = 1;
+		strings = new sf::String[length]{"}"};
+		return true;
+	}
+	if (StringEditor::equals(str, L"/*"))
+	{
+		length = 1;
+		strings = new sf::String[length]{ "beginComment" };
+		return true;
+	}
+	if (StringEditor::equals(str, L"*/"))
+	{
+		length = 1;
+		strings = new sf::String[length]{ "endComment" };
+		return true;
+	}
 
-	StringEditor::echo(str);
+	//StringEditor::echo(str);
 
 	int type = 0;		//Format type
+	bool langTag = false;
 
 	int SCRIPT = 1;		//If the line has this format - setWidth(8)
 	int VARIABLE = 2;	//If the line has this format - width = 8
@@ -48,7 +67,8 @@ bool KFile::readLine(sf::String *& strings, int & length)
 	for (int i = 0; i < str.length(); i++)
 	{
 		if (str[i] == L'=') { type = VARIABLE; break; }
-		if (str[i] == L',' || str[i] == L';' || str[i] == L'(') { type = SCRIPT; break; }
+		if (str[i] == L'.') { langTag = true;}
+		if (str[i] == L',' || str[i] == L';' || str[i] == L'(' || str[i] == L'{') { type = SCRIPT; break; }
 	}
 
 	if (type == SCRIPT)
@@ -62,7 +82,8 @@ bool KFile::readLine(sf::String *& strings, int & length)
 	else if (type == VARIABLE)
 	{
 		length = 2;
-		strings = breakInHalf(str);
+		strings = breakInHalf(str, langTag);
+		if (langTag) length = 3;
 
 		return true;
 	}
@@ -104,7 +125,7 @@ int KFile::getBreakPosition(sf::String str, int endOfSegmentNumber)
 	int s = 0;
 	for (int i = 0; i < str.toWideString().length(); i++)
 	{
-		if (str[i] == L',' || str[i] == L';' || str[i] == L'(' || str[i] == L')')
+		if (str[i] == L',' || str[i] == L';' || str[i] == L'(' || str[i] == L')' || str[i] == L'{')
 		{
 			s++;
 			if (s == endOfSegmentNumber)
@@ -144,6 +165,11 @@ int KFile::getNumberOfSegments(sf::String str)
 			num++;
 			return num;
 		}
+		else if (str[i] == L'{')
+		{
+			num++;
+			return num;
+		}
 	}
 	/*
 	If the program gets this far into the function, we know the user did not end a line with a semi colon
@@ -168,13 +194,26 @@ sf::String* KFile::breakApart(sf::String str)
 	}
 	return strs;
 }
-sf::String* KFile::breakInHalf(sf::String str)
+sf::String* KFile::breakInHalf(sf::String str, bool b)
 {
 	if (str.toWideString().compare(L"endFile;") == 0) return new sf::String[2]{ L"endFile", L"" };
 	if (str.toWideString().compare(L"endFile();") == 0) return new sf::String[2]{ L"endFile", L"" };
-	int pos = str.find(L'=');
-	sf::String* strs = new sf::String[2];
-	strs[0] = str.toWideString().substr(0, pos);
-	strs[1] = str.toWideString().substr(pos + 1, str.toWideString().length() - (pos + 1));
-	return strs;
+	if (b)
+	{
+		int pos0 = str.find(L'.');
+		int pos1 = str.find(L'=');
+		sf::String* strs = new sf::String[3];
+		strs[0] = str.toWideString().substr(0, pos0);
+		strs[1] = str.toWideString().substr(pos0 + 1, (pos1 - pos0) - 1);
+		strs[2] = str.toWideString().substr(pos1 + 1, str.toWideString().length() - (pos1 + 1));
+		return strs;
+	}
+	else
+	{
+		int pos = str.find(L'=');
+		sf::String* strs = new sf::String[2];
+		strs[0] = str.toWideString().substr(0, pos);
+		strs[1] = str.toWideString().substr(pos + 1, str.toWideString().length() - (pos + 1));
+		return strs;
+	}
 }

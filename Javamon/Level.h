@@ -38,19 +38,18 @@ public:
 	Standard constructor for multiplayer mode
 	*/
 	Level(sf::String, sf::String, sf::String);
-
-	/*
-	TODO
-	*/
-	//void addPlayer(Player p);
+	
+	void addPlayer(Player p);
 
 	~Level();
 
 	void update(Controls&, int);
-	void render(sf::RenderWindow&, int);
+	void render(sf::RenderWindow&, KText &, int);
 
 	bool isRequestingLevelChange();
 	void getPlayer(Player&, sf::String&);
+
+	bool isPlayerUnderNPC(int playerNumber);
 
 	sf::String getAuth() { return auth; }
 	sf::String getPack() { return pack; }
@@ -58,6 +57,8 @@ public:
 
 	static enum Mode { REG = 0, LOADING = 1 };
 	Level::Mode getMode();
+
+	void setLanguageOfPlayer(int num, Language l) { players[num].setLanguage(l); }
 private:
 
 	/*
@@ -78,21 +79,19 @@ private:
 	*/
 	sf::String name;
 
-	/*
-	This is the language friendly name for in-game mentions of the level
-	*/
-	sf::String dispName;
-
 	Level::Mode mode = Mode::LOADING;
 
-	vector<vector<Tile>> map;
+	vector<Word> names;
 	int spawnX;
 	int spawnY;
 	Direction spawnDirection;
+	vector<vector<Tile>> map;
+	vector<Tile> floatingTiles;
 
 	vector<Teleport> teleports;	//List of teleports
 	
 	vector<sf::Texture> textures;
+	vector<sf::Texture> dialogBoxes;
 
 	int dialogNPCNum;
 

@@ -1,0 +1,4 @@
+﻿openFile;
+name.en_US=Hills
+name.ja_JP=おんなのおか
+closeFile;

@@ -14,7 +14,7 @@ public:
 	Singleplayer();
 	Singleplayer(Language, sf::String, sf::String, sf::String);
 	void update(Controls &);
-	void render(sf::RenderWindow & w);
+	void render(sf::RenderWindow &, KText &);
 protected:
 private:
 	Level l;

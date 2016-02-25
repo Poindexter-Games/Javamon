@@ -1,0 +1,4 @@
+﻿openFile;
+name.en_US=KING BUSH III
+name.ja_JP=ダイ３ジ・おうさま・ブッシュ
+closeFile;

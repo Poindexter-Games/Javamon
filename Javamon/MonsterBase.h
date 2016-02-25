@@ -4,6 +4,12 @@
 
 class MonsterBase
 {
-private:
 public:
+	MonsterBase();
+
+	void increaseStats(MonsterStats&);
+	MonsterStats getBaseStats() { return baseStats; }
+private:
+	MonsterStats baseStats;
+	MonsterStats incStats;
 };

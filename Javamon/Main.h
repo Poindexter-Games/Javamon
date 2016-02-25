@@ -32,6 +32,7 @@ public:
 private:
 	sf::RenderWindow & window;
 	Language l;
+	KText font;
 	bool playingGame;
 
 	sf::Event event;

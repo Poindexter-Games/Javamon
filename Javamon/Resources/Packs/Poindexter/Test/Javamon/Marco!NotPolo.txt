@@ -1,0 +1,4 @@
+﻿openFile;
+name.en_US=Marco! Not Polo
+name.ja_JP=ルヴィヲ
+closeFile;

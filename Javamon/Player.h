@@ -24,7 +24,6 @@ public:
 	Language lang;
 
 	enum Mode{ NORMAL = 0, DIALOG = 1 };
-	Mode mode;
 
 	void render(sf::RenderWindow & w);
 
@@ -45,6 +44,13 @@ public:
 	void inhibitMovement() { movementAllowed = false; }
 	bool isAllowedToMove() { return movementAllowed; }
 
+	void setLanguage(Language l) { lang = l; }
+	void setMode(Mode m) { mode = m; }
+
+	void setNPCDialogNumber(int n) { npcDialogNumber = n; }
+
+	//
+
 	Direction getDirection() { return direction; }
 	int getZDirection() { return zdirection; }
 	float getSteepness() { return steepness; }
@@ -52,6 +58,7 @@ public:
 	wstring getDialog() { return dialog; }
 	wstring getPostBattleQuote() { return postBattleQuote; }
 	wstring getAnteBattleQuote() { return anteBattleQuote; }
+	int getNPCDialogNumber() { return npcDialogNumber; }
 
 	void setDialog(wstring dialog) { Player::dialog = dialog; }
 
@@ -64,11 +71,17 @@ public:
 
 	bool getWantsToBattle() { return wantsToBattle; }
 	void setWantsToBattle(bool b) { wantsToBattle = b; }
+
+	sf::String getLanguageCode() { return lang.getLanguageCode(); }
+	Mode getMode() { return mode; }
 private:
 	vector<sf::Texture> textures;
+	vector<Monster> party;
 
 	wstring name;
 	Gender sex;
+
+	Mode mode;
 	
 	Direction direction;
 	int zdirection; //this is for the going up stairs or down stairs animation, 1 is up, -1 is down
@@ -78,10 +91,9 @@ private:
 	wstring dialog; //Dialogue
 	wstring anteBattleQuote; //Quote before the battle
 	wstring postBattleQuote; //Quote after the battle
+	int npcDialogNumber;
 
 	bool wantsToBattle;
-	Monster* monsters; //Inventory of monsters
-	int numMonsters; //Number of monsters in inventory. This must be between 0 and 6 (inclusive).
 
 	bool visible; //If true, shows NPC and gives them a hitbox
 	int animationFrame;

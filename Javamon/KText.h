@@ -3,6 +3,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
+#include <SFML/System/String.hpp>
 #include <string>
 
 #include "Variables.h"
@@ -13,6 +14,33 @@ using namespace std;
 
 class KText
 {
+public:
+	/*
+	This is a default constructor, make sure to override this with KText(Language)
+	*/
+	KText();
+	/*
+	This will instantiate the files needed for the language
+	*/
+	KText(Language);
+
+	/*
+	This renders a dialog box on the bottom of the screen for text inside the
+	movement portion of the game.
+	*/
+	void levelDialog(sf::RenderWindow &, wstring);
+	/*
+	This renders the word loading
+	*/
+	void simpleMessage(sf::RenderWindow &, wstring);
+	/*
+	This renders X and Y coordinates
+	*/
+	void coordinates(sf::RenderWindow &, int, int);
+	/*
+	This renders text
+	*/
+	void drawText(sf::RenderWindow &, int, int, sf::String);
 private:
 	/*
 	This is for determining which character sets are needed.
@@ -33,30 +61,4 @@ private:
 	Basic_Latin.png file so that our font is not monospaced in the English version.
 	*/
 	int* latinWidths;
-public:
-	/*
-	This will instantiate the files needed for the language
-	*/
-	KText(Language);
-
-	/*
-	This renders a dialog box on the bottom of the screen for text inside the
-	movement portion of the game.
-	*/
-	void levelDialog(sf::RenderWindow &, wstring);
-	/*
-	This renders the word loading
-	*/
-	void simpleMessage(sf::RenderWindow &, wstring);
-
-	/*
-	This is for converting the Japanese Hiragana syllabary to the Katakana syllabary.
-	Notes: Unimplemented
-	*/
-	wstring hiraganaToKatakana(wstring);
-	/*
-	This is for converting the Japanese Katakana syllabary to the Hiragana syllabary.
-	Notes: Unimplemented
-	*/
-	wstring katakanaToHiragana(wstring);
 };

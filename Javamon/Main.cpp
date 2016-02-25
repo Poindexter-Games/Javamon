@@ -4,7 +4,7 @@ void render(sf::RenderWindow&);
 
 int main()
 {
-	//Sets the command prompt to display utf-8 text (use Lucida Console as your font)
+	//Sets the command prompt to display utf-8 text (use Lucida Console as your console font)
 	_setmode(_fileno(stdout), _O_U8TEXT);
 
 	sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), WINDOW_TITLE);
@@ -28,17 +28,24 @@ int main()
 
 Main::Main(sf::RenderWindow & window) : window(window)
 {
-
 	playingGame = true;
 	
-	//en_US
-	//ja_JP
-	Language lang = Language("en_US");
+	l = Language("en_US");
+
+	KFile options(sf::String(RESOURCES + "Options.txt"));
+	sf::String* segments;
+	int length;
+	options.readLine(segments, length);
+	if (StringEditor::equals(segments[1], L"ja_JP"))
+	{
+		l = Language("ja_JP");
+	}
+	font = KText(l);
 
 	gs = GameState::SINGLE_PLAYER;
 
-	mainMenu = MainMenu(lang);
-	sp = Singleplayer(lang, L"Poindexter", L"Test", L"TestLevel");
+	mainMenu = MainMenu(l);
+	sp = Singleplayer(l, L"Poindexter", L"Test", L"TestLevel");
 
 	bg.setSize(sf::Vector2f((float)INT_MAX, (float)INT_MAX));
 	bg.setFillColor(sf::Color::Black);
@@ -100,7 +107,7 @@ void Main::render()
 			a.setFillColor(sf::Color::Yellow);
 			a.setPosition(sf::Vector2f(0.0f, 0.0f));
 
-			sp.render(window);
+			sp.render(window, font);
 		}
 		if (gs == GameState::MAIN_MENU)
 		{

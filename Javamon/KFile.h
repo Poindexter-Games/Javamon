@@ -36,7 +36,7 @@ public:
 
 	Author: Karl Piepho
 	Date Created: Feb 7, 2016
-	Date Revised: Feb 9, 2016
+	Date Revised: Feb 20, 2016
 	Revised By: Karl Piepho
 	*/
 	bool readLine(sf::String* &, int &);
@@ -82,13 +82,15 @@ private:
 	For Example:
 	single_player=Single Player
 
-	This will always return with a wstring array with 2 wstrings
+	This will return a string with 2 or 3 strings depending if the user added a language tag
+	If the bool is true, the program will look out for the language tag.
+	If false, the program will not split the variable and it's language tag.
 
 	Author: Karl Piepho
 	Date Created: Feb 7, 2016
-	Date Revised: Feb 7, 2016
+	Date Revised: Feb 20, 2016
 	*/
-	static sf::String* breakInHalf(sf::String);
+	static sf::String* breakInHalf(sf::String, bool);
 	/*
 	Returns the location of a certain commma or semicolon
 	The first comma (or parenthesis, or semicolon) is marked as endOfSegmentNumber equaling ZERO

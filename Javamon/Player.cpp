@@ -16,8 +16,7 @@ Player::Player(): MovableEntity(0, 0)
 	dialog = L"THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG.";
 	anteBattleQuote = L"BATTLE QUOTE NOT LOADED.";
 	postBattleQuote = L"BATTLE QUOTE NOT LOADED.";
-
-	numMonsters = 0;
+	npcDialogNumber = -1;
 
 	//npc related stuff
 	visible = true;

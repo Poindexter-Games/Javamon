@@ -1,0 +1,4 @@
+﻿openFile;
+name.en_US=Bombing Barracks
+name.ja_JP=ブラックおばま
+closeFile;
