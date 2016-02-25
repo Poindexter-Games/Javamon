@@ -7,12 +7,14 @@
 
 #include "Variables.h"
 #include "StringEditor.h"
+#include "Language.h"
+#include "KText.h"
 
 class MainMenu: public Screen
 {
 public:
 	MainMenu();
-	MainMenu(Language l);
+	MainMenu(Language);
 	void render(sf::RenderWindow & w);
 private:
 	sf::RectangleShape logo;

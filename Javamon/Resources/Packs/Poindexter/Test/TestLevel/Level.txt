@@ -19,7 +19,23 @@ setBlock(9,3,81,2,0)
 
 addTeleport(9,2,TestLevel1,7,2,LEFT,-1,SHALLOW)
 
-setNumberOfNPCs(0)
+addNPC{
+name.en_US=Clay
+x=5
+y=3
+r=0
+dialogue.en_US=Hello, I'm Clay.
+dialogue.ja_JP=ハロー、クレーですぅ。
+}
+
+addNPC{
+name.en_US=Clay
+x=3
+y=5
+r=0
+dialogue.en_US=Hello, I'm Jay.
+dialogue.ja_JP=デスです。
+}
 
 endFile;
 

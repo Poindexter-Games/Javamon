@@ -1,13 +1,7 @@
 ﻿#include "Screen.h"
 
-Screen::Screen(Language l)
+Screen::Screen()
 {
-	Screen::l = l;
-}
-
-void Screen::setLanguage(Language l)
-{
-	Screen::l = l;
 }
 
 void Screen::update(Controls c)

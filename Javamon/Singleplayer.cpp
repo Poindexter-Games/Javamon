@@ -1,13 +1,14 @@
 #include "Singleplayer.h"
 
-Singleplayer::Singleplayer():Screen(Language())
+Singleplayer::Singleplayer()
 {
 	
 }
 
-Singleplayer::Singleplayer(Language lang, sf::String auth, sf::String pack, sf::String name):Screen(lang)
+Singleplayer::Singleplayer(Language lang, sf::String auth, sf::String pack, sf::String name)
 {
 	l = Level(auth, pack, name, 0);
+	l.setLanguageOfPlayer(0, lang);
 }
 
 void Singleplayer::update(Controls & c)
@@ -24,10 +25,10 @@ void Singleplayer::update(Controls & c)
 	}
 }
 
-void Singleplayer::render(sf::RenderWindow & w)
+void Singleplayer::render(sf::RenderWindow & w, KText & font)
 {
 	if (l.getMode() == Level::Mode::REG)
 	{
-		l.render(w, 0);
+		l.render(w, font, 0);
 	}
 }

@@ -1,0 +1,4 @@
+﻿openFile;
+name.en_US=Trump Card
+name.ja_JP=われわれのきりふだ
+closeFile;

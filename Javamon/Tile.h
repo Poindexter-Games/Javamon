@@ -1,9 +1,11 @@
 #pragma once
 #include <cstdint>
 
+#include "Entity.h"
+
 using namespace std;
 
-class Tile
+class Tile : public Entity
 {
 private:
 	int imgnum;

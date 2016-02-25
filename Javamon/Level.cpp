@@ -25,14 +25,6 @@ Level::Level(sf::String auth, sf::String pack, sf::String level, Player p)
 	loadLevel(auth, pack, level);
 	players.push_back(p);
 
-	//NPC joe;
-	//joe.loadTextures(auth, pack, level, 0);
-	//joe.setX(2);
-	//joe.setY(2);
-	//joe.setActualX((float)(2 * BLOCK_SIZE));
-	//joe.setActualY((float)(2 * BLOCK_SIZE));
-	//npcs.push_back(joe);
-
 	mode = Mode::REG;
 }
 
@@ -43,29 +35,60 @@ void Level::loadLevel(sf::String auth, sf::String pack, sf::String name)
 	Level::pack = pack;
 	Level::name = name;
 
+	Word codeName;
+	codeName.langCode = sf::String(L"code_CODE");
+	codeName.str = name;
+	names.push_back(codeName);
+
 	KFile file(PACKS + auth + L"/" + pack + L"/" + name + L"/Level.txt");
 
-	int width = 0;
-	int height = 0;
+	int width = 0;				//Temporary variable to store the width of the level
+	int height = 0;				//Temporary variable to store the height of the level
 	bool widthLoaded = false;
 	bool heightLoaded = false;
-	bool mapLoaded = false;
+	bool mapLoaded = false;		//Flag which is true if the map dimensions were loaded
+	int numNPC = -1;			//Counts the index number of each npc instantiated, is -1 if none are instantiated (I forgot the reasoning behind this...)
 
-	bool spawnStuffLoaded = false;
+	bool spawnStuffLoaded = false;	//Flag which is true if the spawn coordinates were loaded
 
-	sf::String* segments;
-	int length;
+	bool comment = false;	//Flag which states if reading a multiline comment
+	sf::String* segments;	//Broken apart parameters
+	int length;				//Number of parameters
 
 	for (bool b = true; b; )
 	{
 		file.readLine(segments, length);
 
+		//Conditions for not reading a line
 		if (length == 0) continue;
+		if (StringEditor::equals(segments[0], L"endComment"))
+		{
+			comment = false;
+			continue;
+		}
+		if (comment == true) continue;
 
-		//for (int i = 0; i < length; i++)
-		//{
-		//	StringEditor::echo(segments[i]);
-		//}
+		//Output the split segments to the console
+		for (int i = 0; i < length; i++)
+		{
+			StringEditor::echo(segments[i]);
+		}
+
+		if (length == 1)
+		{
+			if (StringEditor::equals(segments[0], L"addNPC"))
+			{
+				numNPC++;
+				npcs.push_back(NPC());
+				npcs[numNPC].loadTextures(auth, pack, name, 0);
+				npcs[numNPC].loadFromFile(file, auth, pack, name);
+			}
+			if (StringEditor::equals(segments[0], L"beginComment"))
+			{
+				comment = true;
+				continue;
+			}
+		}
 
 		if (length == 2)
 		{
@@ -78,6 +101,18 @@ void Level::loadLevel(sf::String auth, sf::String pack, sf::String name)
 			{
 				height = stoi(segments[1].toWideString());
 				heightLoaded = true;
+			}
+		}
+
+		if (length == 3)
+		{
+			if (StringEditor::equals(segments[0], L"setName"))
+			{
+				Word s_name;
+				s_name.langCode = segments[1];
+				s_name.str = segments[2];
+				names.push_back(s_name);
+				continue;
 			}
 		}
 
@@ -106,6 +141,7 @@ void Level::loadLevel(sf::String auth, sf::String pack, sf::String name)
 				}
 				spawnDirection = to_Direction(d);
 				spawnStuffLoaded = true;
+				continue;
 			}
 		}
 
@@ -117,6 +153,7 @@ void Level::loadLevel(sf::String auth, sf::String pack, sf::String name)
 				{
 					map[i][stoi(segments[1].toWideString())] = Tile(stoi(segments[2].toWideString()), stoi(segments[3].toWideString()), stoi(segments[4].toWideString()));
 				}
+				continue;
 			}
 			if (StringEditor::equals(segments[0], L"setCol"))
 			{
@@ -124,6 +161,7 @@ void Level::loadLevel(sf::String auth, sf::String pack, sf::String name)
 				{
 					map[stoi(segments[1].toWideString())][i] = Tile(stoi(segments[2].toWideString()), stoi(segments[3].toWideString()), stoi(segments[4].toWideString()));
 				}
+				continue;
 			}
 		}
 
@@ -132,6 +170,47 @@ void Level::loadLevel(sf::String auth, sf::String pack, sf::String name)
 			if (StringEditor::equals(segments[0], L"setBlock"))
 			{
 				map[stoi(segments[1].toWideString())][stoi(segments[2].toWideString())] = Tile(stoi(segments[3].toWideString()), stoi(segments[4].toWideString()), stoi(segments[5].toWideString()));
+				continue;
+			}
+		}
+
+		if (length == 8)
+		{
+			if (StringEditor::equals(segments[0], L"setArea"))
+			{
+				int tempX = stoi(segments[1].toWideString());
+				int tempY = stoi(segments[2].toWideString());
+				int tempToX = stoi(segments[3].toWideString());
+				int tempToY = stoi(segments[4].toWideString());
+
+				for (int i = tempX; i <= tempToX; i++)
+				{
+					for (int j = tempY; j <= tempToY; j++)
+					{
+						map[i][j] = Tile(stoi(segments[5].toWideString()), stoi(segments[6].toWideString()), stoi(segments[7].toWideString()));
+					}
+				}
+				continue;
+			}
+			if (StringEditor::equals(segments[0], L"setDefinedArea"))
+			{
+				int tempX = stoi(segments[1].toWideString());
+				int tempY = stoi(segments[2].toWideString());
+				int tempToX = stoi(segments[3].toWideString());
+				int tempToY = stoi(segments[4].toWideString());
+
+				for (int i = tempX; i <= tempToX; i++)
+				{
+					for (int j = tempY; j <= tempToY; j++)
+					{
+						int xOffset = i - tempX;
+						int yOffset = j - tempY;
+
+						//The 16 is the width of the sprite sheet
+						map[i][j] = Tile(stoi(segments[5].toWideString()) + xOffset + (16 * yOffset), stoi(segments[6].toWideString()), stoi(segments[7].toWideString()));
+					}
+				}
+				continue;
 			}
 		}
 
@@ -167,6 +246,7 @@ void Level::loadLevel(sf::String auth, sf::String pack, sf::String name)
 				}
 				Teleport t(stoi(segments[1].toWideString()), stoi(segments[2].toWideString()), segments[3], stoi(segments[4].toWideString()), stoi(segments[5].toWideString()), to_Direction(d), stoi(segments[7].toWideString()), f);
 				teleports.push_back(t);
+				continue;
 			}
 		}
 
@@ -188,6 +268,9 @@ void Level::loadLevel(sf::String auth, sf::String pack, sf::String name)
 	}
 	file.close();
 
+	//Creating temp map if something wasn't loaded
+	//If there was an error in the file, the program most likely won't make it this far into the code.
+
 	if (!mapLoaded)
 	{
 		width = 1;
@@ -206,6 +289,8 @@ void Level::loadLevel(sf::String auth, sf::String pack, sf::String name)
 		spawnDirection = Direction::RIGHT;
 	}
 
+	//Loading block textures
+
 	sf::Image blockSheet;
 	blockSheet.loadFromFile(PACKS + auth + L"/" + pack + L"/" + name + L"/Spritesheet.png");
 	StringEditor::echo(sf::String(PACKS + auth + L"/" + pack + L"/" + name + L"/Spritesheet.png").toWideString());
@@ -215,6 +300,16 @@ void Level::loadLevel(sf::String auth, sf::String pack, sf::String name)
 	{
 		textures[i].loadFromImage(blockSheet, sf::IntRect((i % 16) * BLOCK_SIZE, (int)(i / 16) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE));
 	}
+
+	//Loading Dialog Boxes
+
+	sf::Image dialogBoxImg;
+	if (!dialogBoxImg.loadFromFile(VIDEO + L"DialogBox.png"))
+	{
+		StringEditor::echo(L"Dialog Box was not loaded");
+	}
+	dialogBoxes.push_back(sf::Texture());
+	dialogBoxes[0].loadFromImage(dialogBoxImg, sf::IntRect(0, 0, 1280, 200));
 }
 
 void Level::requestLevelChange(int playerNumber, sf::String toLevel)
@@ -242,6 +337,16 @@ Level::~Level()
 
 void Level::update(Controls & c, int playerNumber)
 {
+	if (players[playerNumber].getMode() == Player::Mode::DIALOG)
+	{
+		if (c.isPressedForFirstTime(Control::ACCEPT) && players[playerNumber].getMode() == Player::Mode::DIALOG)
+		{
+			players[playerNumber].setNPCDialogNumber(-1);
+			players[playerNumber].setMode(Player::Mode::NORMAL);
+		}
+		return;
+	}
+
 	if (!players[playerNumber].isLocked())
 	{
 		//If player is in transition between two blocks
@@ -280,9 +385,26 @@ void Level::update(Controls & c, int playerNumber)
 			if ((players[playerNumber].getY() == (map[0].size() - 1))) { downBlocked = true; }
 			if ((players[playerNumber].getX() == (map.size() - 1))) { rightBlocked = true; }
 
-			/*
-			TODO NPC Check
-			*/
+			//npc collision
+			for (int i = 0; i < npcs.size(); i++)
+			{
+				if (!upBlocked && players[playerNumber].getX() == npcs[i].getX() && players[playerNumber].getY() - 1 == npcs[i].getY())
+				{
+					upBlocked = true;
+				}
+				if (!leftBlocked && players[playerNumber].getX() - 1 == npcs[i].getX() && players[playerNumber].getY() == npcs[i].getY())
+				{
+					leftBlocked = true;
+				}
+				if (!downBlocked && players[playerNumber].getX() == npcs[i].getX() && players[playerNumber].getY() + 1 == npcs[i].getY())
+				{
+					downBlocked = true;
+				}
+				if (!rightBlocked && players[playerNumber].getX() + 1 == npcs[i].getX() && players[playerNumber].getY() == npcs[i].getY())
+				{
+					rightBlocked = true;
+				}
+			}
 
 			//Final movement validity check
 			if (players[playerNumber].getDirection() == Direction::UP)
@@ -328,6 +450,35 @@ void Level::update(Controls & c, int playerNumber)
 	{
 		//If player is not moving and does not want to move
 		players[playerNumber].setAnimationFrame(0);
+	
+		if (c.isPressedForFirstTime(Control::ACCEPT))
+		{
+			Direction d = players[playerNumber].getDirection();
+			for (int i = 0; i < npcs.size(); i++)
+			{
+
+				if (d == Direction::UP && players[playerNumber].getX() == npcs[i].getX() && players[playerNumber].getY() - 1 == npcs[i].getY())
+				{
+					players[playerNumber].setNPCDialogNumber(i);
+					players[playerNumber].setMode(Player::Mode::DIALOG);
+				}
+				else if (d == Direction::LEFT && players[playerNumber].getX() - 1 == npcs[i].getX() && players[playerNumber].getY() == npcs[i].getY())
+				{
+					players[playerNumber].setNPCDialogNumber(i);
+					players[playerNumber].setMode(Player::Mode::DIALOG);
+				}
+				else if (d == Direction::DOWN && players[playerNumber].getX() == npcs[i].getX() && players[playerNumber].getY() + 1 == npcs[i].getY())
+				{
+					players[playerNumber].setNPCDialogNumber(i);
+					players[playerNumber].setMode(Player::Mode::DIALOG);
+				}
+				else if(players[playerNumber].getX() + 1 == npcs[i].getX() && players[playerNumber].getY() == npcs[i].getY())
+				{
+					players[playerNumber].setNPCDialogNumber(i);
+					players[playerNumber].setMode(Player::Mode::DIALOG);
+				}
+			}
+		}
 	}
 	if (players[playerNumber].isLocked())
 	{
@@ -371,7 +522,7 @@ void Level::update(Controls & c, int playerNumber)
 	}
 }
 
-void Level::render(sf::RenderWindow & window, int playerNumber)
+void Level::render(sf::RenderWindow & window, KText & font, int playerNumber)
 {
 	if (mode == Level::Mode::LOADING)
 		return;
@@ -387,16 +538,24 @@ void Level::render(sf::RenderWindow & window, int playerNumber)
 	//Draw blocks
 	for (int x = 0; x < map.size(); x++)
 	{
-		for (int y = 0; y < map[x].size(); y++)
+		if (x >= players[playerNumber].getX() - 11 && x <= players[playerNumber].getX() + 11)
 		{
-			sf::Sprite s(textures[map[x][y].getImgNum()]);
-			s.setPosition(sf::Vector2f((float)x * BLOCK_SIZE, (float)y * BLOCK_SIZE));
-			window.draw(s);
+			for (int y = 0; y < map[x].size(); y++)
+			{
+				if (y >= players[playerNumber].getY() - 7 && y <= players[playerNumber].getY() + 6)
+				{
+					sf::Sprite s(textures[map[x][y].getImgNum()]);
+					s.setPosition(sf::Vector2f((float)x * BLOCK_SIZE, (float)y * BLOCK_SIZE));
+					window.draw(s);
+				}
+			}
 		}
+		
 	}
-	//Draw character if above NPC
-	players[playerNumber].render(window);
-	
+	if (!isPlayerUnderNPC(playerNumber))
+	{
+		players[playerNumber].render(window);
+	}
 
 	//DRAW NPCs
 	
@@ -406,12 +565,41 @@ void Level::render(sf::RenderWindow & window, int playerNumber)
 	}
 
 	//Draw character if below npc
-	players[playerNumber].render(window);
-
-	/*if (mode == Mode::DIALOG)
+	if (isPlayerUnderNPC(playerNumber))
 	{
-		drawDialog(window, font);
-	}*/
+		players[playerNumber].render(window);
+	}
+
+	if (players[playerNumber].getMode() == Player::Mode::DIALOG)
+	{
+		sf::View view;
+		view.setSize(sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
+		view.setCenter(sf::Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2));
+		window.setView(view);
+
+		sf::Sprite s(dialogBoxes[0]);	//TODO Multiple types of dialog boxes
+		s.setPosition(sf::Vector2f(0, DIALOG_BOX_LOW));
+		window.draw(s);
+		font.drawText(window, 16, DIALOG_BOX_LOW + 16, npcs[players[playerNumber].getNPCDialogNumber()].getDialog(players[playerNumber].getLanguageCode()));
+	}
+
+	for (int i = 0; i < floatingTiles.size(); i++)
+	{
+		if (i >= players[playerNumber].getY() - 7 && i <= players[playerNumber].getY() + 6)
+		{
+			sf::View view;
+			view.setSize(sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
+			view.setCenter(sf::Vector2f(players[playerNumber].getActualX() + 32, players[playerNumber].getActualY() + 32));
+			window.setView(view);
+
+			sf::Sprite s(textures[floatingTiles[i].getImgNum()]);
+			s.setPosition(sf::Vector2f(floatingTiles[i].getX() * BLOCK_SIZE, floatingTiles[i].getY() * BLOCK_SIZE));
+			window.draw(s);
+		}
+	}
+
+	//RENDER DEBUG STUFF
+	font.coordinates(window, players[playerNumber].getX(), players[playerNumber].getY());
 }
 
 bool Level::isRequestingLevelChange()
@@ -423,4 +611,29 @@ void Level::getPlayer(Player & p, sf::String & s)
 {
 	p = player;
 	s = toLevel;
+}
+
+bool Level::isPlayerUnderNPC(int playerNumber)
+{
+	Player p = players[playerNumber];
+	if (players[playerNumber].getY() == 0)
+	{
+		return false;
+	}
+	for (int i = 0; i < npcs.size(); i++)
+	{
+		if (npcs[i].getX() == p.getX() && npcs[i].getY() == p.getY() - 1)
+		{
+			return true;
+		}
+		if (npcs[i].getX() == p.getX() - 1 && npcs[i].getY() == p.getY() - 1)
+		{
+			return true;
+		}
+		if (npcs[i].getX() == p.getX() + 1 && npcs[i].getY() == p.getY() - 1)
+		{
+			return true;
+		}
+	}
+	return false;
 }

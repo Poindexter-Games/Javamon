@@ -1,0 +1,4 @@
+﻿openFile;
+name.en_US=Feel the burn of the Burny Sanders
+name.ja_JP=バニー(ｳｻｷﾞ)サンダース
+closeFile;

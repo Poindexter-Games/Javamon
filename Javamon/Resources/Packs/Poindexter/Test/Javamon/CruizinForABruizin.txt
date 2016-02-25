@@ -1,0 +1,4 @@
+﻿openFile;
+name.en_US=You're cruizin' for a bruizin'
+name.ja_JP=ドライブ…あだなはよないな…
+closeFile;
