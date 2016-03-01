@@ -100,7 +100,9 @@ private:
 
 	void loadLevel(sf::String, sf::String, sf::String);
 
+	/*We need to account for multiple characters leaving a stage in the same update frame*/
 	bool requestsLevelChange = false;
+
 	Player player;
 	sf::String toLevel;
 	void requestLevelChange(int, sf::String);

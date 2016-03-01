@@ -339,9 +339,21 @@ void Level::update(Controls & c, int playerNumber)
 {
 	if (players[playerNumber].getMode() == Player::Mode::DIALOG)
 	{
-		if (c.isPressedForFirstTime(Control::ACCEPT) && players[playerNumber].getMode() == Player::Mode::DIALOG)
+		if (c.isPressedForFirstTime(Control::ACCEPT))
 		{
 			players[playerNumber].setNPCDialogNumber(-1);
+			players[playerNumber].setMode(Player::Mode::NORMAL);
+		}
+		return;
+	}
+	if (players[playerNumber].getMode() == Player::Mode::MENU)
+	{
+		if (c.isPressedForFirstTime(Control::CANCEL))
+		{
+			players[playerNumber].setMode(Player::Mode::NORMAL);
+		}
+		else if (c.isPressedForFirstTime(Control::START))
+		{
 			players[playerNumber].setMode(Player::Mode::NORMAL);
 		}
 		return;
@@ -472,12 +484,16 @@ void Level::update(Controls & c, int playerNumber)
 					players[playerNumber].setNPCDialogNumber(i);
 					players[playerNumber].setMode(Player::Mode::DIALOG);
 				}
-				else if(players[playerNumber].getX() + 1 == npcs[i].getX() && players[playerNumber].getY() == npcs[i].getY())
+				else if (players[playerNumber].getX() + 1 == npcs[i].getX() && players[playerNumber].getY() == npcs[i].getY())
 				{
 					players[playerNumber].setNPCDialogNumber(i);
 					players[playerNumber].setMode(Player::Mode::DIALOG);
 				}
 			}
+		}
+		else if (c.isPressedForFirstTime(Control::START))
+		{
+			players[playerNumber].setMode(Player::Mode::MENU);
 		}
 	}
 	if (players[playerNumber].isLocked())
@@ -596,6 +612,11 @@ void Level::render(sf::RenderWindow & window, KText & font, int playerNumber)
 			s.setPosition(sf::Vector2f(floatingTiles[i].getX() * BLOCK_SIZE, floatingTiles[i].getY() * BLOCK_SIZE));
 			window.draw(s);
 		}
+	}
+
+	if (players[playerNumber].getMode() == Player::Mode::MENU)
+	{
+		player.renderMenu(window);
 	}
 
 	//RENDER DEBUG STUFF

@@ -14,20 +14,24 @@
 #include "Controls.h"
 #include "Monster.h"
 
+#include "InGameMenu.h"
+
 using namespace std;
 
 class Player: public MovableEntity
 {
 public:
-	Player(); //
+	Player();
 
 	Language lang;
+	InGameMenu menu;
 
-	enum Mode{ NORMAL = 0, DIALOG = 1 };
+	enum Mode{ NORMAL = 0, DIALOG = 1, MENU = 2 };
 
 	void render(sf::RenderWindow & w);
+	void renderMenu(sf::RenderWindow & w);
 
-	wstring getName() { return name; }
+	sf::String getName() { return name; }
 	bool isMale() { return sex == 0; }
 	bool isFemale() { return sex == 1; }
 	void setGender(Gender sex) { Player::sex = sex; }
@@ -55,12 +59,12 @@ public:
 	int getZDirection() { return zdirection; }
 	float getSteepness() { return steepness; }
 
-	wstring getDialog() { return dialog; }
-	wstring getPostBattleQuote() { return postBattleQuote; }
-	wstring getAnteBattleQuote() { return anteBattleQuote; }
+	sf::String getDialog() { return dialog; }
+	sf::String getPostBattleQuote() { return postBattleQuote; }
+	sf::String getAnteBattleQuote() { return anteBattleQuote; }
 	int getNPCDialogNumber() { return npcDialogNumber; }
 
-	void setDialog(wstring dialog) { Player::dialog = dialog; }
+	void setDialiog(sf::String dialog) { Player::dialog = dialog; }
 
 	bool isVisible() { return visible; }
 	void setVisible() { visible = true; }
@@ -75,26 +79,26 @@ public:
 	sf::String getLanguageCode() { return lang.getLanguageCode(); }
 	Mode getMode() { return mode; }
 private:
-	vector<sf::Texture> textures;
-	vector<Monster> party;
+	vector<sf::Texture> textures;	//Number of textures (should be 16)
+	vector<Monster> party;			//Party (your monsters)
 
-	wstring name;
-	Gender sex;
+	sf::String name;		//Do I need to explain?
+	Gender sex;				//Okay, you need some help
 
-	Mode mode;
+	Mode mode;				//Player mode
 	
 	Direction direction;
-	int zdirection; //this is for the going up stairs or down stairs animation, 1 is up, -1 is down
-	float steepness; //this is for whether the player is traversing steep (.5) or gradual hills (.25)
+	int zdirection;			//this is for the going up stairs or down stairs animation, 1 is up, -1 is down
+	float steepness;		//this is for whether the player is traversing steep (.5) or gradual hills (.25)
 	bool movementAllowed;
 
-	wstring dialog; //Dialogue
-	wstring anteBattleQuote; //Quote before the battle
-	wstring postBattleQuote; //Quote after the battle
-	int npcDialogNumber;
+	sf::String dialog;			//Dialogue
+	sf::String anteBattleQuote;	//Quote before the battle	This will probably be for user vs user battles
+	sf::String postBattleQuote;	//Quote after the battle	This will probably be for user vs user battles
+	int npcDialogNumber;		//Stores the value for which npc the player is talking to, this may be more appropriately saved in the Level class, but it's fine for now
 
-	bool wantsToBattle;
+	bool wantsToBattle;			//Bool for online which states if the player wants to participate in battles
 
-	bool visible; //If true, shows NPC and gives them a hitbox
-	int animationFrame;
+	bool visible;				//If true, shows the player and gives them a hitbox
+	int animationFrame;			//Frame number of the player
 };

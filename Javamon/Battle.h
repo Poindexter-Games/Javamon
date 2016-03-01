@@ -14,7 +14,7 @@ private:
 	sf::RectangleShape bg;
 public:
 	Battle();
-	void render(sf::RenderWindow&);
-	void update(Controls&);
+	void render(sf::RenderWindow&, int);
+	void update(Controls&, int);
 	bool isOver() { return !running; }
 };

@@ -11,12 +11,12 @@ Battle::Battle()
 	bg.setPosition(sf::Vector2f(INT_MIN / 2, INT_MIN / 2));
 }
 
-void Battle::update(Controls& c)
+void Battle::render(sf::RenderWindow & window, int playerNumber)
 {
-	numFrames++;
+	//
 }
 
-void Battle::render(sf::RenderWindow & window)
+void Battle::update(Controls& c, int playerNumber)
 {
-	window.draw(bg);
+	//
 }

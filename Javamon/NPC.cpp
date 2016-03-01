@@ -59,6 +59,15 @@ void NPC::loadFromFile(KFile& file, sf::String auth, sf::String pack, sf::String
 				y = stoi(segments[1].toWideString());
 				actualY = y * BLOCK_SIZE;
 			}
+			if (StringEditor::equals(segments[0], L"wantsToBattle"))
+			{
+				bool b = false;
+				if (StringEditor::equals(segments[1], L"true"))
+				{
+					b = true;
+				}
+				wantsToBattle = b;
+			}
 			if (StringEditor::equals(segments[0], L"direction"))
 			{
 				int d = 3;

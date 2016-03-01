@@ -21,7 +21,7 @@ Language::Language(sf::String str)
 	file.imbue(std::locale(file.getloc(), new std::codecvt_utf8<wchar_t, 0x10ffff, consume_header>()));
 	*/
 
-	KFile file(RESOURCES + L"Languages/" + str + L".txt");
+	KFile file(LANGUAGES + str + L".txt");
 	sf::String* segments;
 	int length;
 

@@ -13,6 +13,8 @@ Player::Player(): MovableEntity(0, 0)
 	movementAllowed = true;
 	mode = Mode::NORMAL;
 
+	menu = InGameMenu();
+
 	dialog = L"THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG.";
 	anteBattleQuote = L"BATTLE QUOTE NOT LOADED.";
 	postBattleQuote = L"BATTLE QUOTE NOT LOADED.";
@@ -53,6 +55,15 @@ void Player::render(sf::RenderWindow & w)
 	w.draw(s);
 }
 
+void Player::renderMenu(sf::RenderWindow & w)
+{
+	sf::View view;
+	view.setCenter(sf::Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2));
+	view.setSize(sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
+	w.setView(view);
+	menu.render(w);
+}
+
 void Player::place(int x, int y, Direction d)
 {
 	Player::x = x;
@@ -68,6 +79,11 @@ void Player::place(int x, int y, Direction d)
 
 void Player::place(int x, int y, Direction d, int zdir, float s)
 {
+	/*
+	TODO
+	THIS METHOD IS AWFUL, THIS NEEDS TO BE CHANGED.
+	*/
+
 	Player::x = x;
 	Player::y = y;
 	actualX = (float)(x * BLOCK_SIZE);

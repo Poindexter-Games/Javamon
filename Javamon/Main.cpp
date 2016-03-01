@@ -4,25 +4,47 @@ void render(sf::RenderWindow&);
 
 int main()
 {
-	//Sets the command prompt to display utf-8 text (use Lucida Console as your console font)
+	/*
+	Sets the command prompt to display utf-8 text (use Lucida Console as your console font)
+	The command prompt defaults to the ASCII encoding, but I wanted it temporarily changed to
+	UTF-8 so at least I can see that the right number of letters are loaded from a language
+	file even though Lucida Console can't display characters other than latin.
+	*/
 	_setmode(_fileno(stdout), _O_U8TEXT);
 
+	/*
+	The renderwindow needs to be instantiated in the main function for best initialization results.
+	Also, I don't know how to properly code in C++, so it is going to stay here for now
+	*/
 	sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), WINDOW_TITLE);
 	window.setFramerateLimit(FRAME_RATE_LIMIT); //Cap the framerate at 60fps
 	window.setKeyRepeatEnabled(false);
 
+	/*
+	This is to instantiate a class called main which holds all of the available screens in the game
+	*/
 	Main main(window);
 
-	//sf::Thread update(&Main::update, &main);
+	/*
+	Creates a thread for rendering the game
+	*/
 	sf::Thread render(&Main::render, &main);
 
-	//update.launch();
+	/*
+	Starts the rendering thread and then proceeds to update the game
+	*/
 	render.launch();
 	main.update();
 
-	//update.wait();
+	/*
+	This is something I was told to include, maybe one day someone on our team will know what
+	this is actually used for.
+	*/
 	render.wait();
 
+	/*
+	Clean up (nothing here)
+	*/
 	return 0;
 }
 
@@ -30,8 +52,17 @@ Main::Main(sf::RenderWindow & window) : window(window)
 {
 	playingGame = true;
 	
+	/*
+	Create the language variable (default: American English)
+	*/
 	l = Language("en_US");
 
+	/*
+	Load options from Options.txt
+	Current things the program is looking for:
+		openFile;
+		language	=	[ja_JP]
+	*/
 	KFile options(sf::String(RESOURCES + "Options.txt"));
 	sf::String* segments;
 	int length;
@@ -40,18 +71,34 @@ Main::Main(sf::RenderWindow & window) : window(window)
 	{
 		l = Language("ja_JP");
 	}
+
+	/*
+	Instantiate the font based off of the game language
+	English users don't need the Japanese character set loaded (saves space)
+	*/
 	font = KText(l);
 
+	/*
+	Sets the game state; the final version of the game should have this set to logo screen,
+	then goes to the main menu
+	*/
 	gs = GameState::SINGLE_PLAYER;
 
+	/*
+	Loads the game modes.
+	Only one variable should be loaded at one point, so we need to figure out how to unload modes
+	when you aren't using them. Ie, single player and multiplayer shouldn't be loaded on the stack
+	(I don't think I am using that term correctly)
+	*/
 	mainMenu = MainMenu(l);
 	sp = Singleplayer(l, L"Poindexter", L"Test", L"TestLevel");
 
+	/*
+	Render a black background
+	*/
 	bg.setSize(sf::Vector2f((float)INT_MAX, (float)INT_MAX));
 	bg.setFillColor(sf::Color::Black);
 	bg.setPosition(sf::Vector2f((float)(INT_MIN / 2), (float)(INT_MIN / 2)));
-
-	delta = 0;
 }
 
 void Main::update()

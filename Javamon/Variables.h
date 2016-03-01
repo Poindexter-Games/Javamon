@@ -18,6 +18,8 @@ const int FONT_SIZE = 32;
 const sf::String RESOURCES = L"Resources/";
 const sf::String VIDEO = RESOURCES + L"Video/";
 const sf::String PACKS = RESOURCES + L"Packs/";
+const sf::String SAVES = RESOURCES + L"Saves/";
+const sf::String LANGUAGES = RESOURCES + L"Languages/";
 
 enum Gender { MALE = 0, FEMALE = 1};
 enum GameState { MAIN_MENU = 0, LOADING = 1, SINGLE_PLAYER = 2};
@@ -36,4 +38,10 @@ struct Word
 {
 	sf::String langCode;
 	sf::String str;
+};
+
+struct Variable
+{
+	sf::String identifier;
+	int value;
 };

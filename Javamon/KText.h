@@ -23,12 +23,6 @@ public:
 	This will instantiate the files needed for the language
 	*/
 	KText(Language);
-
-	/*
-	This renders a dialog box on the bottom of the screen for text inside the
-	movement portion of the game.
-	*/
-	void levelDialog(sf::RenderWindow &, wstring);
 	/*
 	This renders the word loading
 	*/

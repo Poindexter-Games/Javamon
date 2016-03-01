@@ -24,5 +24,3 @@ private:
 	bool windowClosed = false;
 };
 #endif
-
-

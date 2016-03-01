@@ -57,6 +57,9 @@ Fixing Runways
 setBlock(5,117,2,0,0)
 setBlock(7,119,2,0,0)
 
+setArea(38,87,44,119,2,0,0)
+setArea(5,80,44,86,2,0,0)
+
 addNPC{
 name.en_US=Foo
 name.ja_JP=イチロー
@@ -75,7 +78,7 @@ x=1
 y=114
 direction=RIGHT
 r=3
-dialogue.en_US=~Uwaaaaaa!!!
+dialogue.en_US=ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞ\nßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ
 dialogue.ja_JP=すずみやさん…
 }
 
@@ -133,7 +136,7 @@ x=20
 y=123
 direction=UP
 r=2
-dialogue.en_US=WBC\nWBC~~!
+dialogue.en_US=WBC!\nWBC~!
 dialogue.ja_JP=ご・たい・さん！\nティーム（ジム）リーダーイチロー
 }
 

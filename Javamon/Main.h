@@ -28,7 +28,6 @@ public:
 	Main(sf::RenderWindow&);
 	void update();
 	void render();
-	int32_t delta;
 private:
 	sf::RenderWindow & window;
 	Language l;

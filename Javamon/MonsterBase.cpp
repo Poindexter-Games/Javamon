@@ -2,6 +2,7 @@
 
 MonsterBase::MonsterBase()
 {
+	name = L"NoMonsterBase";
 	baseStats = MonsterStats();
 	incStats = MonsterStats();
 }
