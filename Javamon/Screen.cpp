@@ -1,5 +1,9 @@
 ﻿#include "Screen.h"
 
+/*
+Description in Screen.h
+*/
+
 Screen::Screen()
 {
 }

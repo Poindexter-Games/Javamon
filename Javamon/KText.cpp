@@ -154,7 +154,7 @@ void KText::coordinates(sf::RenderWindow & window, int px, int py)
 		bool draw = false;
 		wchar_t w = dialog[i];
 		sf::Sprite c;
-		charWidth = FONT_SIZE;
+		charWidth = 14;
 		if (w == '\n') //If w is the enter key
 		{
 			//Go down a row and adjust all the way to the left side of the dialog box, also display the enter key with a width of zero

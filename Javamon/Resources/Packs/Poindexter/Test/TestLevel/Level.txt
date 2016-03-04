@@ -26,16 +26,16 @@ y=3
 r=0
 wantsToBattle=true
 dialogue.en_US=Hello, I'm Clay.
-dialogue.ja_JP=ハロー、クレーですぅ．ＷＥＥＢですぅ．
+dialogue.ja_JP=ハロー、クレーですぅ～．
 }
 
 addNPC{
-name.en_US=Clay
+name.en_US=Jay
 x=3
 y=5
 r=0
 dialogue.en_US=Hello, I'm Jay.
-dialogue.ja_JP=こんにちわ！ジェイデス。
+dialogue.ja_JP=こーにちわ！ジェイデス。
 }
 
 endFile;

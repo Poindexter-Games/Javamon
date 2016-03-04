@@ -36,9 +36,13 @@ public:
 
 	/*
 	Standard constructor for multiplayer mode
+	Not implemented
 	*/
 	Level(sf::String, sf::String, sf::String);
 	
+	/*
+	For multiplayer mode, so that the server can add a player to a preëxisting level.
+	*/
 	void addPlayer(Player p);
 
 	~Level();
@@ -46,18 +50,31 @@ public:
 	void update(Controls&, int);
 	void render(sf::RenderWindow&, KText &, int);
 
+	/*
+	Returns a boolean that tells the (faux)listener that another level needs to be loaded.
+	This method is okay for single player, but we need something else for multiplayer.
+	*/
 	bool isRequestingLevelChange();
+	/*
+	This allows the faux-level listener to get the new level name and and player so that it
+	can instantiate another level
+	*/
 	void getPlayer(Player&, sf::String&);
 
+	/*
+	Scans to see if a player is under a player so that his sprite draw order can be changed.
+	*/
 	bool isPlayerUnderNPC(int playerNumber);
 
 	sf::String getAuth() { return auth; }
 	sf::String getPack() { return pack; }
 	sf::String getName() { return name; }
 
+	/*Because level isn't a screen, we need another duplicate enum called mode for loading purposes*/
 	static enum Mode { REG = 0, LOADING = 1 };
 	Level::Mode getMode();
 
+	/*Self explanitory, idk if it is used although*/
 	void setLanguageOfPlayer(int num, Language l) { players[num].setLanguage(l); }
 private:
 
