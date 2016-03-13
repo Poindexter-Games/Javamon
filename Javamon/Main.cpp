@@ -67,10 +67,7 @@ Main::Main(sf::RenderWindow & window) : window(window)
 	sf::String* segments;
 	int length;
 	options.readLine(segments, length);
-	if (StringEditor::equals(segments[1], L"ja_JP"))
-	{
-		l = Language("ja_JP");
-	}
+	l = Language(segments[1]);
 
 	/*
 	Instantiate the font based off of the game language
@@ -124,7 +121,7 @@ void Main::update()
 			{
 				sp.update(controls);
 			}
-			if (gs == GameState::MAIN_MENU)
+			else if (gs == GameState::MAIN_MENU)
 			{
 				mainMenu.update(controls);
 			}
@@ -156,7 +153,7 @@ void Main::render()
 
 			sp.render(window, font);
 		}
-		if (gs == GameState::MAIN_MENU)
+		else if (gs == GameState::MAIN_MENU)
 		{
 			mainMenu.render(window);
 		}

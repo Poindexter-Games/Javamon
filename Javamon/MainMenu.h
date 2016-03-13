@@ -15,9 +15,9 @@ class MainMenu: public Screen
 public:
 	MainMenu();
 	MainMenu(Language);
+	void update(Controls&);
 	void render(sf::RenderWindow & w);
 private:
-	sf::RectangleShape logo;
 	sf::Texture logoTexture;
 
 	sf::RectangleShape singleplayer;

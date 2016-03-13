@@ -1,0 +1,7 @@
+﻿openFile;
+single_player=Einspieler
+multi_player=Multiplayer
+settings=Settings
+quit=Quit
+loading=Loading...
+endFile;

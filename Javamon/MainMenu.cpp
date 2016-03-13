@@ -7,6 +7,8 @@ MainMenu::MainMenu()
 
 MainMenu::MainMenu(Language l)
 {
+	logoTexture = sf::Texture();
+
 	if (StringEditor::equals(l.getLanguageCode(), L"ja_JP"))
 	{
 		logoTexture.loadFromFile(VIDEO + "TitleJP.png");
@@ -15,12 +17,6 @@ MainMenu::MainMenu(Language l)
 	{
 		logoTexture.loadFromFile(VIDEO + "Title.png");
 	}
-
-	sf::Texture * texture = &logoTexture;
-
-	logo = sf::RectangleShape(sf::Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2));
-	logo.setTexture(texture);
-	logo.setPosition(sf::Vector2f(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4));
 
 	singleplayer = sf::RectangleShape(sf::Vector2f(SCREEN_WIDTH  / 8, SCREEN_HEIGHT / 36));
 	multiplayer  = sf::RectangleShape(sf::Vector2f(SCREEN_HEIGHT / 36, SCREEN_WIDTH  / 8));
@@ -39,9 +35,21 @@ MainMenu::MainMenu(Language l)
 	quit.setPosition(sf::Vector2f(0, (.5 * SCREEN_HEIGHT) - (.5 * quit.getSize().y)));
 }
 
+void MainMenu::update(Controls & c)
+{
+	if((c.isPressedForFirstTime(Control::MOUSE_LEFT) /*&& mouse is in rect*/ ) || c.isPressedForFirstTime(Control::C_UP))
+	{
+		//goto single player
+	}
+}
+
 void MainMenu::render(sf::RenderWindow & w)
 {
-	w.draw(logo);
+	sf::Sprite s;
+	s.setPosition(sf::Vector2f(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4));
+	s.setTexture(logoTexture);
+
+	w.draw(s);
 
 	w.draw(singleplayer);
 	w.draw(multiplayer);

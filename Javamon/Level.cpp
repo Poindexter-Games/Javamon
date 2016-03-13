@@ -83,14 +83,14 @@ void Level::loadLevel(sf::String auth, sf::String pack, sf::String name)
 				npcs[numNPC].loadTextures(auth, pack, name, 0);
 				npcs[numNPC].loadFromFile(file, auth, pack, name);
 			}
-			if (StringEditor::equals(segments[0], L"beginComment"))
+			else if (StringEditor::equals(segments[0], L"beginComment"))
 			{
 				comment = true;
 				continue;
 			}
 		}
 
-		if (length == 2)
+		else if (length == 2)
 		{
 			if (StringEditor::equals(segments[0], L"setWidth"))
 			{
@@ -104,7 +104,7 @@ void Level::loadLevel(sf::String auth, sf::String pack, sf::String name)
 			}
 		}
 
-		if (length == 3)
+		else if (length == 3)
 		{
 			if (StringEditor::equals(segments[0], L"setName"))
 			{
@@ -116,7 +116,7 @@ void Level::loadLevel(sf::String auth, sf::String pack, sf::String name)
 			}
 		}
 
-		if (length == 4)
+		else if (length == 4)
 		{
 			if (StringEditor::equals(segments[0], L"setSpawn"))
 			{
@@ -145,7 +145,7 @@ void Level::loadLevel(sf::String auth, sf::String pack, sf::String name)
 			}
 		}
 
-		if (length == 5)
+		else if (length == 5)
 		{
 			if (StringEditor::equals(segments[0], L"setRow"))
 			{
@@ -155,7 +155,7 @@ void Level::loadLevel(sf::String auth, sf::String pack, sf::String name)
 				}
 				continue;
 			}
-			if (StringEditor::equals(segments[0], L"setCol"))
+			else if (StringEditor::equals(segments[0], L"setCol"))
 			{
 				for (int i = 0; i < map[stoi(segments[1].toWideString())].size(); i++)
 				{
@@ -165,7 +165,7 @@ void Level::loadLevel(sf::String auth, sf::String pack, sf::String name)
 			}
 		}
 
-		if (length == 6)
+		else if (length == 6)
 		{
 			if (StringEditor::equals(segments[0], L"setBlock"))
 			{
@@ -174,7 +174,7 @@ void Level::loadLevel(sf::String auth, sf::String pack, sf::String name)
 			}
 		}
 
-		if (length == 8)
+		else if (length == 8)
 		{
 			if (StringEditor::equals(segments[0], L"setArea"))
 			{
@@ -192,7 +192,7 @@ void Level::loadLevel(sf::String auth, sf::String pack, sf::String name)
 				}
 				continue;
 			}
-			if (StringEditor::equals(segments[0], L"setDefinedArea"))
+			else if (StringEditor::equals(segments[0], L"setDefinedArea"))
 			{
 				int tempX = stoi(segments[1].toWideString());
 				int tempY = stoi(segments[2].toWideString());
@@ -214,7 +214,7 @@ void Level::loadLevel(sf::String auth, sf::String pack, sf::String name)
 			}
 		}
 
-		if (length == 9)
+		else if (length == 9)
 		{
 			if (StringEditor::equals(segments[0], L"addTeleport"))
 			{
