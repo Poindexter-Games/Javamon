@@ -61,83 +61,83 @@ setArea(38,87,44,119,2,0,0)
 setArea(5,80,44,86,2,0,0)
 
 addNPC{
-name.en_US=Foo
-name.ja_JP=イチロー
+name.en-US=Foo
+name.ja-JP=イチロー
 x=47
 y=97
 direction=LEFT
 r=1
-dialogue.en_US=Ookurando Asuretikku no yakyuuzyou dearu sa.
-dialogue.ja_JP=ワオ！
+dialogue.en-US=Ookurando Asuretikku no yakyuuzyou dearu sa.
+dialogue.ja-JP=ワオ！
 }
 
 addNPC{
-name.en_US=Time Traveler
-name.ja_JP=みくる
+name.en-US=Time Traveler
+name.ja-JP=みくる
 x=1
 y=114
 direction=RIGHT
 r=3
-dialogue.en_US=ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞ\nßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ
-dialogue.ja_JP=すずみやさん…
+dialogue.en-US=ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞ\nßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ
+dialogue.ja-JP=すずみやさん…
 }
 
 addNPC{
-name.en_US=Footsoo no onnna no ko
-name.ja_JP=ハルヒ
+name.en-US=Footsoo no onnna no ko
+name.ja-JP=ハルヒ
 x=1
 y=115
 direction=RIGHT
 r=2
-dialogue.en_US=Moé! Iwayuru moé=yoúso!
-dialogue.ja_JP=アホー！ナニしてるの？
+dialogue.en-US=Moé! Iwayuru moé=yoúso!
+dialogue.ja-JP=アホー！ナニしてるの？
 }
 
 addNPC{
-name.en_US=Anouncer 2
-name.ja_JP=アナウンサー２
+name.en-US=Anouncer 2
+name.ja-JP=アナウンサー２
 x=10
 y=123
 direction=UP
 r=2
-dialogue.en_US=Ground ball, right field.HOLY SMOKES!\nA LAZER BEAM STRIKE FROM THROW BY ICHIRO!\nIt's gun down at third base.
-dialogue.ja_JP=ﾄﾊﾞｲﾁﾛｰ！\nトバイチロ－！
+dialogue.en-US=Ground ball, right field.HOLY SMOKES!\nA LAZER BEAM STRIKE FROM THROW BY ICHIRO!\nIt's gun down at third base.
+dialogue.ja-JP=ﾄﾊﾞｲﾁﾛｰ！\nトバイチロ－！
 }
 
 
 
 
 addNPC{
-name.en_US=Anouncer
-name.ja_JP=アナウンサー
+name.en-US=Anouncer
+name.ja-JP=アナウンサー
 x=40
 y=123
 direction=UP
 r=2
-dialogue.en_US=No hablo inglés...
-dialogue.ja_JP=イチローさん…
+dialogue.en-US=No hablo inglés...
+dialogue.ja-JP=イチローさん…
 }
 
 addNPC{
-name.en_US=Fanatic
-name.ja_JP=イキロー
+name.en-US=Fanatic
+name.ja-JP=イキロー
 x=41
 y=123
 direction=UP
 r=2
-dialogue.en_US=Hehehehehehehe
-dialogue.ja_JP=いや…もう…ほぼイキかけました…
+dialogue.en-US=Hehehehehehehe
+dialogue.ja-JP=いや…もう…ほぼイキかけました…
 }
 
 addNPC{
-name.en_US=Anouncer 3
-name.ja_JP=アナウンサー３
+name.en-US=Anouncer 3
+name.ja-JP=アナウンサー３
 x=20
 y=123
 direction=UP
 r=2
-dialogue.en_US=WBC!\nWBC~!
-dialogue.ja_JP=ご・たい・さん！\nティーム（ジム）リーダーイチロー
+dialogue.en-US=WBC!\nWBC~!
+dialogue.ja-JP=ご・たい・さん！\nティーム（ジム）リーダーイチロー
 }
 
 endFile;

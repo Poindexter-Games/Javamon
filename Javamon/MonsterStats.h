@@ -1,6 +1,17 @@
 #pragma once
 
-#include <cstdint>
+/*
+Stats are:
+
+Health
+Speed
+Evasion [?]
+Attack
+Defence
+Magic Attack
+Magic Defence
+
+*/
 
 class MonsterStats
 {

@@ -24,7 +24,7 @@ KText::KText(Language lang)
 	basic_latin = sf::Texture();
 	basic_latin.loadFromImage(fontImg);
 
-	if (lang.getLanguageCode().toWideString().compare(L"ja_JP") == 0)
+	if (lang.getLanguageCode().toWideString().compare(L"ja-JP") == 0)
 	{
 		sf::Image japaneseImg;
 		japaneseImg.loadFromFile(VIDEO + L"Japanese.png");

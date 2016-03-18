@@ -1,2 +1,2 @@
-﻿openFile;
-language=en_US
+﻿language=en-US
+endFile;

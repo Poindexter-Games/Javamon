@@ -1,6 +1,4 @@
-﻿openFile;
-
-setName,en-US,Foobar;
+﻿setName,en-US,Foobar;
 setName,ja-JP,フーバー;
 
 setWidth(11)
@@ -20,22 +18,24 @@ setBlock(9,3,81,2,0)
 addTeleport(9,2,TestLevel1,7,2,LEFT,-1,SHALLOW)
 
 addNPC{
-name.en_US=Clay
+name.en-US=Clay
+name.ja-JP=クレー
 x=5
 y=3
 r=0
 wantsToBattle=true
-dialogue.en_US=Hello, I'm Clay.
-dialogue.ja_JP=ハロー、クレーですぅ～．
+dialogue.en-US=Hello, I'm Clay.
+dialogue.ja-JP=ハロー、クレーですぅ～．
 }
 
 addNPC{
-name.en_US=Jay
+name.en-US=Jay
+name.ja-JP=ジェイ
 x=3
 y=5
 r=0
-dialogue.en_US=Hello, I'm Jay.
-dialogue.ja_JP=こーにちわ！ジェイデス。
+dialogue.en-US=Hello, I'm Jay.
+dialogue.ja-JP=こーにちわ！ジェイデス。
 }
 
 endFile;

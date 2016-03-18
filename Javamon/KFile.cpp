@@ -12,8 +12,10 @@ KFile::KFile(sf::String filepath)
 	//This is to load the file as a UTF-8 format
 	file.imbue(std::locale(file.getloc(), new std::codecvt_utf8<wchar_t, 0x10ffff, std::consume_header>()));
 
-	std::wstring line;
-	getline(file, line);
+	//std::wstring line;
+	//getline(file, line);
+	//TODO
+	
 	/*These two lines ignore the first line of the file which contain the BOM character
 
 	Quote from Wikipedia (https://en.wikipedia.org/wiki/Byte_order_mark):
@@ -112,6 +114,13 @@ bool KFile::readLine(sf::String *& strings, int & length)
 	strings = new sf::String[length]{ L"FileReadError" };
 
 	return false;
+}
+
+void KFile::readLine(sf::String & str)
+{
+	wstring wstr;
+	std::getline(file, wstr);
+	str = sf::String(wstr);
 }
 
 void KFile::close()

@@ -4,23 +4,6 @@ Language::Language(sf::String str)
 {
 	langCode = str;
 
-	/*
-	OLD CODE, MOVED TO KFILE
-
-	std::locale locale("");					//This will read the user's locale, so the program can determine string encoding since wifstream uses a regular string to load a file
-	StringEditor::echo(sf::String(locale.name()).toWideString());
-	std::string path = sf::String(RESOURCES + L"Languages/" + str + L".txt").toAnsiString(locale);
-	
-	std::wifstream file;
-	file.open(path);
-
-	std::wstring line;			//This is the file of the line
-	getline(file, line);		//This is to ignore the first line of the file, which contains the BOM character
-	wstring* segments = new wstring[2];
-
-	file.imbue(std::locale(file.getloc(), new std::codecvt_utf8<wchar_t, 0x10ffff, consume_header>()));
-	*/
-
 	KFile file(LANGUAGES + str + L".txt");
 	sf::String* segments;
 	int length;
@@ -30,12 +13,12 @@ Language::Language(sf::String str)
 		file.readLine(segments, length);
 
 		if (segments[0].toWideString().compare(L"single_player") == 0) { single_player = sf::String(segments[1]); }
-		if (segments[0].toWideString().compare(L"multi_player") == 0) { multi_player = sf::String(segments[1]); }
-		if (segments[0].toWideString().compare(L"settings") == 0) { settings = sf::String(segments[1]); }
-		if (segments[0].toWideString().compare(L"quit") == 0) { quit = sf::String(segments[1]); }
-		if (segments[0].toWideString().compare(L"loading") == 0) { loading = sf::String(segments[1]); }
+		else if (segments[0].toWideString().compare(L"multi_player") == 0) { multi_player = sf::String(segments[1]); }
+		else if (segments[0].toWideString().compare(L"settings") == 0) { settings = sf::String(segments[1]); }
+		else if (segments[0].toWideString().compare(L"quit") == 0) { quit = sf::String(segments[1]); }
+		else if (segments[0].toWideString().compare(L"loading") == 0) { loading = sf::String(segments[1]); }
 
-		if (segments[0].toWideString().compare(L"endFile") == 0)
+		else if (segments[0].toWideString().compare(L"endFile") == 0)
 		{
 			b = false;
 		}
@@ -45,8 +28,8 @@ Language::Language(sf::String str)
 
 Language::Language()
 {
-	//This is in case the language somehow is not loaded
-	langCode = L"en_US";
+	//This is in case that the language is not loaded
+	langCode = L"en-US";
 	
 	single_player = L"Single Player";
 	multi_player = L"Multi Player";

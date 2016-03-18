@@ -55,13 +55,13 @@ Main::Main(sf::RenderWindow & window) : window(window)
 	/*
 	Create the language variable (default: American English)
 	*/
-	l = Language("en_US");
+	l = Language("en-US");
 
 	/*
 	Load options from Options.txt
 	Current things the program is looking for:
 		openFile;
-		language	=	[ja_JP]
+		language	=	[ja-JP]
 	*/
 	KFile options(sf::String(RESOURCES + "Options.txt"));
 	sf::String* segments;

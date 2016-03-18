@@ -41,6 +41,14 @@ public:
 	*/
 	bool readLine(sf::String* &, int &);
 	/*
+	Calls the default getline command provided by namespace std.
+	Author: Karl Piepho
+	Date Created: March 15, 2016
+	Date Revised:
+	Revised By:
+	*/
+	void readLine(sf::String &);
+	/*
 	Closes the file
 
 	Author: Karl Piepho

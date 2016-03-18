@@ -1,5 +1,4 @@
-﻿openFile;
-single_player=シングルプレイヤー
+﻿single_player=シングルプレイヤー
 multi_player=マルチプレイヤー
 settings=セッテイ
 quit=やめる
