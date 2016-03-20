@@ -26,11 +26,12 @@ public:
 
 	void loadFromFile(KFile&, sf::String, sf::String, sf::String);
 
+	sf::String getName(sf::String);
 	sf::String getDialog(sf::String);
 protected:
 private:
 	std::vector<Word> names;
-	Gender sex;
+	Sex sex;
 	Direction dir;
 	std::vector<sf::Texture> textures;
 	std::vector<Word> dialogs;

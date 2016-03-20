@@ -1,9 +1,4 @@
-﻿openFile;
-
-setName,en-US,Foobar;
-setName,ja-JP,フーバー;
-
-setWidth,10;
+﻿setWidth,10;
 setHeight,9;
 
 setSpawn,8,8,RIGHT;
@@ -20,7 +15,8 @@ setBlock,8,3,82,2,0;
 setBlock,9,3,83,2,0;
 
 addNPC{
-name.en_US=Trump
+name=Trump
+name.ja-JP=トランプ
 x=3
 y=5
 r=0

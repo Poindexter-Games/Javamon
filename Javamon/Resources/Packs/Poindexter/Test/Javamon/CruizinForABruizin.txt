@@ -1,4 +1,6 @@
-﻿openFile;
-name.en_US=You're cruizin' for a bruizin'
-name.ja_JP=ドライブ…あだなはよないな…
+﻿name.en_US=You're cruizin' for a bruizin'
+name.ja_JP=イスラファエル
 closeFile;
+
+イスラフェル＋ラファエル＝イスラファエル
+同型の二体（アメリカ人とカナダ人）に分裂する能力を持つ聖寺家（せいじか）

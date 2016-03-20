@@ -1,4 +1,3 @@
-﻿openFile;
-name.en_US=KING BUSH III
+﻿name.en_US=KING BUSH III
 name.ja_JP=ブッシュ３せい
 closeFile;

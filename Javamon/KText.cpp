@@ -24,34 +24,26 @@ KText::KText(Language lang)
 	basic_latin = sf::Texture();
 	basic_latin.loadFromImage(fontImg);
 
-	if (lang.getLanguageCode().toWideString().compare(L"ja-JP") == 0)
-	{
-		sf::Image japaneseImg;
-		japaneseImg.loadFromFile(VIDEO + L"Japanese.png");
-
-		japanese = sf::Texture();
-		japanese.loadFromImage(japaneseImg);
-	}
 	latinWidths = new int[256];
 	for (int i = 0; i < 256; i++) { latinWidths[i] = FONT_SIZE; }
-	
-	KFile file(VIDEO+L"Latin_Widths.txt");
+
+	KFile file(VIDEO + L"Latin_Widths.txt");
 	bool comment = false;
 	sf::String* segments;
 	int length;
 	for (bool b = true; b; )
 	{
 		file.readLine(segments, length);
-		
+
 		if (length == 0) continue;
 		if (StringEditor::equals(segments[0], L"endComment")) {
 			comment = false; continue;
 		}
 		if (comment == true) continue;
-		
+
 		if (length == 1)
 		{
-			if (StringEditor::equals(segments[0], L"beginComment")){
+			if (StringEditor::equals(segments[0], L"beginComment")) {
 				comment = true; continue;
 			}
 		}
@@ -65,6 +57,19 @@ KText::KText(Language lang)
 		}
 	}
 	file.close();
+
+	//JAPANESE
+
+	if (lang.getLanguageCode().toWideString().compare(L"ja-JP") == 0)
+	{
+		sf::Image japaneseImg;
+		japaneseImg.loadFromFile(VIDEO + L"Japanese.png");
+
+		japanese = sf::Texture();
+		japanese.loadFromImage(japaneseImg);
+
+		for (int i = 0; i < 256; i++) { latinWidths[i] = FONT_SIZE / 2; }
+	}
 }
 
 void KText::simpleMessage(sf::RenderWindow & window, wstring dialog)
@@ -204,7 +209,13 @@ void KText::drawText(sf::RenderWindow & window, int x, int y, sf::String str)
 			i++;
 			continue;
 		}
-		if ((32 <= w && w <= 126) || (161 <= w && w <= 255)) //basic latin
+		else if (w != str.toWideString().size() - 1 && w == L'\\' && str[i + 1] == L't') //If w is the tab key
+		{
+			col += charWidth * 2;
+			i++;
+			continue;
+		}
+		else if ((32 <= w && w <= 126) || (161 <= w && w <= 255)) //basic latin
 		{
 			draw = true;
 			c = sf::Sprite(basic_latin, sf::IntRect((w % 16) * FONT_SIZE, ((w - (w % 16)) / 16) * FONT_SIZE, latinWidths[w], FONT_SIZE));

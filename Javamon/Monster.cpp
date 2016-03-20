@@ -5,7 +5,7 @@ Monster::Monster()
 	name = L"Gei Hakkâ's Monster";
 	base = MonsterBase();
 	stats = base.getBaseStats();	//get the stats from the base
-	sex = Gender::MALE;
+	sex = Sex::MALE;
 	health = stats.getHealth();
 }
 
@@ -17,23 +17,23 @@ Monster::Monster(sf::String name)
 
 	if (StringEditor::equals(name, L"tanaco"))
 	{
-		sex = Gender::FEMALE;
+		sex = Sex::FEMALE;
 	}
 	if (StringEditor::equals(name, L"migaca"))
 	{
-		sex = Gender::FEMALE;
+		sex = Sex::FEMALE;
 	}
 	if (StringEditor::equals(name, L"sacatu"))
 	{
-		sex = Gender::FEMALE;
+		sex = Sex::FEMALE;
 	}
 	if (StringEditor::equals(name, L"kiyumi"))
 	{
-		sex = Gender::FEMALE;
+		sex = Sex::FEMALE;
 	}
 	else
 	{
-		sex = Gender::MALE;
+		sex = Sex::MALE;
 	}
 	health = stats.getHealth();
 }

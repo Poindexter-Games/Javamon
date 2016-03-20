@@ -1,7 +1,6 @@
-﻿openFile;
-
-setName,en-US,Error;
-setName,ja-JP,エラー;
+﻿setName=Error
+setName.en-US=Error
+setName.ja-JP=エラー
 
 setWidth(11)
 setHeight(9)

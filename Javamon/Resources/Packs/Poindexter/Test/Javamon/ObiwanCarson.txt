@@ -1,4 +1,3 @@
-﻿openFile;
-name.en_US=Obiwan Carson
+﻿name.en_US=Obiwan Carson
 name.en_US=ドクターエッ…カーソン！？
 closeFile;

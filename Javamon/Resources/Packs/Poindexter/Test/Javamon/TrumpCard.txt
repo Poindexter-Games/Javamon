@@ -1,4 +1,3 @@
-﻿openFile;
-name.en_US=Trump Card
-name.ja_JP=われわれのきりふだな
+﻿name.en_US=Trump Card
+name.ja_JP=われわれのきりふだな…ばけものめ！
 closeFile;

@@ -1,4 +1,5 @@
-﻿openFile;
-name.en_US=Hills
-name.ja_JP=おんなのおか
+﻿name.en_US=Pinto Beans, Not HILLarious
+name.ja_JP=ピンとうビーン
 closeFile;
+
+ピントビーン＋豆の音読み（トウ）＝ピンとうビーン

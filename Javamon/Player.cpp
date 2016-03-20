@@ -3,7 +3,7 @@ Player::Player(): MovableEntity(0, 0)
 {
 	//common stuff
 	name = L"Gei Hakkâ";
-	sex = Gender::FEMALE;
+	sex = Sex::FEMALE;
 	x = 0;
 	y = 0;
 	direction = Direction::DOWN;

@@ -34,8 +34,8 @@ public:
 	sf::String getName() { return name; }
 	bool isMale() { return sex == 0; }
 	bool isFemale() { return sex == 1; }
-	void setGender(Gender sex) { Player::sex = sex; }
-	Gender getGender() { return sex; };
+	void setGender(Sex sex) { Player::sex = sex; }
+	Sex getGender() { return sex; };
 
 	void setDirection(Direction direction) { Player::direction = direction; }
 	void setZDirection(int zd) { zdirection = zd; }
@@ -83,7 +83,7 @@ private:
 	vector<Monster> party;			//Party (your monsters)
 
 	sf::String name;		//Do I need to explain?
-	Gender sex;				//Okay, you need some help
+	Sex sex;				//Okay, you need some help
 
 	Mode mode;				//Player mode
 	

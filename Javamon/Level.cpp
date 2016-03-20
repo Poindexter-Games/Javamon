@@ -596,7 +596,7 @@ void Level::render(sf::RenderWindow & window, KText & font, int playerNumber)
 		sf::Sprite s(dialogBoxes[0]);	//TODO Multiple types of dialog boxes
 		s.setPosition(sf::Vector2f(0, DIALOG_BOX_LOW));
 		window.draw(s);
-		font.drawText(window, 16, DIALOG_BOX_LOW + 16, npcs[players[playerNumber].getNPCDialogNumber()].getDialog(players[playerNumber].getLanguageCode()));
+		font.drawText(window, 16, DIALOG_BOX_LOW + 16, L"\\t" + npcs[players[playerNumber].getNPCDialogNumber()].getName(players[playerNumber].getLanguageCode()) + L"\\n" + npcs[players[playerNumber].getNPCDialogNumber()].getDialog(players[playerNumber].getLanguageCode()));
 	}
 
 	for (int i = 0; i < floatingTiles.size(); i++)

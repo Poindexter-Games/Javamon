@@ -21,7 +21,7 @@ const sf::String PACKS = RESOURCES + L"Packs/";
 const sf::String SAVES = RESOURCES + L"Saves/";
 const sf::String LANGUAGES = RESOURCES + L"Languages/";
 
-enum Gender { MALE = 0, FEMALE = 1};
+enum Sex { MALE = 0, FEMALE = 1};
 enum GameState { MAIN_MENU = 0, LOADING = 1, SINGLE_PLAYER = 2};
 enum Direction { UP = 0, LEFT = 1, DOWN = 2, RIGHT = 3 };
 enum Control { C_UP = 0, C_LEFT = 1, C_DOWN = 2, C_RIGHT = 3, ACCEPT = 4, CANCEL = 5, START = 6, SELECT = 7, MOUSE_LEFT = 8, MOUSE_RIGHT = 9 };

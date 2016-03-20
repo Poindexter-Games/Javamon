@@ -22,7 +22,7 @@ public:
 private:
 	MonsterBase base;
 	sf::String name;
-	Gender sex;
+	Sex sex;
 	MonsterStats stats;
 	int health;
 };

@@ -1,7 +1,6 @@
-﻿openFile;
-
-setName,en-US,Field;
-setName,ja-JP,ヤキュウジョウ;
+﻿setName=Field
+setName.en-US=Baseball Field
+setName.ja-JP=ヤキュウジョウ
 
 setWidth(125)
 setHeight(125)

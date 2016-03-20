@@ -10,7 +10,7 @@ NPC::NPC():MovableEntity(0, 0)
 	w.str = L"Dialoguehumei";
 	dialogs.push_back(w);
 
-	sex = Gender::MALE;
+	sex = Sex::MALE;
 
 	dir = Direction::RIGHT;
 
@@ -121,6 +121,19 @@ void NPC::loadFromFile(KFile& file, sf::String auth, sf::String pack, sf::String
 			return;
 		}
 	}
+}
+
+sf::String NPC::getName(sf::String s)
+{
+	for (int i = 0; i < names.size(); i++)
+	{
+		if (StringEditor::equals(s, names[i].langCode))
+		{
+			return names[i].str;
+		}
+	}
+
+	return dialogs[0].str;
 }
 
 sf::String NPC::getDialog(sf::String s)
