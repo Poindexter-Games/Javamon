@@ -2,16 +2,15 @@
 #include <string>
 
 #include <SFML/Graphics/Image.hpp>
-#include <cstdint>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Rect.hpp>
-#include <iostream>
 #include <fstream>
 #include <SFML/System/String.hpp>
 #include <vector>
 
 #include "Variables.h"
+#include "Math.h"
 #include "StringEditor.h"
 #include "Controls.h"
 #include "KText.h"

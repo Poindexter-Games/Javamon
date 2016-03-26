@@ -183,7 +183,7 @@ void KText::coordinates(sf::RenderWindow & window, int px, int py)
 	}
 }
 
-void KText::drawText(sf::RenderWindow & window, int x, int y, sf::String str)
+void KText::drawText(sf::RenderWindow & window, int x, int y, sf::String str, sf::Color colour = sf::Color::Black)
 {
 	sf::View view;
 	view.setSize(sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
@@ -258,7 +258,7 @@ void KText::drawText(sf::RenderWindow & window, int x, int y, sf::String str)
 			col += charWidth;
 			//Set the x value of the next character to += the width of the last character
 		}
-		c.setColor(sf::Color::Black);
+		c.setColor(colour);
 		window.draw(c);
 	}
 }

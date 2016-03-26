@@ -44,6 +44,8 @@ public:
 	void place(int, int, Direction);
 	void place(int x, int y, Direction d, int zdir, float);
 
+	void updateMenu(Controls & c);
+
 	void allowMovement() { movementAllowed = true; }
 	void inhibitMovement() { movementAllowed = false; }
 	bool isAllowedToMove() { return movementAllowed; }

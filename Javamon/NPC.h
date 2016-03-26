@@ -25,6 +25,7 @@ public:
 	void loadTextures(sf::String, sf::String, sf::String, int);
 
 	void loadFromFile(KFile&, sf::String, sf::String, sf::String);
+	Sex getSex() { return sex; }
 
 	sf::String getName(sf::String);
 	sf::String getDialog(sf::String);

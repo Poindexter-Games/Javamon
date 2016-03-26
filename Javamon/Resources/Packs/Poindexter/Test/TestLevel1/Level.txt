@@ -20,9 +20,9 @@ name.ja-JP=トランプ
 x=3
 y=5
 r=0
-dialogue=Your language is not supported.
+dialogue=This is the default dialogue.
 dialogue.en-US=I'm going to trump you all.
-dialogue.ja-JP=コマンド　ニュウリョク！トランプカード：You're firedだぞ！
+dialogue.ja-JP=ｺﾏﾝﾄﾞ ﾆｭｳﾘｮｸ､ ｳｴ ｳｴ ｼﾀ ｼﾀ ﾋﾀﾞﾘ ﾐｷﾞ ﾋﾀﾞﾘ ﾐｷﾞ A B! ﾄﾗﾝﾌﾟｶｰﾄﾞ!
 }
 
 addTeleport,8,2,TestLevel,10,2,RIGHT,1,STEEP;

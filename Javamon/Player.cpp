@@ -109,3 +109,8 @@ void Player::place(int x, int y, Direction d, int zdir, float s)
 
 	animationFrame = 0;
 }
+
+void Player::updateMenu(Controls & c)
+{
+	menu.update(c);
+}

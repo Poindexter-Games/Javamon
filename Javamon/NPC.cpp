@@ -4,10 +4,10 @@ NPC::NPC():MovableEntity(0, 0)
 {
 	Word w;
 	w.langCode = L"code_CODE";
-	w.str = L"Syôtaihumei";
+	w.str = L"No Name Defined";
 	names.push_back(w);
 
-	w.str = L"Dialoguehumei";
+	w.str = L"No Dialogue Defined";
 	dialogs.push_back(w);
 
 	sex = Sex::MALE;
@@ -49,17 +49,17 @@ void NPC::loadFromFile(KFile& file, sf::String auth, sf::String pack, sf::String
 				w.str = segments[1];
 				names[0] = w;
 			}
-			if (StringEditor::equals(segments[0], L"x"))
+			else if (StringEditor::equals(segments[0], L"x"))
 			{
 				x = stoi(segments[1].toWideString());
 				actualX = x * BLOCK_SIZE;
 			}
-			if (StringEditor::equals(segments[0], L"y"))
+			else if (StringEditor::equals(segments[0], L"y"))
 			{
 				y = stoi(segments[1].toWideString());
 				actualY = y * BLOCK_SIZE;
 			}
-			if (StringEditor::equals(segments[0], L"wantsToBattle"))
+			else if (StringEditor::equals(segments[0], L"wantsToBattle"))
 			{
 				bool b = false;
 				if (StringEditor::equals(segments[1], L"true"))
@@ -68,7 +68,7 @@ void NPC::loadFromFile(KFile& file, sf::String auth, sf::String pack, sf::String
 				}
 				wantsToBattle = b;
 			}
-			if (StringEditor::equals(segments[0], L"direction"))
+			else if (StringEditor::equals(segments[0], L"direction"))
 			{
 				int d = 3;
 				if (StringEditor::equals(segments[1], L"UP"))
@@ -85,11 +85,20 @@ void NPC::loadFromFile(KFile& file, sf::String auth, sf::String pack, sf::String
 				}
 				NPC::dir = to_Direction(d);
 			}
-			if (StringEditor::equals(segments[0], L"r"))
+			else if (StringEditor::equals(segments[0], L"sex"))
+			{
+				sex = Sex::MALE;
+				if (StringEditor::equals(segments[1], L"FEMALE"))
+				{
+					sex = Sex::FEMALE;
+				}
+				
+			}
+			else if (StringEditor::equals(segments[0], L"r"))
 			{
 				loadTextures(auth, pack, name, stoi(segments[1].toWideString()));
 			}
-			if (StringEditor::equals(segments[0], L"dialogue"))
+			else if (StringEditor::equals(segments[0], L"dialogue"))
 			{
 				Word w;
 				w.langCode = L"code_CODE";
@@ -106,7 +115,7 @@ void NPC::loadFromFile(KFile& file, sf::String auth, sf::String pack, sf::String
 				w.str = segments[2];
 				names.push_back(w);
 			}
-			if (StringEditor::equals(segments[0], L"dialogue"))
+			else if (StringEditor::equals(segments[0], L"dialogue"))
 			{
 				Word w;
 				w.langCode = segments[1];
@@ -133,7 +142,7 @@ sf::String NPC::getName(sf::String s)
 		}
 	}
 
-	return dialogs[0].str;
+	return names[0].str;
 }
 
 sf::String NPC::getDialog(sf::String s)

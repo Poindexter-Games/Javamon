@@ -176,5 +176,8 @@
     <ClInclude Include="StringEditor.h">
       <Filter>Header Files\Language</Filter>
     </ClInclude>
+    <ClInclude Include="Math.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

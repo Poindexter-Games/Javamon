@@ -356,16 +356,17 @@ void Level::update(Controls & c, int playerNumber)
 		{
 			players[playerNumber].setMode(Player::Mode::NORMAL);
 		}
+		players[playerNumber].updateMenu(c);
 		return;
 	}
 
 	if (!players[playerNumber].isLocked())
 	{
 		//If player is in transition between two blocks
-		int time = c.getTimePressed(players[playerNumber].getDirection());
-		time = ((time - (time % 15)) / 15) % 4;
-		if (time == 3)time = 1;
-		players[playerNumber].setAnimationFrame(time + 1);
+		if (((int)players[playerNumber].getActualX() % 32 == 0) && ((int)players[playerNumber].getActualY() % 32 == 0))
+		{
+			players[playerNumber].setAnimationFrame(rollOverAdd(players[playerNumber].getAnimationFrame(), 1, 3));
+		}
 
 		if (players[playerNumber].getActualY() - 4.0f>(float)players[playerNumber].getY() * BLOCK_SIZE) players[playerNumber].adjustActualY(-4.0f);
 		else if ((int)players[playerNumber].getActualY() > players[playerNumber].getY() * BLOCK_SIZE) players[playerNumber].setActualY((float)players[playerNumber].getY() * BLOCK_SIZE);
@@ -596,7 +597,8 @@ void Level::render(sf::RenderWindow & window, KText & font, int playerNumber)
 		sf::Sprite s(dialogBoxes[0]);	//TODO Multiple types of dialog boxes
 		s.setPosition(sf::Vector2f(0, DIALOG_BOX_LOW));
 		window.draw(s);
-		font.drawText(window, 16, DIALOG_BOX_LOW + 16, L"\\t" + npcs[players[playerNumber].getNPCDialogNumber()].getName(players[playerNumber].getLanguageCode()) + L"\\n" + npcs[players[playerNumber].getNPCDialogNumber()].getDialog(players[playerNumber].getLanguageCode()));
+		font.drawText(window, 16, DIALOG_BOX_LOW + 16, npcs[players[playerNumber].getNPCDialogNumber()].getName(players[playerNumber].getLanguageCode()) + L":", to_Color(npcs[players[playerNumber].getNPCDialogNumber()].getSex()));
+		font.drawText(window, 16, DIALOG_BOX_LOW + 16 + FONT_SIZE, npcs[players[playerNumber].getNPCDialogNumber()].getDialog(players[playerNumber].getLanguageCode()), sf::Color::Black);
 	}
 
 	for (int i = 0; i < floatingTiles.size(); i++)
@@ -616,7 +618,7 @@ void Level::render(sf::RenderWindow & window, KText & font, int playerNumber)
 
 	if (players[playerNumber].getMode() == Player::Mode::MENU)
 	{
-		player.renderMenu(window);
+		players[playerNumber].renderMenu(window);
 	}
 
 	//RENDER DEBUG STUFF

@@ -154,6 +154,7 @@
     <ClInclude Include="KText.h" />
     <ClInclude Include="Language.h" />
     <ClInclude Include="MainMenu.h" />
+    <ClInclude Include="Math.h" />
     <ClInclude Include="MovableEntity.h" />
     <ClInclude Include="NPC.h" />
     <ClInclude Include="Screen.h" />

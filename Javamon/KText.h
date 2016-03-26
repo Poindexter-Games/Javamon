@@ -34,7 +34,7 @@ public:
 	/*
 	This renders text
 	*/
-	void drawText(sf::RenderWindow &, int, int, sf::String);
+	void drawText(sf::RenderWindow & window, int x, int y, sf::String str, sf::Color c);
 private:
 	/*
 	This is for determining which character sets are needed.
