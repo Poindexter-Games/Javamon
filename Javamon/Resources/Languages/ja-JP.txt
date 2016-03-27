@@ -1,6 +1,13 @@
-﻿single_player=シングルプレイヤー
+﻿main_menu=メインメニュー
+single_player=シングルプレイヤー
 multi_player=マルチプレイヤー
-settings=セッテイ
+settings=せってい
 quit=やめる
-loading=ロードチュウ…
+loading=ロードしている…
+trainer=トレーナー
+bag=バッグ
+monster=モンスター(TODO)
+map=ちず
+phone=スマホ
+save=セーブ
 endFile;

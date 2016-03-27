@@ -55,13 +55,13 @@ void Player::render(sf::RenderWindow & w)
 	w.draw(s);
 }
 
-void Player::renderMenu(sf::RenderWindow & w)
+void Player::renderMenu(sf::RenderWindow & w, KText & font)
 {
 	sf::View view;
 	view.setCenter(sf::Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2));
 	view.setSize(sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
 	w.setView(view);
-	menu.render(w);
+	menu.render(w, font);
 }
 
 void Player::place(int x, int y, Direction d)

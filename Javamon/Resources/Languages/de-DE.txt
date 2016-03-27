@@ -1,7 +1,14 @@
 ﻿openFile;
+main_menu=Main Menu
 single_player=Einspieler
 multi_player=Multiplayer
 settings=Settings
 quit=Quit
 loading=Loading...
+trainer=Trainer/Trainerin
+bag=Bag
+monster=Javamon (TODO)
+map=Stadtplan
+phone=Handy
+save=Save
 endFile;

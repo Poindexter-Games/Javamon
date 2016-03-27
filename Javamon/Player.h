@@ -23,13 +23,13 @@ class Player: public MovableEntity
 public:
 	Player();
 
-	Language lang;
-	InGameMenu menu;
+	Language lang;		//<--This probably shouldn't be public
+	InGameMenu menu;	//This too.
 
 	enum Mode{ NORMAL = 0, DIALOG = 1, MENU = 2 };
 
 	void render(sf::RenderWindow & w);
-	void renderMenu(sf::RenderWindow & w);
+	void renderMenu(sf::RenderWindow & w, KText&);
 
 	sf::String getName() { return name; }
 	bool isMale() { return sex == 0; }
@@ -50,7 +50,7 @@ public:
 	void inhibitMovement() { movementAllowed = false; }
 	bool isAllowedToMove() { return movementAllowed; }
 
-	void setLanguage(Language l) { lang = l; }
+	void setLanguage(Language l) { lang = l; menu.setLanguage(l); }
 	void setMode(Mode m) { mode = m; }
 
 	void setNPCDialogNumber(int n) { npcDialogNumber = n; }

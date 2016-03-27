@@ -169,6 +169,7 @@ void Controls::setPressed(Control c, bool pressed)
 		break;
 	case CANCEL:
 		cancelPressed = pressed;
+		break;
 	case START:
 		startPressed = pressed;
 		break;
@@ -209,3 +210,31 @@ int Controls::getTimePressed(Direction d)
 		return rightPressedTime;
 	return 0;
 }
+
+/*
+int Controls::getTimePressed(Control c)
+{
+	switch (c)
+	{
+	case C_UP:
+		return upPressedTime;
+	case C_LEFT:
+		return leftPressedTime;
+	case C_DOWN:
+		return downPressedTime;
+	case C_RIGHT:
+		return rightPressedTime;
+	case ACCEPT:
+		return acceptPressedTime;
+	case CANCEL:
+		return cancelPressedTime;
+	case START:
+		return startPressedTime;
+	case SELECT:
+		return selectPressedTime;
+	case MOUSE_LEFT:
+		return leftPressedTime;
+	case MOUSE_RIGHT:
+		return rightClickPressedTime;
+	}
+}*/

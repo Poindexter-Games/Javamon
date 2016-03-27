@@ -17,6 +17,13 @@ Language::Language(sf::String str)
 		else if (segments[0].toWideString().compare(L"settings") == 0) { settings = sf::String(segments[1]); }
 		else if (segments[0].toWideString().compare(L"quit") == 0) { quit = sf::String(segments[1]); }
 		else if (segments[0].toWideString().compare(L"loading") == 0) { loading = sf::String(segments[1]); }
+		else if (segments[0].toWideString().compare(L"trainer") == 0) { trainer = sf::String(segments[1]); }
+		else if (segments[0].toWideString().compare(L"main_menu") == 0) { main_menu = sf::String(segments[1]); }
+		else if (segments[0].toWideString().compare(L"bag") == 0) { bag = sf::String(segments[1]); }
+		else if (segments[0].toWideString().compare(L"monster") == 0) { monster = sf::String(segments[1]); }
+		else if (segments[0].toWideString().compare(L"map") == 0) { map = sf::String(segments[1]); }
+		else if (segments[0].toWideString().compare(L"phone") == 0) { phone = sf::String(segments[1]); }
+		else if (segments[0].toWideString().compare(L"save") == 0) { save = sf::String(segments[1]); }
 
 		else if (segments[0].toWideString().compare(L"endFile") == 0)
 		{
@@ -36,4 +43,5 @@ Language::Language()
 	settings = L"Settings";
 	quit = L"Quit";
 	loading = L"Loading...";
+	trainer = L"Trainer";
 }

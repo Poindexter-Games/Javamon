@@ -346,13 +346,9 @@ void Level::update(Controls & c, int playerNumber)
 		}
 		return;
 	}
-	if (players[playerNumber].getMode() == Player::Mode::MENU)
+	else if (players[playerNumber].getMode() == Player::Mode::MENU)
 	{
-		if (c.isPressedForFirstTime(Control::CANCEL))
-		{
-			players[playerNumber].setMode(Player::Mode::NORMAL);
-		}
-		else if (c.isPressedForFirstTime(Control::START))
+		if (players[playerNumber].menu.isRequestingExit())
 		{
 			players[playerNumber].setMode(Player::Mode::NORMAL);
 		}
@@ -618,7 +614,7 @@ void Level::render(sf::RenderWindow & window, KText & font, int playerNumber)
 
 	if (players[playerNumber].getMode() == Player::Mode::MENU)
 	{
-		players[playerNumber].renderMenu(window);
+		players[playerNumber].renderMenu(window, font);
 	}
 
 	//RENDER DEBUG STUFF

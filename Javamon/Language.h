@@ -29,6 +29,14 @@ public:
 
 	sf::String getLanguageCode() { return langCode; }
 	sf::String getLoading() { return loading; }
+	sf::String getQuit() { return quit; }
+	sf::String getTrainer() { return trainer; }
+	sf::String getMainMenu() { return main_menu; };
+	sf::String getBag(){return bag;}
+	sf::String getMonster(){return monster;}
+	sf::String getMap(){return map;}
+	sf::String getPhone(){return phone;}
+	sf::String getSave() { return save; }
 private:
 	sf::String langCode;
 
@@ -37,4 +45,11 @@ private:
 	sf::String settings;
 	sf::String quit;
 	sf::String loading;
+	sf::String trainer;
+	sf::String main_menu;
+	sf::String bag;
+	sf::String monster;
+	sf::String map;
+	sf::String phone;
+	sf::String save;
 };
