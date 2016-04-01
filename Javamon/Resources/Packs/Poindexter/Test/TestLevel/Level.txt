@@ -18,6 +18,18 @@ setBlock(9,3,81,2,0)
 addTeleport(9,2,TestLevel1,7,2,LEFT,-1,SHALLOW)
 
 addNPC{
+name=Jay
+name.ja-JP=ジェイ
+sex=MALE
+x=3
+y=5
+r=0
+dialogue=Hello, I'm Jay.
+dialogue.de-DE=Hallo, Ich heiße Jay.
+dialogue.ja-JP=こーにちわ！ジェイデス。
+}
+
+addNPC{
 name=Clay
 name.ja-JP=クレー
 sex=MALE
@@ -28,18 +40,6 @@ wantsToBattle=true
 dialogue=Hello, I'm Clay.
 dialogue.de-DE=Hallo, Ich heiße Clay.
 dialogue.ja-JP=ハロー、クレーですぅ～．
-}
-
-addNPC{
-name=Jay
-name.ja-JP=ジェイ
-sex=MALE
-x=3
-y=5
-r=0
-dialogue=Hello, I'm Jay.
-dialogue.de-DE=Hallo, Ich heiße Jay.
-dialogue.ja-JP=こーにちわ！ジェイデス。
 }
 
 endFile;

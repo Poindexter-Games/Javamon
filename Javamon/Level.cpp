@@ -53,16 +53,28 @@ void Level::loadLevel(sf::String auth, sf::String pack, sf::String name)
 
 	bool comment = false;	//Flag which states if reading a multiline comment
 	sf::String* segments;	//Broken apart parameters
+	sf::String segment;		//Used for strings that ain't broken apart, like comments
 	int length;				//Number of parameters
+
+	segments = {};
 
 	for (bool b = true; b; )
 	{
-		file.readLine(segments, length);
+		if (!comment)
+		{
+			file.readLine(segments, length);
+		}
+		else
+		{
+			file.readLine(segment);
+		}
+
 
 		//Conditions for not reading a line
 		if (length == 0) continue;
-		if (StringEditor::equals(segments[0], L"endComment"))
+		if (StringEditor::equals(segments[0], L"endComment") || StringEditor::equals(segment, L"*/"))
 		{
+			StringEditor::echo(L"Comment was ended by: " + segment);
 			comment = false;
 			continue;
 		}
@@ -348,9 +360,14 @@ void Level::update(Controls & c, int playerNumber)
 	}
 	else if (players[playerNumber].getMode() == Player::Mode::MENU)
 	{
-		if (players[playerNumber].menu.isRequestingExit())
+		if (players[playerNumber].getMenu().isRequestingExit())
 		{
 			players[playerNumber].setMode(Player::Mode::NORMAL);
+		}
+		if (players[playerNumber].getMenu().getRequestedMode() == InGameMenu::RequestMode::QUIT)
+		{
+			players[playerNumber].getMenu().setRequestedModeRead();
+			rm = RequestMode::MAIN_MENU;
 		}
 		players[playerNumber].updateMenu(c);
 		return;
@@ -612,13 +629,15 @@ void Level::render(sf::RenderWindow & window, KText & font, int playerNumber)
 		}
 	}
 
+	//RENDER DEBUG STUFF
+	font.coordinates(window, players[playerNumber].getX(), players[playerNumber].getY());
+
+
+	//RENDER MENU STUFF
 	if (players[playerNumber].getMode() == Player::Mode::MENU)
 	{
 		players[playerNumber].renderMenu(window, font);
 	}
-
-	//RENDER DEBUG STUFF
-	font.coordinates(window, players[playerNumber].getX(), players[playerNumber].getY());
 }
 
 bool Level::isRequestingLevelChange()
@@ -634,22 +653,21 @@ void Level::getPlayer(Player & p, sf::String & s)
 
 bool Level::isPlayerUnderNPC(int playerNumber)
 {
-	Player p = players[playerNumber];
 	if (players[playerNumber].getY() == 0)
 	{
 		return false;
 	}
 	for (int i = 0; i < npcs.size(); i++)
 	{
-		if (npcs[i].getX() == p.getX() && npcs[i].getY() == p.getY() - 1)
+		if (npcs[i].getX() == players[playerNumber].getX() && npcs[i].getY() == players[playerNumber].getY() - 1)
 		{
 			return true;
 		}
-		if (npcs[i].getX() == p.getX() - 1 && npcs[i].getY() == p.getY() - 1)
+		if (npcs[i].getX() == players[playerNumber].getX() - 1 && npcs[i].getY() == players[playerNumber].getY() - 1)
 		{
 			return true;
 		}
-		if (npcs[i].getX() == p.getX() + 1 && npcs[i].getY() == p.getY() - 1)
+		if (npcs[i].getX() == players[playerNumber].getX() + 1 && npcs[i].getY() == players[playerNumber].getY() - 1)
 		{
 			return true;
 		}

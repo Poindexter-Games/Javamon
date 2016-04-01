@@ -1,8 +1,9 @@
 #include "Player.h"
+
 Player::Player(): MovableEntity(0, 0)
 {
 	//common stuff
-	name = L"Gei Hakkâ";
+	name = L"Player";
 	sex = Sex::FEMALE;
 	x = 0;
 	y = 0;
@@ -13,11 +14,12 @@ Player::Player(): MovableEntity(0, 0)
 	movementAllowed = true;
 	mode = Mode::NORMAL;
 
-	menu = InGameMenu();
+	preferredBattleType = BattleType::SINGLE;	//Default is single
+	preferredSwitchType = SwitchType::SWITCH;	//Default is switch
 
-	dialog = L"THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG.";
-	anteBattleQuote = L"BATTLE QUOTE NOT LOADED.";
-	postBattleQuote = L"BATTLE QUOTE NOT LOADED.";
+	dialog = L"Hello, my name is " + name;
+	anteBattleQuote = L"Antebattlequote";
+	postBattleQuote = L"Postbattlequote";
 	npcDialogNumber = -1;
 
 	//npc related stuff
@@ -34,6 +36,14 @@ Player::Player(): MovableEntity(0, 0)
 	{
 		textures[i].loadFromImage(textureSheet, sf::IntRect((i % 16) * BLOCK_SIZE, (int)((i - (i % 16)) / 16) + (PLAYER_HEIGHT * sex), BLOCK_SIZE, PLAYER_HEIGHT));
 	}
+
+
+	Monster m("A", Sex::MALE);
+	party.push_back(m);
+	m = Monster("B", Sex::MALE);
+	party.push_back(m);
+	m = Monster("C", Sex::FEMALE);
+	party.push_back(m);
 }
 
 void Player::render(sf::RenderWindow & w)
@@ -61,7 +71,7 @@ void Player::renderMenu(sf::RenderWindow & w, KText & font)
 	view.setCenter(sf::Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2));
 	view.setSize(sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
 	w.setView(view);
-	menu.render(w, font);
+	menu.render(w, font, name, sex, preferredBattleType, party);
 }
 
 void Player::place(int x, int y, Direction d)
@@ -112,5 +122,5 @@ void Player::place(int x, int y, Direction d, int zdir, float s)
 
 void Player::updateMenu(Controls & c)
 {
-	menu.update(c);
+	menu.update(c, preferredBattleType, party);
 }

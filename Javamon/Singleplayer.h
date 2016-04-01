@@ -12,6 +12,10 @@
 class Singleplayer: public Screen
 {
 public:
+	enum RequestMode{QUIT, NONE};
+	RequestMode getRequestedMode() { return rm; }
+	void setRequestedModeRead() { rm = RequestMode::NONE; }
+
 	Singleplayer();
 	Singleplayer(Language, sf::String, sf::String, sf::String);
 	void update(Controls &);
@@ -19,6 +23,7 @@ public:
 	enum Mode{ LEVEL = 0, BATTLE = 1 };
 protected:
 private:
+	RequestMode rm;
 	Mode mode;
 	Level l;
 	Battle b;

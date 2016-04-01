@@ -31,6 +31,8 @@ enum Sex { MALE = 0, FEMALE = 1};
 enum GameState { MAIN_MENU = 0, LOADING = 1, SINGLE_PLAYER = 2};
 enum Direction { UP = 0, LEFT = 1, DOWN = 2, RIGHT = 3 };
 enum Control { C_UP = 0, C_LEFT = 1, C_DOWN = 2, C_RIGHT = 3, ACCEPT = 4, CANCEL = 5, START = 6, SELECT = 7, MOUSE_LEFT = 8, MOUSE_RIGHT = 9 };
+enum BattleType {SINGLE, DOUBLE};
+enum SwitchType {SWITCH, SET, NOT_ALLOWED};
 
 static Direction to_Direction(int i)
 {

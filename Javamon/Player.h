@@ -23,63 +23,91 @@ class Player: public MovableEntity
 public:
 	Player();
 
-	Language lang;		//<--This probably shouldn't be public
-	InGameMenu menu;	//This too.
-
 	enum Mode{ NORMAL = 0, DIALOG = 1, MENU = 2 };
 
+	/*
+	METHODS TO BE ACCESSED
+	*/
+
 	void render(sf::RenderWindow & w);
-	void renderMenu(sf::RenderWindow & w, KText&);
-
-	sf::String getName() { return name; }
-	bool isMale() { return sex == 0; }
-	bool isFemale() { return sex == 1; }
-	void setGender(Sex sex) { Player::sex = sex; }
-	Sex getGender() { return sex; };
-
-	void setDirection(Direction direction) { Player::direction = direction; }
-	void setZDirection(int zd) { zdirection = zd; }
-	void setSteepness(float s) { steepness = s; }
-
-	void place(int, int, Direction);
-	void place(int x, int y, Direction d, int zdir, float);
 
 	void updateMenu(Controls & c);
+	void renderMenu(sf::RenderWindow & w, KText&);
 
-	void allowMovement() { movementAllowed = true; }
-	void inhibitMovement() { movementAllowed = false; }
-	bool isAllowedToMove() { return movementAllowed; }
+	/*
+	GETTER METHODS
+	*/
 
-	void setLanguage(Language l) { lang = l; menu.setLanguage(l); }
-	void setMode(Mode m) { mode = m; }
+	InGameMenu getMenu() {return menu;}
+	sf::String getLanguageCode() { return lang.getLanguageCode(); }
+	Mode getMode() { return mode; }
 
-	void setNPCDialogNumber(int n) { npcDialogNumber = n; }
-
-	//
+	//Movement Stuff
 
 	Direction getDirection() { return direction; }
 	int getZDirection() { return zdirection; }
 	float getSteepness() { return steepness; }
+
+	bool isAllowedToMove() { return movementAllowed; }
+	bool isVisible() { return visible; }
+
+	int getAnimationFrame() { return animationFrame; }
+
+	//RPG Stuff
+
+	sf::String getName() { return name; }
+	bool isMale() { return sex == 0; }
+	bool isFemale() { return sex == 1; }
+	void setSex(Sex sex) { Player::sex = sex; }
+	Sex getSex() { return sex; };
+
+	//Dialogue Stuff
 
 	sf::String getDialog() { return dialog; }
 	sf::String getPostBattleQuote() { return postBattleQuote; }
 	sf::String getAnteBattleQuote() { return anteBattleQuote; }
 	int getNPCDialogNumber() { return npcDialogNumber; }
 
-	void setDialiog(sf::String dialog) { Player::dialog = dialog; }
+	//Battle Stuff
 
-	bool isVisible() { return visible; }
+	bool getWantsToBattle() { return wantsToBattle; }
+	BattleType getBattleType() { return preferredBattleType; }
+	SwitchType getSwitchType() { return preferredSwitchType; }
+	
+	/*
+	SETTER METHODS
+	*/
+
+	void setLanguage(Language l) { lang = l; menu.setLanguage(l); }
+	void setMode(Mode m) { mode = m; }
+
+	//Movement Stuff
+
+	void place(int, int, Direction);
+	void place(int x, int y, Direction d, int zdir, float);
+
+	void setDirection(Direction direction) { Player::direction = direction; }
+	void setZDirection(int zd) { zdirection = zd; }
+	void setSteepness(float s) { steepness = s; }
+
+	void allowMovement() { movementAllowed = true; }
+	void inhibitMovement() { movementAllowed = false; }
+
 	void setVisible() { visible = true; }
 	void setInvisible() { visible = false; }
 
-	int getAnimationFrame() { return animationFrame; }
 	void setAnimationFrame(int f) { animationFrame = f; }
 
-	bool getWantsToBattle() { return wantsToBattle; }
-	void setWantsToBattle(bool b) { wantsToBattle = b; }
+	//RPG Stuff
 
-	sf::String getLanguageCode() { return lang.getLanguageCode(); }
-	Mode getMode() { return mode; }
+	//Dialogue Stuff
+	
+	void setNPCDialogNumber(int n) { npcDialogNumber = n; }
+	void setDialiog(sf::String dialog) { Player::dialog = dialog; }
+
+	//Battle Stuff
+
+	void setWantsToBattle(bool b) { wantsToBattle = b; }
 private:
 	vector<sf::Texture> textures;	//Number of textures (should be 16)
 	vector<Monster> party;			//Party (your monsters)
@@ -88,6 +116,12 @@ private:
 	Sex sex;				//Okay, you need some help
 
 	Mode mode;				//Player mode
+
+	Language lang;
+	InGameMenu menu;
+
+	BattleType preferredBattleType;
+	SwitchType preferredSwitchType;
 	
 	Direction direction;
 	int zdirection;			//this is for the going up stairs or down stairs animation, 1 is up, -1 is down

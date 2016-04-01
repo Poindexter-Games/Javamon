@@ -10,14 +10,23 @@
 #include "Language.h"
 #include "KText.h"
 
-class MainMenu: public Screen
+class MainMenu : public Screen
 {
 public:
+	enum RequestMode { SINGLE_PLAYER, MULTI_PLAYER, OPTIONS, QUIT, NONE };
+
 	MainMenu();
 	MainMenu(Language);
 	void update(Controls&);
-	void render(sf::RenderWindow & w);
+	void render(sf::RenderWindow&);
+
+	RequestMode getRequestedMode() { return m; }
+	void setRequestedModeRead() { m = RequestMode::NONE; }
 private:
+	int boxSelected = 0;
+
+	RequestMode m;
+
 	sf::Texture logoTexture;
 
 	sf::RectangleShape singleplayer;

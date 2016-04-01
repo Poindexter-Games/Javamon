@@ -22,6 +22,22 @@
 class Level
 {
 public:
+	/*
+	Enum to let super-class (SINGLEPLAYER) know what level wants it to do
+	*/
+	enum RequestMode{MAIN_MENU, NONE};
+	/*
+	Returns a command that level wants the super class to do
+	*/
+	RequestMode getRequestedMode() { return rm; }
+	/*
+	Lets the level know that the super-class has read its request
+	*/
+	void setRequestedModeRead() { rm = RequestMode::NONE; }
+
+	/*
+	Default Constructor
+	*/
 	Level();
 	/*
 	Constuctor for 1 player mode with loading character from save file
@@ -76,6 +92,8 @@ public:
 	/*Self explanitory, idk if it is used although*/
 	void setLanguageOfPlayer(int num, Language l) { players[num].setLanguage(l); }
 private:
+
+	RequestMode rm;
 
 	/*
 	Author is the subfolder under Resources/Packs/

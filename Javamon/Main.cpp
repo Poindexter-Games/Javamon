@@ -79,7 +79,7 @@ Main::Main(sf::RenderWindow & window) : window(window)
 	Sets the game state; the final version of the game should have this set to logo screen,
 	then goes to the main menu
 	*/
-	gs = GameState::SINGLE_PLAYER;
+	gs = GameState::MAIN_MENU;
 
 	/*
 	Loads the game modes.
@@ -88,10 +88,9 @@ Main::Main(sf::RenderWindow & window) : window(window)
 	(I don't think I am using that term correctly)
 	*/
 	mainMenu = MainMenu(l);
-	sp = Singleplayer(l, L"Poindexter", L"Test", L"TestLevel");
 
 	/*
-	Render a black background
+	Create a black background
 	*/
 	bg.setSize(sf::Vector2f((float)INT_MAX, (float)INT_MAX));
 	bg.setFillColor(sf::Color::Black);
@@ -120,10 +119,27 @@ void Main::update()
 			if (gs == GameState::SINGLE_PLAYER)
 			{
 				sp.update(controls);
+				if (sp.getRequestedMode() == Singleplayer::RequestMode::QUIT)
+				{
+					sp.setRequestedModeRead();
+					gs = GameState::MAIN_MENU;
+				}
 			}
 			else if (gs == GameState::MAIN_MENU)
 			{
 				mainMenu.update(controls);
+				if (mainMenu.getRequestedMode() == MainMenu::RequestMode::SINGLE_PLAYER)
+				{
+					gs = GameState::LOADING;
+					sp = Singleplayer(l, L"Poindexter", L"Test", L"TestLevel");
+					gs = GameState::SINGLE_PLAYER;
+					mainMenu.setRequestedModeRead();
+				}
+				else if (mainMenu.getRequestedMode() == MainMenu::RequestMode::QUIT)
+				{
+					playingGame = false;
+					mainMenu.setRequestedModeRead();
+				}
 			}
 
 			clock.restart();
@@ -156,6 +172,10 @@ void Main::render()
 		else if (gs == GameState::MAIN_MENU)
 		{
 			mainMenu.render(window);
+		}
+		else if (gs == GameState::LOADING)
+		{
+			font.drawText(window, 0, 0, l.getLoading(), sf::Color::White);
 		}
 
 		window.display();

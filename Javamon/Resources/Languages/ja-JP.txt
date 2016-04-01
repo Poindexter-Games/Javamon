@@ -8,6 +8,6 @@ trainer=トレーナー
 bag=バッグ
 monster=モンスター(TODO)
 map=ちず
-phone=スマホ
+phone=ケイタイ
 save=セーブ
 endFile;
