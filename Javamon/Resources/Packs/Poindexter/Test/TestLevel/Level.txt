@@ -37,7 +37,7 @@ x=5
 y=3
 r=0
 wantsToBattle=true
-dialogue=Hello, I'm Clay.
+dialogue=Nobody gives a shit.
 dialogue.de-DE=Hallo, Ich heiße Clay.
 dialogue.ja-JP=ハロー、クレーですぅ～．
 }

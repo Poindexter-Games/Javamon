@@ -1,5 +1,4 @@
-﻿openFile;
-main_menu=Main Menu
+﻿main_menu=Main Menu
 single_player=Single-player
 multi_player=Multi-player
 settings=Settings

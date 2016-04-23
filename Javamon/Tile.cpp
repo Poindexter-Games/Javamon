@@ -14,3 +14,8 @@ Tile::Tile(int imgnum, int z, int type): Entity(0, 0)
 	Tile::z = z;
 	Tile::type = type;
 }
+Tile::Tile(sf::String s) : Entity(0, 0)
+{
+	int comma = StringEditor::getFirstAppearanceOf(',', s);
+	int parenthesis = StringEditor::getFirstAppearanceOf(')', s);
+}

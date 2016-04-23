@@ -42,11 +42,13 @@ public:
 	This is for converting the Japanese Hiragana syllabary to the Katakana syllabary.
 	Notes: Unimplemented
 	*/
-	wstring hiraganaToKatakana(wstring);
+	static wstring hiraganaToKatakana(wstring);
 	/*
 	This is for converting the Japanese Katakana syllabary to the Hiragana syllabary.
 	Notes: Unimplemented
 	*/
-	wstring katakanaToHiragana(wstring);
+	static wstring katakanaToHiragana(wstring);
+
+	static int getFirstAppearanceOf(char, sf::String);
 private:
 };

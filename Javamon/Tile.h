@@ -20,6 +20,10 @@ public:
 	type   - int
 	*/
 	Tile(int, int, int);
+	/*
+	Param: (0,0)
+	*/
+	Tile(sf::String);
 
 	void setImgNum() {Tile::imgnum = imgnum;}
 	int getImgNum(){return imgnum;}

@@ -28,3 +28,16 @@ void StringEditor::echo(int i, wstring str)
 {
 	wcout << i << L" " << str << endl;
 }
+
+int StringEditor::getFirstAppearanceOf(char c, sf::String s)
+{
+	for (int i = 0; i < s.toWideString().length(); i++) 
+	{
+		if (s[i] == c)
+		{
+			return i;
+		}
+	}
+
+	return -1;
+}

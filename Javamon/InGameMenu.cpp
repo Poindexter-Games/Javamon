@@ -211,9 +211,17 @@ void InGameMenu::render(sf::RenderWindow & window, KText& font, sf::String name,
 			bg.setSize(sf::Vector2f(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4));
 			window.draw(bg);
 
-			//Temp stuff
-			font.drawText(window, SCREEN_WIDTH * 3 / 8, SCREEN_HEIGHT * 3 / 8, to_wstring(boxSelected), sf::Color::Cyan);
-			font.drawText(window, SCREEN_WIDTH * 3 / 8, SCREEN_HEIGHT * 3 / 8, L"   <--\\n0 = return to main menu\\n1 = close\\nLeft = --\\nRight = ++", sf::Color::White);
+			if (StringEditor::equals(l.getLanguageCode(), L"ja-JP"))
+			{
+				font.drawText(window, SCREEN_WIDTH * 3 / 8, SCREEN_HEIGHT * 3 / 8, to_wstring(boxSelected), sf::Color::Cyan);
+				font.drawText(window, SCREEN_WIDTH * 3 / 8, SCREEN_HEIGHT * 3 / 8, L" <--\\n0=main menu ni modoru\\n1=game ni modoru\\nhidari=--\\nmigi=++", sf::Color::White);
+			}
+			else
+			{
+				//Temp stuff
+				font.drawText(window, SCREEN_WIDTH * 3 / 8, SCREEN_HEIGHT * 3 / 8, to_wstring(boxSelected), sf::Color::Cyan);
+				font.drawText(window, SCREEN_WIDTH * 3 / 8, SCREEN_HEIGHT * 3 / 8, L"   <--\\n0 = return to main menu\\n1 = close\\nLeft = --\\nRight = ++", sf::Color::White);
+			}
 
 			//Yes box and no box, add the selector too
 		}

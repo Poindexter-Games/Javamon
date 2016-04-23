@@ -1,0 +1,9 @@
+﻿setName,en-US,Foobar;
+setName,ja-JP,フーバー;
+
+setWidth(1000)
+setHeight(1000)
+
+setSpawn(1,1,RIGHT)
+
+endFile;

@@ -38,11 +38,7 @@ Player::Player(): MovableEntity(0, 0)
 	}
 
 
-	Monster m("A", Sex::MALE);
-	party.push_back(m);
-	m = Monster("B", Sex::MALE);
-	party.push_back(m);
-	m = Monster("C", Sex::FEMALE);
+	Monster m("Jawamon", Sex::MALE);
 	party.push_back(m);
 }
 
