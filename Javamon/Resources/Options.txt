@@ -1,2 +1,1 @@
 ﻿language=en-US
-endFile;

@@ -64,10 +64,9 @@ Main::Main(sf::RenderWindow & window) : window(window)
 		language	=	[ja-JP]
 	*/
 	KFile options(sf::String(RESOURCES + "Options.txt"));
-	sf::String* segments;
-	int length;
-	options.readLine(segments, length);
-	l = Language(segments[1]);
+	wstring w;
+	options.readLine(w);
+	l = Language(StringEditor::substring(w, StringEditor::findCharacter(w, L'=', 1) + 1, w.length()));
 
 	/*
 	Instantiate the font based off of the game language
@@ -131,7 +130,7 @@ void Main::update()
 				if (mainMenu.getRequestedMode() == MainMenu::RequestMode::SINGLE_PLAYER)
 				{
 					gs = GameState::LOADING;
-					sp = Singleplayer(l, L"Poindexter", L"Test", L"TestLevel");
+					sp = Singleplayer(l, L"Poindexter", L"Test", L"TestLevel2");
 					gs = GameState::SINGLE_PLAYER;
 					mainMenu.setRequestedModeRead();
 				}

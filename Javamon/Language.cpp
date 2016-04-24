@@ -5,30 +5,37 @@ Language::Language(sf::String str)
 	langCode = str;
 
 	KFile file(LANGUAGES + str + L".txt");
-	sf::String* segments;
-	int length;
+	wstring w;
 
 	for (bool b = true; b; )
 	{
-		file.readLine(segments, length);
+		file.readLine(w);
 
-		if (segments[0].toWideString().compare(L"single_player") == 0) { single_player = sf::String(segments[1]); }
-		else if (segments[0].toWideString().compare(L"multi_player") == 0) { multi_player = sf::String(segments[1]); }
-		else if (segments[0].toWideString().compare(L"settings") == 0) { settings = sf::String(segments[1]); }
-		else if (segments[0].toWideString().compare(L"quit") == 0) { quit = sf::String(segments[1]); }
-		else if (segments[0].toWideString().compare(L"loading") == 0) { loading = sf::String(segments[1]); }
-		else if (segments[0].toWideString().compare(L"trainer") == 0) { trainer = sf::String(segments[1]); }
-		else if (segments[0].toWideString().compare(L"main_menu") == 0) { main_menu = sf::String(segments[1]); }
-		else if (segments[0].toWideString().compare(L"bag") == 0) { bag = sf::String(segments[1]); }
-		else if (segments[0].toWideString().compare(L"monster") == 0) { monster = sf::String(segments[1]); }
-		else if (segments[0].toWideString().compare(L"map") == 0) { map = sf::String(segments[1]); }
-		else if (segments[0].toWideString().compare(L"phone") == 0) { phone = sf::String(segments[1]); }
-		else if (segments[0].toWideString().compare(L"save") == 0) { save = sf::String(segments[1]); }
+		if (w.length() == 0) continue;
 
-		else if (segments[0].toWideString().compare(L"endFile") == 0)
+		if (StringEditor::equals(w, L"endFile;"))
 		{
-			b = false;
+			break;
 		}
+
+		int comma = StringEditor::findCharacter(w, L'=', 1);
+		wstring tag = StringEditor::substring(w, 0, comma);
+		wstring text = StringEditor::substring(w, comma + 1, w.length());
+
+		StringEditor::equals(tag, L"");
+
+		if (StringEditor::equals(tag, L"single_player"))		{ single_player = text; }
+		else if (StringEditor::equals(tag, L"multi_player"))	{ multi_player = text; }
+		else if (StringEditor::equals(tag, L"settings"))		{ settings = sf::String(text); }
+		else if (StringEditor::equals(tag, L"quit"))			{ quit = sf::String(text); }
+		else if (StringEditor::equals(tag, L"loading"))			{ loading = sf::String(text); }
+		else if (StringEditor::equals(tag, L"trainer"))			{ trainer = sf::String(text); }
+		else if (StringEditor::equals(tag, L"main_menu"))		{ main_menu = sf::String(text); }
+		else if (StringEditor::equals(tag, L"bag"))				{ bag = sf::String(text); }
+		else if (StringEditor::equals(tag, L"monster"))			{ monster = sf::String(text); }
+		else if (StringEditor::equals(tag, L"map"))				{ map = sf::String(text); }
+		else if (StringEditor::equals(tag, L"phone"))			{ phone = sf::String(text); }
+		else if (StringEditor::equals(tag, L"save"))			{ save = sf::String(text); }
 	}
 	file.close();
 }
@@ -44,4 +51,10 @@ Language::Language()
 	quit = L"Quit";
 	loading = L"Loading...";
 	trainer = L"Trainer";
+	main_menu = L"Main Menu";
+	bag = L"Bag";
+	monster = L"Monsters";
+	map = L"Map";
+	phone = L"Phone";
+	save = L"Save";
 }

@@ -30,276 +30,197 @@ Level::Level(sf::String auth, sf::String pack, sf::String level, Player p)
 
 void Level::loadLevel(sf::String auth, sf::String pack, sf::String name)
 {
+	width = 0;
+	height = 0;
+
+	transparentOverhangTiles = vector<Tile>();
+	opaqueOverhangTiles = vector<Tile>();
+
+	/*
+	TO DO - TODO
+	Put the request level change flag in the player class
+	and have the SinglePlayer.cpp access the level's player class
+	*/
 	requestsLevelChange = false;
 	Level::auth = auth;
 	Level::pack = pack;
 	Level::name = name;
 
+	/*
+	Create a default name for the file if none are loaded
+	*/
 	Word codeName;
 	codeName.langCode = sf::String(L"code_CODE");
 	codeName.str = name;
 	names.push_back(codeName);
 
 	KFile file(PACKS + auth + L"/" + pack + L"/" + name + L"/Level.txt");
+	wstring w;
 
-	int width = 0;				//Temporary variable to store the width of the level
-	int height = 0;				//Temporary variable to store the height of the level
-	bool widthLoaded = false;
-	bool heightLoaded = false;
-	bool mapLoaded = false;		//Flag which is true if the map dimensions were loaded
-	int numNPC = -1;			//Counts the index number of each npc instantiated, is -1 if none are instantiated (I forgot the reasoning behind this...)
+	/*
+	True if reading through multiline comments
+	*/
+	bool comment = false;
 
-	bool spawnStuffLoaded = false;	//Flag which is true if the spawn coordinates were loaded
-
-	bool comment = false;	//Flag which states if reading a multiline comment
-	sf::String* segments;	//Broken apart parameters
-	sf::String segment;		//Used for strings that ain't broken apart, like comments
-	int length;				//Number of parameters
-
-	segments = {};
-
+	/*
+	Start reading the file
+	*/
 	for (bool b = true; b; )
 	{
-		if (!comment)
-		{
-			file.readLine(segments, length);
-		}
-		else
-		{
-			file.readLine(segment);
-		}
+		file.readLine(w);
 
-
-		//Conditions for not reading a line
-		if (length == 0) continue;
-		if (StringEditor::equals(segments[0], L"endComment") || StringEditor::equals(segment, L"*/"))
+		if (w.length() >= 2 && StringEditor::equals(StringEditor::substring(w, w.length() - 2, w.length()), L"*/"))
 		{
-			StringEditor::echo(L"Comment was ended by: " + segment);
+			//If line ends with */ then end comment mode
 			comment = false;
 			continue;
 		}
-		if (comment == true) continue;
-
-		//Output the split segments to the console
-		for (int i = 0; i < length; i++)
+		else if (comment || StringEditor::startsWith(w, L"//"))
 		{
-			StringEditor::echo(segments[i]);
+			//Skip the line if it is a single line comment or in comment mode
+			continue;
 		}
-
-		if (length == 1)
-		{
-			if (StringEditor::equals(segments[0], L"addNPC"))
-			{
-				numNPC++;
-				npcs.push_back(NPC());
-				npcs[numNPC].loadTextures(auth, pack, name, 0);
-				npcs[numNPC].loadFromFile(file, auth, pack, name);
-			}
-			else if (StringEditor::equals(segments[0], L"beginComment"))
-			{
-				comment = true;
-				continue;
-			}
-		}
-
-		else if (length == 2)
-		{
-			if (StringEditor::equals(segments[0], L"setWidth"))
-			{
-				width = stoi(segments[1].toWideString());
-				widthLoaded = true;
-			}
-			else if (StringEditor::equals(segments[0], L"setHeight"))
-			{
-				height = stoi(segments[1].toWideString());
-				heightLoaded = true;
-			}
-		}
-
-		else if (length == 3)
-		{
-			if (StringEditor::equals(segments[0], L"setName"))
-			{
-				Word s_name;
-				s_name.langCode = segments[1];
-				s_name.str = segments[2];
-				names.push_back(s_name);
-				continue;
-			}
-		}
-
-		else if (length == 4)
-		{
-			if (StringEditor::equals(segments[0], L"setSpawn"))
-			{
-				spawnX = stoi(segments[1].toWideString());
-				spawnY = stoi(segments[2].toWideString());
-				int d = 0;
-				if (StringEditor::equals(segments[3], L"UP"))
-				{
-					d = 0;
-				}
-				if (StringEditor::equals(segments[3], L"LEFT"))
-				{
-					d = 1;
-				}
-				if (StringEditor::equals(segments[3], L"DOWN"))
-				{
-					d = 2;
-				}
-				else
-				{
-					d = 3;
-				}
-				spawnDirection = to_Direction(d);
-				spawnStuffLoaded = true;
-				continue;
-			}
-		}
-
-		else if (length == 5)
-		{
-			if (StringEditor::equals(segments[0], L"setRow"))
-			{
-				for (int i = 0; i < map.size(); i++)
-				{
-					map[i][stoi(segments[1].toWideString())] = Tile(stoi(segments[2].toWideString()), stoi(segments[3].toWideString()), stoi(segments[4].toWideString()));
-				}
-				continue;
-			}
-			else if (StringEditor::equals(segments[0], L"setCol"))
-			{
-				for (int i = 0; i < map[stoi(segments[1].toWideString())].size(); i++)
-				{
-					map[stoi(segments[1].toWideString())][i] = Tile(stoi(segments[2].toWideString()), stoi(segments[3].toWideString()), stoi(segments[4].toWideString()));
-				}
-				continue;
-			}
-		}
-
-		else if (length == 6)
-		{
-			if (StringEditor::equals(segments[0], L"setBlock"))
-			{
-				map[stoi(segments[1].toWideString())][stoi(segments[2].toWideString())] = Tile(stoi(segments[3].toWideString()), stoi(segments[4].toWideString()), stoi(segments[5].toWideString()));
-				continue;
-			}
-		}
-
-		else if (length == 8)
-		{
-			if (StringEditor::equals(segments[0], L"setArea"))
-			{
-				int tempX = stoi(segments[1].toWideString());
-				int tempY = stoi(segments[2].toWideString());
-				int tempToX = stoi(segments[3].toWideString());
-				int tempToY = stoi(segments[4].toWideString());
-
-				for (int i = tempX; i <= tempToX; i++)
-				{
-					for (int j = tempY; j <= tempToY; j++)
-					{
-						map[i][j] = Tile(stoi(segments[5].toWideString()), stoi(segments[6].toWideString()), stoi(segments[7].toWideString()));
-					}
-				}
-				continue;
-			}
-			else if (StringEditor::equals(segments[0], L"setDefinedArea"))
-			{
-				int tempX = stoi(segments[1].toWideString());
-				int tempY = stoi(segments[2].toWideString());
-				int tempToX = stoi(segments[3].toWideString());
-				int tempToY = stoi(segments[4].toWideString());
-
-				for (int i = tempX; i <= tempToX; i++)
-				{
-					for (int j = tempY; j <= tempToY; j++)
-					{
-						int xOffset = i - tempX;
-						int yOffset = j - tempY;
-
-						//The 16 is the width of the sprite sheet
-						map[i][j] = Tile(stoi(segments[5].toWideString()) + xOffset + (16 * yOffset), stoi(segments[6].toWideString()), stoi(segments[7].toWideString()));
-					}
-				}
-				continue;
-			}
-		}
-
-		else if (length == 9)
-		{
-			if (StringEditor::equals(segments[0], L"addTeleport"))
-			{
-				int d = 0;
-				if (StringEditor::equals(segments[6], L"UP"))
-				{
-					d = 0;
-				}
-				else if (StringEditor::equals(segments[6], L"LEFT"))
-				{
-					d = 1;
-				}
-				else if (StringEditor::equals(segments[6], L"DOWN"))
-				{
-					d = 2;
-				}
-				else
-				{
-					d = 3;
-				}
-				float f = -1;
-				if (StringEditor::equals(segments[8], L"SHALLOW"))
-				{
-					f = .25f;
-				}
-				else
-				{
-					f = .5f;
-				}
-				Teleport t(stoi(segments[1].toWideString()), stoi(segments[2].toWideString()), segments[3], stoi(segments[4].toWideString()), stoi(segments[5].toWideString()), to_Direction(d), stoi(segments[7].toWideString()), f);
-				teleports.push_back(t);
-				continue;
-			}
-		}
-
-		if (!mapLoaded && widthLoaded && heightLoaded)
-		{
-			map.resize(width);
-			for (int x = 0; x < width; x++)
-			{
-				map[x].resize(height);
-			}
-
-			mapLoaded = true;
-		}
-
-		if (segments[0].toWideString().compare(L"endFile") == 0)
-		{
-			b = false;
-		}
-	}
-	file.close();
-
-	//Creating temp map if something wasn't loaded
-	//If there was an error in the file, the program most likely won't make it this far into the code.
-
-	if (!mapLoaded)
-	{
-		width = 1;
-		height = 1;
 		
-		map.resize(width);
-		for (int x = 0; x < width; x++)
+		else if(StringEditor::startsWith(w, L"\*"))
 		{
-			map[x].resize(height);
+			//If starting a multiline comment, ignore everything until the */
+			comment = true;
+			continue;
+		}
+
+		else if (StringEditor::startsWith(w, L"setSize"))
+		{
+			int openParenthesis = StringEditor::findCharacter(w, L'(', 1);
+			int comma = StringEditor::findCharacter(w, L',', 1);
+			int closeParenthesis = StringEditor::findCharacter(w, L')', 1);
+
+			try
+			{
+				wstring sWidth = StringEditor::substring(w, openParenthesis + 1, comma);
+				wstring sHeight = StringEditor::substring(w, comma + 1, closeParenthesis);
+
+				width = stoi(sWidth);
+				height = stoi(sHeight);
+
+				StringEditor::echo(L"sWidth:\t" + to_wstring(width) + L"\tsHeight:\t" + to_wstring(height));
+
+				map = new Tile*[width];
+				for (int i = 0; i < width; i++)
+				{
+					map[i] = new Tile[height];
+				}
+
+				for (int i = 0; i < width; i++)
+				{
+					for (int j = 0; j < height; j++)
+					{
+						map[i][j] = Tile();
+					}
+				}
+			}
+			catch (exception e)
+			{
+				StringEditor::echo(sf::String(e.what()));
+			}
+		}
+
+		else if (StringEditor::startsWith(w, L"setSpawn"))
+		{
+			int openParenthesis = StringEditor::getFirstAppearanceIn(w, L'(');
+			int comma_1 = StringEditor::getFirstAppearanceIn(w, L',');
+			int comma_2 = StringEditor::findCharacter(w, L',', 2);
+			int closeParenthesis = StringEditor::getFirstAppearanceIn(w, L')');
+
+			try
+			{
+				wstring sX = StringEditor::substring(w, openParenthesis + 1, comma_1);
+				wstring sY = StringEditor::substring(w, comma_1 + 1, comma_2);
+				wstring sDir = StringEditor::substring(w, comma_2 + 1, closeParenthesis);
+
+				if (StringEditor::equals(sDir, L"UP"))
+				{
+					spawnDirection = Direction::UP;
+				}
+				else if (StringEditor::equals(sDir, L"LEFT"))
+				{
+					spawnDirection = Direction::LEFT;
+				}
+				else if (StringEditor::equals(sDir, L"DOWN"))
+				{
+					spawnDirection = Direction::DOWN;
+				}
+				else if (StringEditor::equals(sDir, L"RIGHT"))
+				{
+					spawnDirection = Direction::RIGHT;
+				}
+				else
+				{
+					spawnDirection = to_Direction(stoi(sDir));
+				}
+
+				spawnX = stoi(sX);
+				spawnY = stoi(sY);
+
+				StringEditor::echo(L"spawn X: " + to_wstring(spawnX));
+				StringEditor::echo(L"spawn Y: " + to_wstring(spawnY));
+				StringEditor::echo(L"spawn D: " + to_wstring(spawnDirection));
+			}
+			catch (exception e)
+			{
+				StringEditor::echo(sf::String(e.what()));
+			}
+		}
+
+		else if (StringEditor::equals(w, L"blocks=["))
+		{
+			for (int j = 0; j < height; j++)
+			{
+				file.readLine(w);
+				for (int i = 0; i < width; i++)
+				{
+					int comma = StringEditor::findCharacter(w, L',', 3);
+					//0 is inclusive, comma is exclusive
+					wstring tile = StringEditor::substring(w, 0, comma);
+					map[i][j] = Tile(tile);
+					w = StringEditor::substring(w, comma + 1, w.length());
+				}
+			}
+			file.readLine(w);
+			//The line above is to ignore the ] that makes the text file look nicer
+			continue;
+		}
+
+		else if (StringEditor::startsWith(w, L"addTransparentOverhang"))
+		{
+			int openParenthesis = StringEditor::findCharacter(w, L'(', 1);
+			int comma_1 = StringEditor::findCharacter(w, L',', 1);
+			int comma_2 = StringEditor::findCharacter(w, L',', 2);
+			int closeParenthesis = StringEditor::findCharacter(w, L')', 1);
+
+			wstring sX = StringEditor::substring(w, openParenthesis + 1, comma_1);
+			wstring sY = StringEditor::substring(w, comma_1 + 1, comma_2);
+			wstring sN = StringEditor::substring(w, comma_2 + 1, closeParenthesis);
+
+			Tile t;
+			t.setX(stoi(sX));
+			t.setY(stoi(sY));
+			t.setImgNum(stoi(sN));
+
+			transparentOverhangTiles.push_back(t);
+		}
+		else if (StringEditor::equals(w, L"addOpaqueOverhang"))
+		{
+
+		}
+
+		else if (StringEditor::equals(w, L"endFile;"))
+		{
+			break;
 		}
 	}
-	if (!spawnStuffLoaded)
-	{
-		spawnX = 0;
-		spawnY = 0;
-		spawnDirection = Direction::RIGHT;
-	}
+
+	file.close();
+	StringEditor::echo(L"file.close()");
 
 	//Loading block textures
 
@@ -323,6 +244,8 @@ void Level::loadLevel(sf::String auth, sf::String pack, sf::String name)
 	dialogBoxes.push_back(sf::Texture());
 	dialogBoxes[0].loadFromImage(dialogBoxImg, sf::IntRect(0, 0, 1280, 200));
 }
+
+//=================================================================================================
 
 void Level::requestLevelChange(int playerNumber, sf::String toLevel)
 {
@@ -408,8 +331,8 @@ void Level::update(Controls & c, int playerNumber)
 			//keep player from leaving the boundaries
 			if (players[playerNumber].getY() == 0) { upBlocked = true; }
 			if (players[playerNumber].getX() == 0) { leftBlocked = true; }
-			if ((players[playerNumber].getY() == (map[0].size() - 1))) { downBlocked = true; }
-			if ((players[playerNumber].getX() == (map.size() - 1))) { rightBlocked = true; }
+			if ((players[playerNumber].getY() == (height - 1))) { downBlocked = true; }
+			if ((players[playerNumber].getX() == (width - 1))) { rightBlocked = true; }
 
 			//npc collision
 			for (int i = 0; i < npcs.size(); i++)
@@ -566,11 +489,11 @@ void Level::render(sf::RenderWindow & window, KText & font, int playerNumber)
 	window.setView(view);
 
 	//Draw blocks
-	for (int x = 0; x < map.size(); x++)
+	for (int x = 0; x < width; x++)
 	{
 		if (x >= players[playerNumber].getX() - 11 && x <= players[playerNumber].getX() + 11)
 		{
-			for (int y = 0; y < map[x].size(); y++)
+			for (int y = 0; y < height; y++)
 			{
 				if (y >= players[playerNumber].getY() - 7 && y <= players[playerNumber].getY() + 6)
 				{
@@ -614,17 +537,22 @@ void Level::render(sf::RenderWindow & window, KText & font, int playerNumber)
 		font.drawText(window, 16, DIALOG_BOX_LOW + 16 + FONT_SIZE, npcs[players[playerNumber].getNPCDialogNumber()].getDialog(players[playerNumber].getLanguageCode()), sf::Color::Black);
 	}
 
-	for (int i = 0; i < floatingTiles.size(); i++)
+	for (int i = 0; i < transparentOverhangTiles.size(); i++)
 	{
-		if (i >= players[playerNumber].getY() - 7 && i <= players[playerNumber].getY() + 6)
+		int tx = transparentOverhangTiles[i].getX();
+		int ty = transparentOverhangTiles[i].getY();
+		int px = players[playerNumber].getX();
+		int py = players[playerNumber].getY();
+
+		if (ty >= py - 6 && tx >= px - 10 && ty <= py + 6 && tx <= px + 10)
 		{
 			sf::View view;
 			view.setSize(sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
 			view.setCenter(sf::Vector2f(players[playerNumber].getActualX() + 32, players[playerNumber].getActualY() + 32));
 			window.setView(view);
 
-			sf::Sprite s(textures[floatingTiles[i].getImgNum()]);
-			s.setPosition(sf::Vector2f(floatingTiles[i].getX() * BLOCK_SIZE, floatingTiles[i].getY() * BLOCK_SIZE));
+			sf::Sprite s(textures[transparentOverhangTiles[i].getImgNum()]);
+			s.setPosition(sf::Vector2f(transparentOverhangTiles[i].getX() * BLOCK_SIZE, transparentOverhangTiles[i].getY() * BLOCK_SIZE));
 			window.draw(s);
 		}
 	}

@@ -32,6 +32,7 @@ void NPC::loadTextures(sf::String auth, sf::String pack, sf::String name, int n)
 
 void NPC::loadFromFile(KFile& file, sf::String auth, sf::String pack, sf::String name)
 {
+	/*
 	sf::String* segments;
 	int length;
 
@@ -130,6 +131,7 @@ void NPC::loadFromFile(KFile& file, sf::String auth, sf::String pack, sf::String
 			return;
 		}
 	}
+	*/
 }
 
 sf::String NPC::getName(sf::String s)

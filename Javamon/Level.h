@@ -92,6 +92,8 @@ public:
 	/*Self explanitory, idk if it is used although*/
 	void setLanguageOfPlayer(int num, Language l) { players[num].setLanguage(l); }
 private:
+	int height;
+	int width;
 
 	RequestMode rm;
 
@@ -119,10 +121,12 @@ private:
 	int spawnX;
 	int spawnY;
 	Direction spawnDirection;
-	vector<vector<Tile>> map;
-	vector<Tile> floatingTiles;
+	Tile** map;
 
-	vector<Teleport> teleports;	//List of teleports
+	vector<Tile> transparentOverhangTiles;
+	vector<Tile> opaqueOverhangTiles;
+
+	vector<Teleport> teleports;	//List of teleporters
 	
 	vector<sf::Texture> textures;
 	vector<sf::Texture> dialogBoxes;

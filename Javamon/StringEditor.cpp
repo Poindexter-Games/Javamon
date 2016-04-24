@@ -29,15 +29,64 @@ void StringEditor::echo(int i, wstring str)
 	wcout << i << L" " << str << endl;
 }
 
-int StringEditor::getFirstAppearanceOf(char c, sf::String s)
+int StringEditor::getFirstAppearanceIn(wstring w, wchar_t c)
 {
-	for (int i = 0; i < s.toWideString().length(); i++) 
+	for (int i = 0; i < w.length(); i++) 
 	{
-		if (s[i] == c)
+		if (w[i] == c)
 		{
 			return i;
 		}
 	}
 
+	return -1;
+}
+
+wstring StringEditor::substring(wstring wstr, int beginIndex, int endIndex)
+{
+	wstring w;
+
+	for (int i = beginIndex; i < endIndex; i++)
+	{
+		w += wstr[i];
+	}
+
+	return w;
+}
+
+bool StringEditor::startsWith(wstring wstr, wstring pre)
+{
+	if (pre.length() > wstr.length())
+	{
+		return false;
+	}
+	for (int i = 0; i < pre.length(); i++)
+	{
+		if(wstr[i] != pre[i])
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+int StringEditor::findCharacter(wstring str, wchar_t c, int n)
+{
+	int occurence = 0;
+
+	for (int i = 0; i < str.length(); i++)
+	{
+		if (str[i] == c)
+		{
+			occurence++;
+			if (occurence == n)
+			{
+				//If the occurence = n, return character location
+				return i;
+			}
+		}
+	}
+
+	//Return -1 if the character was never found
 	return -1;
 }

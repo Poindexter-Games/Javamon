@@ -29,31 +29,20 @@ KText::KText(Language lang)
 
 	KFile file(VIDEO + L"Latin_Widths.txt");
 	bool comment = false;
-	sf::String* segments;
-	int length;
+	wstring w;
 	for (bool b = true; b; )
 	{
-		file.readLine(segments, length);
+		file.readLine(w);
 
-		if (length == 0) continue;
-		if (StringEditor::equals(segments[0], L"endComment")) {
-			comment = false; continue;
+		if (w.length() == 0) continue;
+		if (StringEditor::equals(w, L"endFile;")) {
+			break;
 		}
-		if (comment == true) continue;
+		else
+		{
+			int equals = StringEditor::findCharacter(w, L'=', 1);
 
-		if (length == 1)
-		{
-			if (StringEditor::equals(segments[0], L"beginComment")) {
-				comment = true; continue;
-			}
-		}
-		if (length == 2)
-		{
-			latinWidths[stoi(segments[0].toWideString())] = stoi(segments[1].toWideString());
-		}
-		if (StringEditor::equals(segments[0], L"endFile"))
-		{
-			b = false;
+			latinWidths[stoi(StringEditor::substring(w, 0, equals))] = stoi(StringEditor::substring(w, equals + 1, w.length()));
 		}
 	}
 	file.close();
