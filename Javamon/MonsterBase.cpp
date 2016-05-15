@@ -2,9 +2,19 @@
 
 MonsterBase::MonsterBase()
 {
-	name = L"NoMonsterBase";
+	Word w;
+	w.langCode = L"code-CODE";
+	w.str = L"MONSTER BASE WAS NOT LOADED!\nMONSTER BASE HA LOAD SITTEINAKATTA!!";
+
 	baseStats = MonsterStats();
 	incStats = MonsterStats();
+}
+
+MonsterBase::MonsterBase(Word w, MonsterStats base, MonsterStats inc)
+{
+	name = w;
+	baseStats = base;
+	incStats = inc;
 }
 
 void MonsterBase::increaseStats(MonsterStats & stats)

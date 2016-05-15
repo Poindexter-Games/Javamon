@@ -13,29 +13,11 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\Screen">
-      <UniqueIdentifier>{74967578-7575-4613-8eab-f5cd3f135d2e}</UniqueIdentifier>
+    <Filter Include="Header Files\Battle">
+      <UniqueIdentifier>{d2ba74d2-f89c-4567-8cc8-e349a167259b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Screen">
-      <UniqueIdentifier>{6f3ee94a-4215-4aa3-a746-58ef396c9548}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Language">
-      <UniqueIdentifier>{1bde5866-7be1-4dc6-813f-5fed6cb1bc10}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Language">
-      <UniqueIdentifier>{a5306656-3424-4c31-bfd5-799b7f7ece2c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Level">
-      <UniqueIdentifier>{3eeddd4a-2de7-45ba-a949-c86d500ab40d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Level">
-      <UniqueIdentifier>{129e66e8-cf36-4daa-a173-9f0209e0785f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Monster">
-      <UniqueIdentifier>{98d78b9c-c0d0-472f-9be1-ddd1d7442c73}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Monster">
-      <UniqueIdentifier>{106b4984-7d44-4ddc-bb5d-f4a01a71e54d}</UniqueIdentifier>
+    <Filter Include="Source Files\Battle">
+      <UniqueIdentifier>{3f54605d-6d9d-415a-a762-c960e7f9dd85}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -51,133 +33,145 @@
     <ClCompile Include="KFile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Singleplayer.cpp">
+    <ClCompile Include="Battle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Element.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Monster.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MonsterBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Language.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StringEditor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Level.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MovableEntity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NPC.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Tile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="InGameMenu.cpp">
-      <Filter>Source Files\Screen</Filter>
-    </ClCompile>
-    <ClCompile Include="Screen.cpp">
-      <Filter>Source Files\Screen</Filter>
-    </ClCompile>
-    <ClCompile Include="Tile.cpp">
-      <Filter>Source Files\Level</Filter>
-    </ClCompile>
-    <ClCompile Include="NPC.cpp">
-      <Filter>Source Files\Level</Filter>
-    </ClCompile>
-    <ClCompile Include="Language.cpp">
-      <Filter>Source Files\Language</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="KText.cpp">
-      <Filter>Source Files\Language</Filter>
-    </ClCompile>
-    <ClCompile Include="Entity.cpp">
-      <Filter>Source Files\Level</Filter>
-    </ClCompile>
-    <ClCompile Include="Level.cpp">
-      <Filter>Source Files\Level</Filter>
-    </ClCompile>
-    <ClCompile Include="Battle.cpp">
-      <Filter>Source Files\Screen</Filter>
-    </ClCompile>
-    <ClCompile Include="Element.cpp">
-      <Filter>Source Files\Monster</Filter>
-    </ClCompile>
-    <ClCompile Include="MonsterBase.cpp">
-      <Filter>Source Files\Monster</Filter>
-    </ClCompile>
-    <ClCompile Include="Monster.cpp">
-      <Filter>Source Files\Monster</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Source Files\Level</Filter>
-    </ClCompile>
-    <ClCompile Include="MovableEntity.cpp">
-      <Filter>Source Files\Level</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MainMenu.cpp">
-      <Filter>Source Files\Screen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="StringEditor.cpp">
-      <Filter>Source Files\Language</Filter>
+    <ClCompile Include="Screen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Singleplayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Attack.cpp">
+      <Filter>Source Files\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="Type.cpp">
+      <Filter>Source Files\Battle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Events.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Main.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Variables.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Controls.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="KFile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Singleplayer.h">
+    <ClInclude Include="Events.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="InGameMenu.h">
-      <Filter>Header Files\Screen</Filter>
-    </ClInclude>
-    <ClInclude Include="Screen.h">
-      <Filter>Header Files\Screen</Filter>
+    <ClInclude Include="Controls.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Battle.h">
-      <Filter>Header Files\Screen</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Element.h">
-      <Filter>Header Files\Monster</Filter>
-    </ClInclude>
-    <ClInclude Include="Entity.h">
-      <Filter>Header Files\Level</Filter>
-    </ClInclude>
-    <ClInclude Include="KText.h">
-      <Filter>Header Files\Level</Filter>
-    </ClInclude>
-    <ClInclude Include="Level.h">
-      <Filter>Header Files\Level</Filter>
-    </ClInclude>
-    <ClInclude Include="Language.h">
-      <Filter>Header Files\Language</Filter>
-    </ClInclude>
-    <ClInclude Include="MainMenu.h">
-      <Filter>Header Files\Screen</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Monster.h">
-      <Filter>Header Files\Monster</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MonsterBase.h">
-      <Filter>Header Files\Monster</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MonsterStats.h">
-      <Filter>Header Files\Monster</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Tile.h">
-      <Filter>Header Files\Level</Filter>
+    <ClInclude Include="Variables.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MovableEntity.h">
-      <Filter>Header Files\Level</Filter>
-    </ClInclude>
-    <ClInclude Include="NPC.h">
-      <Filter>Header Files\Level</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>Header Files\Level</Filter>
-    </ClInclude>
-    <ClInclude Include="Teleport.h">
-      <Filter>Header Files\Level</Filter>
-    </ClInclude>
-    <ClInclude Include="StringEditor.h">
-      <Filter>Header Files\Language</Filter>
+    <ClInclude Include="Language.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Math.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StringEditor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Level.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MovableEntity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NPC.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Teleport.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InGameMenu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KText.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MainMenu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Screen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Singleplayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Attack.h">
+      <Filter>Header Files\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="Type.h">
+      <Filter>Header Files\Battle</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

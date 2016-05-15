@@ -109,9 +109,8 @@ void Events::eventListener(sf::Event& event, sf::RenderWindow& window, Controls&
 
 		if (event.type == sf::Event::MouseMoved)
 		{
-			c.setMousePos(event.mouseMove.x, event.mouseMove.y);
+			c.setMousePos(event.mouseMove.x * SCREEN_WIDTH / window.getSize().x, event.mouseMove.y * SCREEN_HEIGHT / window.getSize().y);
 		}
-
 	}
 
 }

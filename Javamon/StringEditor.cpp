@@ -90,3 +90,29 @@ int StringEditor::findCharacter(wstring str, wchar_t c, int n)
 	//Return -1 if the character was never found
 	return -1;
 }
+
+wstring StringEditor::getString(wstring w, int n)
+{
+	wstring str = L"";
+	int occurence = 0;
+	int openQuote = 0;
+	int closeQuote = 1;
+
+	for (int i = 0; i < w.length(); i++)
+	{
+		if(w[i] == L'\"' && w[i - 1] != L'\\')
+		{
+			occurence++;
+			if ((occurence - (occurence % 2)) / 2 == n)
+			{
+				openQuote = i;
+			}
+			if (occurence = n * 2 + 1)
+			{
+				closeQuote = i;
+			}
+		}
+	}
+
+	return substring(w, openQuote + 1, closeQuote);
+}

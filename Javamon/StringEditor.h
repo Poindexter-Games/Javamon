@@ -66,7 +66,7 @@ public:
 	static bool startsWith(wstring, wstring);
 
 	/*
-	Finds the the specified character's position in the string
+	Finds the specified character's position in the string
 
 	Parameters:
 	wstring	- the string
@@ -82,5 +82,21 @@ public:
 	Revised by:
 	*/
 	static int findCharacter(wstring, wchar_t, int);
+	/*
+	Finds a string in the string (used for reading strings from a text file)
+
+	Parameters:
+	wstring	- the original string
+	int		- the occurence number of the string (1 for the 1st string)
+
+	Returns:
+	A string, or "" if not found.
+
+	Author: Karl Piepho
+	Date Created: April 25, 2016
+	Date Revised:
+	Revised by:
+	*/
+	static wstring getString(wstring w, int n);
 private:
 };

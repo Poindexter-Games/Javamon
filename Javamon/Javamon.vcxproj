@@ -122,6 +122,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Attack.cpp" />
     <ClCompile Include="Battle.cpp" />
     <ClCompile Include="Controls.cpp" />
     <ClCompile Include="Element.cpp" />
@@ -143,8 +144,10 @@
     <ClCompile Include="Singleplayer.cpp" />
     <ClCompile Include="StringEditor.cpp" />
     <ClCompile Include="Tile.cpp" />
+    <ClCompile Include="Type.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Attack.h" />
     <ClInclude Include="Battle.h" />
     <ClInclude Include="Controls.h" />
     <ClInclude Include="Element.h" />
@@ -160,6 +163,7 @@
     <ClInclude Include="Screen.h" />
     <ClInclude Include="Singleplayer.h" />
     <ClInclude Include="StringEditor.h" />
+    <ClInclude Include="Type.h" />
     <ClInclude Include="Variables.h" />
     <ClInclude Include="Events.h" />
     <ClInclude Include="Level.h" />

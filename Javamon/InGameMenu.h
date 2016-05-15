@@ -15,9 +15,9 @@
 class InGameMenu: public Screen
 {
 public:
-	enum RequestMode {QUIT, NONE};
-	RequestMode getRequestedMode() { return rm; }
-	void setRequestedModeRead() { rm = RequestMode::NONE; }
+	enum RequestMode {NONE, CLOSE, QUIT};
+	RequestMode getRequestedMode() const { return m; }
+	void setRequestedModeRead() { m = RequestMode::NONE; }
 
 	/*
 	Default: Main in Game Menu
@@ -36,7 +36,7 @@ public:
 	void render(sf::RenderWindow&, KText&, sf::String, Sex, BattleType, vector<Monster>);
 	bool isRequestingExit();
 private:
-	RequestMode rm;
+	RequestMode m;
 	Language l;
 
 	sf::Texture box;
@@ -57,7 +57,6 @@ private:
 	sf::Texture questionSelector;
 
 	int boxSelected;
-	bool requestsExit = false;
 
 	State state;
 };

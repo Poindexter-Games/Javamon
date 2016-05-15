@@ -23,6 +23,7 @@ class Player: public MovableEntity
 public:
 	Player();
 
+	enum RequestMode {NONE, NEW_LEVEL, QUIT, LEVEL, BATTLE};
 	enum Mode{ NORMAL = 0, DIALOG = 1, MENU = 2 };
 
 	/*
@@ -38,41 +39,43 @@ public:
 	GETTER METHODS
 	*/
 
-	InGameMenu getMenu() {return menu;}
+	InGameMenu getMenu() const {return menu;}
 	sf::String getLanguageCode() { return lang.getLanguageCode(); }
-	Mode getMode() { return mode; }
+	Mode getMode() const { return mode; }
+	wstring getLevelName() const { return levelName; }
 
 	//Movement Stuff
 
-	Direction getDirection() { return direction; }
-	int getZDirection() { return zdirection; }
-	float getSteepness() { return steepness; }
+	Direction getDirection() const { return direction; }
+	int getZDirection() const { return zdirection; }
+	float getSteepness() const { return steepness; }
 
-	bool isAllowedToMove() { return movementAllowed; }
-	bool isVisible() { return visible; }
+	bool isAllowedToMove() const { return movementAllowed; }
+	bool isVisible() const { return visible; }
 
-	int getAnimationFrame() { return animationFrame; }
+	int getAnimationFrame() const { return animationFrame; }
 
 	//RPG Stuff
 
-	sf::String getName() { return name; }
-	bool isMale() { return sex == 0; }
-	bool isFemale() { return sex == 1; }
-	void setSex(Sex sex) { Player::sex = sex; }
-	Sex getSex() { return sex; };
+	sf::String getName() const { return name; }
+	bool isMale()  const { return sex == 0; }
+	bool isFemale() const { return sex == 1; }
+	Sex getSex() const { return sex; };
+	int getCash() const { return cash; }
+	bool hasEnoughCash(int cash) const { return Player::cash >= cash; }
 
 	//Dialogue Stuff
 
-	sf::String getDialog() { return dialog; }
-	sf::String getPostBattleQuote() { return postBattleQuote; }
-	sf::String getAnteBattleQuote() { return anteBattleQuote; }
-	int getNPCDialogNumber() { return npcDialogNumber; }
+	sf::String getDialog() const { return dialog; }
+	sf::String getPostBattleQuote() const { return postBattleQuote; }
+	sf::String getAnteBattleQuote() const { return anteBattleQuote; }
+	int getNPCDialogNumber() const { return npcDialogNumber; }
 
 	//Battle Stuff
 
-	bool getWantsToBattle() { return wantsToBattle; }
-	BattleType getBattleType() { return preferredBattleType; }
-	SwitchType getSwitchType() { return preferredSwitchType; }
+	bool getWantsToBattle() const { return wantsToBattle; }
+	BattleType getBattleType() const { return preferredBattleType; }
+	SwitchType getSwitchType() const { return preferredSwitchType; }
 	
 	/*
 	SETTER METHODS
@@ -80,6 +83,7 @@ public:
 
 	void setLanguage(Language l) { lang = l; menu.setLanguage(l); }
 	void setMode(Mode m) { mode = m; }
+	void setLevelName(wstring s) { levelName = s; }
 
 	//Movement Stuff
 
@@ -100,6 +104,11 @@ public:
 
 	//RPG Stuff
 
+	void setSex(Sex sex) { Player::sex = sex; }
+	void setCash(int cash) { Player::cash = cash; }
+	void addCash(int cash) { Player::cash += cash; }
+	void removeCash(int cash) { Player::cash -= cash; }
+
 	//Dialogue Stuff
 	
 	void setNPCDialogNumber(int n) { npcDialogNumber = n; }
@@ -109,11 +118,15 @@ public:
 
 	void setWantsToBattle(bool b) { wantsToBattle = b; }
 private:
+	RequestMode m;
+	wstring levelName;
+
 	vector<sf::Texture> textures;	//Number of textures (should be 16)
 	vector<Monster> party;			//Party (your monsters)
 
 	sf::String name;		//Do I need to explain?
 	Sex sex;				//Okay, you need some help
+	int cash;
 
 	Mode mode;				//Player mode
 

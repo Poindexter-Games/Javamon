@@ -276,6 +276,12 @@ void Level::update(Controls & c, int playerNumber)
 	{
 		if (c.isPressedForFirstTime(Control::ACCEPT))
 		{
+			/*
+			
+			Stop talking with a character.
+			Need to implement longer conversations.
+			
+			*/
 			players[playerNumber].setNPCDialogNumber(-1);
 			players[playerNumber].setMode(Player::Mode::NORMAL);
 		}

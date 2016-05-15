@@ -2,6 +2,9 @@
 
 Player::Player(): MovableEntity(0, 0)
 {
+	m = RequestMode::NONE;
+	levelName = L"";
+
 	//common stuff
 	name = L"Player";
 	sex = Sex::FEMALE;
@@ -13,6 +16,7 @@ Player::Player(): MovableEntity(0, 0)
 	actualY = 0;
 	movementAllowed = true;
 	mode = Mode::NORMAL;
+	cash = 0;
 
 	preferredBattleType = BattleType::SINGLE;	//Default is single
 	preferredSwitchType = SwitchType::SWITCH;	//Default is switch
@@ -38,7 +42,7 @@ Player::Player(): MovableEntity(0, 0)
 	}
 
 
-	Monster m("Jawamon", Sex::MALE);
+	Monster m(L"\u30e2\u30f3\u30b9\u30bf\u30fc", Sex::MALE);
 	party.push_back(m);
 }
 

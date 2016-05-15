@@ -14,7 +14,7 @@ class Monster
 {
 public:
 	Monster();
-	Monster(sf::String, Sex); //monsters for debug
+	Monster(wstring, Sex); //monsters for debug
 
 	void restore() { health = stats.getHealth(); }
 
@@ -24,7 +24,7 @@ public:
 	MonsterStats getStats() { return stats; }
 private:
 	MonsterBase base;
-	sf::String name;
+	wstring name;
 	Sex sex;
 	MonsterStats stats;
 	int health;

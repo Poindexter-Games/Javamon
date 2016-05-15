@@ -14,3 +14,7 @@ static int rollOverAdd(int n, int a, int b, int i = 1)
 		return n + i;
 	}
 }
+static bool contains(int x, int y, sf::IntRect rect)
+{
+	return rect.left <= x && x <= rect.left + rect.width && rect.top <= y && y <= rect.top + rect.height;
+}

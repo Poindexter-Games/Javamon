@@ -19,20 +19,6 @@ void Singleplayer::update(Controls & c)
 	if (mode == Mode::LEVEL)
 	{
 		l.update(c, 0);
-
-		if (l.isRequestingLevelChange())
-		{
-			Player p;
-			sf::String s;
-
-			l.getPlayer(p, s);
-			l = Level(l.getAuth(), l.getPack(), s, p);
-		}
-		if (l.getRequestedMode() == Level::RequestMode::MAIN_MENU)
-		{
-			l.setRequestedModeRead();
-			rm = RequestMode::QUIT;
-		}
 	}
 	else if (mode == Mode::BATTLE)
 	{

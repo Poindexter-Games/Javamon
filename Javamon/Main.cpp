@@ -112,7 +112,8 @@ void Main::update()
 				playingGame = false;
 			}
 
-			controls.update(); //This calculates key press time
+			//This calculates key press time and mouse position
+			controls.update();
 
 
 			if (gs == GameState::SINGLE_PLAYER)
@@ -129,7 +130,7 @@ void Main::update()
 				mainMenu.update(controls);
 				if (mainMenu.getRequestedMode() == MainMenu::RequestMode::SINGLE_PLAYER)
 				{
-					gs = GameState::LOADING;
+					//gs = GameState::LOADING;
 					sp = Singleplayer(l, L"Poindexter", L"Test", L"TestLevel2");
 					gs = GameState::SINGLE_PLAYER;
 					mainMenu.setRequestedModeRead();
@@ -170,7 +171,7 @@ void Main::render()
 		}
 		else if (gs == GameState::MAIN_MENU)
 		{
-			mainMenu.render(window);
+			mainMenu.render(window, l, font);
 		}
 		else if (gs == GameState::LOADING)
 		{

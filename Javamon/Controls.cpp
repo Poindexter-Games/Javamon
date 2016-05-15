@@ -20,19 +20,19 @@ Controls::Controls()
 
 	acceptPressed = false;
 	acceptPressedTime = 0;
-	acceptKey = sf::Keyboard::Numpad6;
+	acceptKey = sf::Keyboard::Return; //Numpad6
 
 	cancelPressed = false;
 	cancelPressedTime = 0;
-	cancelKey = sf::Keyboard::Numpad4;
+	cancelKey = sf::Keyboard::BackSpace; //Numpad4
 
 	startPressed = false;
 	startPressedTime = 0;
-	startKey = sf::Keyboard::Numpad3;
+	startKey = sf::Keyboard::Escape; //Numpad3
 
 	selectPressed = false;
 	selectPressedTime = 0;
-	selectKey = sf::Keyboard::Numpad1;
+	selectKey = sf::Keyboard::Numpad1; //Numpad1
 
 	leftClickPressed = false;
 	leftClickPressedTime = 0;
@@ -64,9 +64,9 @@ void Controls::update()
 	else startPressedTime = 0;
 	if (selectPressed) selectPressedTime++;
 	else selectPressedTime = 0;
-	if (leftClickPressed) leftPressedTime++;
+	if (leftClickPressed) leftClickPressedTime++;
 	else leftClickPressedTime = 0;
-	if (rightClickPressed) rightPressedTime++;
+	if (rightClickPressed) rightClickPressedTime++;
 	else rightClickPressedTime = 0;
 
 	mouseXLastTime = mouseX;

@@ -2,17 +2,19 @@
 
 #include <SFML/System/String.hpp>
 #include "MonsterStats.h"
+#include "Variables.h"
 
 class MonsterBase
 {
 public:
 	MonsterBase();
+	MonsterBase(Word, MonsterStats, MonsterStats);
 
 	void increaseStats(MonsterStats&);
 	MonsterStats getBaseStats() { return baseStats; }
-	sf::String getName() { return name; }
+	Word getName() { return name; }
 private:
-	sf::String name;
+	Word name;
 	MonsterStats baseStats;
 	MonsterStats incStats;
 };

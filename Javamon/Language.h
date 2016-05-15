@@ -28,6 +28,9 @@ public:
 	Language(sf::String);
 
 	sf::String getLanguageCode() { return langCode; }
+	sf::String getSinglePlayer() { return single_player; }
+	sf::String getMultiPlayer() { return multi_player; }
+	sf::String getSettings() { return settings; }
 	sf::String getLoading() { return loading; }
 	sf::String getQuit() { return quit; }
 	sf::String getTrainer() { return trainer; }

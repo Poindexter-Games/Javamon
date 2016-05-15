@@ -1,3 +1,0 @@
-/*
-This is where a pack will define how it is loaded into our game, and other information
-*/

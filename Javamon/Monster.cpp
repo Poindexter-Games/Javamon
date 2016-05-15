@@ -9,7 +9,7 @@ Monster::Monster()
 	health = stats.getHealth();
 }
 
-Monster::Monster(sf::String name, Sex sex)
+Monster::Monster(wstring name, Sex sex)
 {
 	Monster::name = name;
 	Monster::sex = sex;

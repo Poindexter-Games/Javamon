@@ -2,7 +2,7 @@
 
 InGameMenu::InGameMenu()
 {
-	rm = RequestMode::NONE;
+	m = RequestMode::NONE;
 	boxSelected = 0;
 
 	box = sf::Texture();
@@ -32,7 +32,7 @@ InGameMenu::InGameMenu()
 	questionWindow = sf::Texture();
 	questionBox = sf::Texture();
 	questionSelector = sf::Texture();
-	questionWindow.loadFromFile(VIDEO + "QuestionBox.png", sf::IntRect(0, 0, 640, 360));
+	questionWindow.loadFromFile(VIDEO + "QuestionBox.png",		sf::IntRect(0, 0, 640, 360));
 	questionBox.loadFromFile(VIDEO + "QuestionBox.png",			sf::IntRect(640, 42 * 0, 320, 42));
 	questionSelector.loadFromFile(VIDEO + "QuestionBox.png",	sf::IntRect(640, 42 * 1, 320, 42));
 
@@ -46,7 +46,7 @@ void InGameMenu::setLanguage(Language l)
 
 void InGameMenu::update(Controls & c, BattleType bt, vector<Monster> party)
 {
-	requestsExit = false;
+	m = RequestMode::NONE;
 
 	if (state == State::DEFAULT)
 	{
@@ -60,7 +60,7 @@ void InGameMenu::update(Controls & c, BattleType bt, vector<Monster> party)
 		}
 		else if (c.isPressedForFirstTime(Control::CANCEL) || c.isPressedForFirstTime(Control::START))
 		{
-			requestsExit = true;
+			//m = RequestMode::CLOSE;
 		}
 		else if (c.isPressedForFirstTime(Control::ACCEPT))
 		{
@@ -100,7 +100,7 @@ void InGameMenu::update(Controls & c, BattleType bt, vector<Monster> party)
 			else if (boxSelected == 7)
 			{
 				//quit
-				requestsExit = true;
+				//m = RequestMode::CLOSE;
 			}
 		}
 	}
@@ -145,7 +145,7 @@ void InGameMenu::update(Controls & c, BattleType bt, vector<Monster> party)
 		{
 			if (boxSelected == 0)
 			{
-				rm = RequestMode::QUIT;
+				m = RequestMode::QUIT;
 			}
 			else
 			{
@@ -332,5 +332,5 @@ void InGameMenu::render(sf::RenderWindow & window, KText& font, sf::String name,
 
 bool InGameMenu::isRequestingExit()
 {
-	return requestsExit;
+	return m == RequestMode::CLOSE;
 }
